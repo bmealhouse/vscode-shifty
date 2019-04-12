@@ -1,0 +1,172 @@
+{
+  "name": "shifty",
+  "displayName": "shifty",
+  "description": "Keeps your day interesting by shifting your color theme and/or font family at random",
+  "version": "0.0.0",
+  "license": "MIT",
+  "publisher": "bmealhouse",
+  "engines": {
+    "vscode": "^0.10.2"
+  },
+  "categories": [],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "shifty",
+      "properties": {
+        "shifty.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Determines if shifty is enabled."
+        },
+        "shifty.colorThemes.ignoreColorThemes": {
+          "type": "string",
+          "default": "Default High Contrast",
+          "description": "Ignores color themes by id/label. (delimited by: ,)"
+        },
+        "shifty.colorThemes.ignoreDarkColorThemes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if dark color themes should be ignored."
+        },
+        "shifty.colorThemes.ignoreLightColorThemes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Determines if light color themes should be ignored."
+        },
+        "shifty.fontFamilies.ignoreCodefaceFontFamilies": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if codeface font families should be ignored."
+        },
+        "shifty.fontFamilies.ignoreFontFamilies": {
+          "type": "string",
+          "default": "",
+          "description": "Ignores font families. (delimited by: ,)"
+        },
+        "shifty.fontFamilies.ignoreMacosFontFamilies": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if macOS font families should be ignored."
+        },
+        "shifty.fontFamilies.ignoreWindowsFontFamilies": {
+          "type": "boolean",
+          "default": true,
+          "description": "Determines if Windows font families should be ignored."
+        },
+        "shifty.fontFamilies.includeFontFamilies": {
+          "type": "string",
+          "default": "",
+          "description": "Includes font families. (delimited by: ,)"
+        },
+        "shifty.shiftInterval.shiftColorThemeIntervalMs": {
+          "type": "number",
+          "default": 1800000,
+          "description": "Number of milliseconds to wait before shifting the color theme. (defaults to 30min)"
+        },
+        "shifty.shiftInterval.shiftFontFamilyIntervalMs": {
+          "type": "number",
+          "default": 1800000,
+          "description": "Number of milliseconds to wait before shifting the font family. (defaults to 30min)"
+        },
+        "shifty.startup.shiftColorThemeOnStartup": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if the color theme shifts when VS Code starts up."
+        },
+        "shifty.startup.shiftFontFamilyOnStartup": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if the font family shifts when VS Code starts up."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "shifty.shiftAll",
+        "title": "Shifty: Shift color theme and font family"
+      },
+      {
+        "command": "shifty.shiftColorTheme",
+        "title": "Shifty: Shift color theme"
+      },
+      {
+        "command": "shifty.shiftFontFamily",
+        "title": "Shifty: Shift font family"
+      },
+      {
+        "command": "shifty.enableShiftInterval",
+        "title": "Shifty: Enable shift interval"
+      },
+      {
+        "command": "shifty.disableShiftInterval",
+        "title": "Shifty: Disable shift interval"
+      },
+      {
+        "command": "shifty.ignoreCurrentColorTheme",
+        "title": "Shifty: Ignore current color theme"
+      },
+      {
+        "command": "shifty.ignoreCurrentFontFamily",
+        "title": "Shifty: Ignore current font family"
+      }
+    ]
+  },
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test",
+    "vscode:prepublish": "webpack --mode production",
+    "wp": "webpack --mode development",
+    "wp-dev": "webpack --mode development --watch"
+  },
+  "prettier": {
+    "useTabs": false,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": false
+  },
+  "xo": {
+    "envs": [
+      "mocha"
+    ],
+    "prettier": true,
+    "plugins": [
+      "filenames"
+    ],
+    "parser": "babel-eslint",
+    "rules": {
+      "capitalized-comments": "off",
+      "no-unused-vars": [
+        "error",
+        {
+          "ignoreRestSiblings": true,
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_"
+        }
+      ],
+      "filenames/match-exported": [
+        "error",
+        "kebab",
+        "^__"
+      ]
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "7.4.3",
+    "@babel/preset-env": "7.4.3",
+    "babel-eslint": "10.0.1",
+    "babel-loader": "8.0.5",
+    "eslint": "5.16.0",
+    "eslint-plugin-filenames": "1.3.2",
+    "vsce": "1.59.0",
+    "vscode": "1.1.33",
+    "webpack": "4.29.6",
+    "webpack-cli": "3.3.0",
+    "xo": "0.24.0"
+  }
+}
