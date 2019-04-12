@@ -146,6 +146,7 @@ function getColorThemes(config) {
 
   return vscode.extensions.all
     .reduce((colorThemes, extension) => {
+      if (!extension.packageJSON.contributes) return colorThemes
       if (!extension.packageJSON.contributes.themes) return colorThemes
 
       return [
