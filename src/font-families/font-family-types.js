@@ -1,0 +1,5 @@
+module.exports = {
+  CODEFACE: 'CODEFACE',
+  MAC_OS_ONLY: 'MAC_OS_ONLY',
+  WINDOWS_ONLY: 'WINDOWS_ONLY',
+}

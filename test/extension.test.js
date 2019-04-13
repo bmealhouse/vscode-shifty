@@ -1,9 +1,14 @@
 const assert = require('assert')
 const shifty = require('../src/extension')
 const allFontFamilies = require('../src/font-families')
-const codefaceFontFamilies = require('../src/font-families/codeface-font-families')
-const macosFontFamilies = require('../src/font-families/macos-font-families')
-const windowsFontFamilies = require('../src/font-families/windows-font-families')
+const {
+  CODEFACE,
+  MAC_OS_ONLY,
+  WINDOWS_ONLY,
+} = require('../src/font-families/font-family-types')
+// const codefaceFontFamilies = require('../src/font-families/codeface-font-families')
+// const macosFontFamilies = require('../src/font-families/macos-font-families')
+// const windowsFontFamilies = require('../src/font-families/windows-font-families')
 
 const {DARK_COLOR_THEME, LIGHT_COLOR_THEME} = shifty
 
@@ -318,7 +323,7 @@ suite('getFontFamilies', () => {
     const fontFamilies = shifty.getFontFamilies(config)
 
     assert.strictEqual(
-      fontFamilies.every(ff => !codefaceFontFamilies.includes(ff)),
+      fontFamilies.every(ff => !ff.types.includes(CODEFACE)),
       true,
     )
   })
@@ -333,7 +338,7 @@ suite('getFontFamilies', () => {
     const fontFamilies = shifty.getFontFamilies(config)
 
     assert.strictEqual(
-      fontFamilies.every(ff => !macosFontFamilies.includes(ff)),
+      fontFamilies.every(ff => !ff.types.includes(MAC_OS_ONLY)),
       true,
     )
   })
@@ -348,7 +353,7 @@ suite('getFontFamilies', () => {
     const fontFamilies = shifty.getFontFamilies(config)
 
     assert.strictEqual(
-      fontFamilies.every(ff => !windowsFontFamilies.includes(ff)),
+      fontFamilies.every(ff => !ff.types.includes(WINDOWS_ONLY)),
       true,
     )
   })

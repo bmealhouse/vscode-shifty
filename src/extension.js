@@ -1,8 +1,10 @@
 const vscode = require('vscode') // eslint-disable-line import/no-unresolved
 const fontFamilies = require('./font-families')
-const codefaceFontFamilies = require('./font-families/codeface-font-families')
-const macosFontFamilies = require('./font-families/macos-font-families')
-const windowsFontFamilies = require('./font-families/windows-font-families')
+const {
+  CODEFACE,
+  MAC_OS_ONLY,
+  WINDOWS_ONLY,
+} = require('./font-families/font-family-types')
 
 const DARK_COLOR_THEME = 'vs-dark'
 const LIGHT_COLOR_THEME = 'vs'
@@ -13,6 +15,9 @@ let shiftFontFamilyIntervalId = null
 
 async function activate(context) {
   config = vscode.workspace.getConfiguration('shifty')
+
+  // TODO: Handle extensions.onDidChange
+  // TODO: Handle workspace.onDidChnageConfiguration
 
   if (!config.enabled) {
     await deactivate()
@@ -173,12 +178,10 @@ function getCurrentColorTheme() {
 
 async function setRandomColorTheme(config) {
   const colorThemes = getColorThemes(config)
-  const {id: randomColorTheme} = getRandomItem(colorThemes)
-  await setColorTheme(randomColorTheme)
+  const {id} = getRandomItem(colorThemes)
+  await setColorTheme(id)
 
-  vscode.window.showInformationMessage(
-    `Color theme shifted to "${randomColorTheme}".`,
-  )
+  vscode.window.showInformationMessage(`Color theme shifted to "${id}".`)
 }
 
 async function setColorTheme(colorTheme) {
@@ -203,11 +206,11 @@ function getFontFamilies(config) {
     ...fontFamilies.filter(
       ff =>
         !(
-          ignoreFontFamilies.split(',').includes(ff) ||
-          (ignoreCodefaceFontFamilies && codefaceFontFamilies.includes(ff)) ||
-          (ignoreMacosFontFamilies && macosFontFamilies.includes(ff)) ||
-          (ignoreWindowsFontFamilies && windowsFontFamilies.includes(ff)) ||
-          ff === currentFontFamily
+          ignoreFontFamilies.split(',').includes(ff.id) ||
+          (ignoreCodefaceFontFamilies && ff.types.includes(CODEFACE)) ||
+          (ignoreMacosFontFamilies && ff.types.includes(MAC_OS_ONLY)) ||
+          (ignoreWindowsFontFamilies && ff.types.includes(WINDOWS_ONLY)) ||
+          ff.id === currentFontFamily
         ),
     ),
     ...includeFontFamilies.split(','),
@@ -220,12 +223,10 @@ function getCurrentFontFamily() {
 
 async function setRandomFontFamily(config) {
   const fontFamilies = getFontFamilies(config)
-  const randomFontFamily = getRandomItem(fontFamilies)
-  await setFontFamily(randomFontFamily)
+  const {id} = getRandomItem(fontFamilies)
+  await setFontFamily(id)
 
-  vscode.window.showInformationMessage(
-    `Font family shifted to "${randomFontFamily}".`,
-  )
+  vscode.window.showInformationMessage(`Font family shifted to "${id}".`)
 }
 
 async function setFontFamily(fontFamily) {
