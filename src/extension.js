@@ -5,13 +5,12 @@ const {
   MAC_OS_ONLY,
   WINDOWS_ONLY,
 } = require('./font-families/font-family-types')
+const {activateShiftInterval, stopShiftInterval} = require('./shift-interval')
 
 const DARK_COLOR_THEME = 'vs-dark'
 const LIGHT_COLOR_THEME = 'vs'
 
 let config = {}
-let shiftColorThemeIntervalId = null
-let shiftFontFamilyIntervalId = null
 
 async function activate(context) {
   config = vscode.workspace.getConfiguration('shifty')
@@ -25,6 +24,7 @@ async function activate(context) {
   }
 
   await initializeExtension(config)
+  activateShiftInterval(context)
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftAll', async () => {
@@ -42,34 +42,6 @@ async function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftFontFamily', async () => {
       await setRandomFontFamily(config)
-    }),
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.enableShiftInterval', async () => {
-      if (config.shiftInterval.shiftColorThemeIntervalMs > 0) {
-        shiftColorThemeIntervalId = setInterval(async () => {
-          await setRandomColorTheme(config)
-        }, config.shiftInterval.shiftColorThemeIntervalMs)
-      }
-
-      if (config.shiftInterval.shiftFontFamilyIntervalMs > 0) {
-        shiftFontFamilyIntervalId = setInterval(async () => {
-          await setRandomFontFamily(config)
-        }, config.shiftInterval.shiftFontFamilyIntervalMs)
-      }
-    }),
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.disableShiftInterval', async () => {
-      if (shiftColorThemeIntervalId !== null) {
-        clearInterval(shiftColorThemeIntervalId)
-      }
-
-      if (shiftFontFamilyIntervalId !== null) {
-        clearInterval(shiftFontFamilyIntervalId)
-      }
     }),
   )
 
@@ -118,6 +90,8 @@ async function activate(context) {
   )
 }
 
+exports.activate = activate
+
 async function initializeExtension(config) {
   if (config.startup.shiftColorThemeOnStartup) {
     await setRandomColorTheme(config)
@@ -129,13 +103,7 @@ async function initializeExtension(config) {
 }
 
 function deactivate() {
-  if (shiftColorThemeIntervalId !== null) {
-    clearInterval(shiftColorThemeIntervalId)
-  }
-
-  if (shiftFontFamilyIntervalId !== null) {
-    clearInterval(shiftFontFamilyIntervalId)
-  }
+  stopShiftInterval()
 }
 
 function getColorThemes(config) {
