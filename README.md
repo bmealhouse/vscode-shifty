@@ -1,6 +1,6 @@
 # shifty
 
-> Keeps your day interesting by shifting your color theme and/or font family at random.
+> Keeps your day interesting by randomly shifting your color theme and/or font family
 
 <!-- ## Features
 
