@@ -7,11 +7,11 @@ const {
 } = require('../src/shift-interval')
 
 suite('shift-interval.test.js', () => {
-  test('should not start the shift interval when VS Code starts up', () => {
+  test('should NOT start the shift interval when VS Code starts up', () => {
     assert.ok(!hasShiftIntervalStarted())
   })
 
-  test('should register shift interval commands', async () => {
+  test('should register shift interval commands when VS Code starts up', async () => {
     const commands = await vscode.commands.getCommands()
     assert.ok(commands.includes('shifty.enableShiftInterval'))
     assert.ok(commands.includes('shifty.disableShiftInterval'))

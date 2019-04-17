@@ -24,14 +24,19 @@
           "description": "Determines if shifty is enabled."
         },
         "shifty.colorThemes.ignoreColorThemes": {
-          "type": "string",
-          "default": "Default High Contrast",
-          "description": "Ignores color themes by id/label. (delimited by: ,)"
+          "type": "array",
+          "default": [],
+          "description": "Ignores color themes by id/label."
         },
         "shifty.colorThemes.ignoreDarkColorThemes": {
           "type": "boolean",
           "default": false,
           "description": "Determines if dark color themes should be ignored."
+        },
+        "shifty.colorThemes.ignoreHighContrastColorThemes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Determines if high contrast color themes should be ignored."
         },
         "shifty.colorThemes.ignoreLightColorThemes": {
           "type": "boolean",
@@ -154,6 +159,11 @@
         "kebab",
         "^__"
       ]
+    },
+    "settings": {
+      "import/core-modules": [
+        "vscode"
+      ]
     }
   },
   "devDependencies": {
@@ -163,6 +173,7 @@
     "babel-loader": "8.0.5",
     "eslint": "5.16.0",
     "eslint-plugin-filenames": "1.3.2",
+    "sinon": "7.3.1",
     "vsce": "1.59.0",
     "vscode": "1.1.33",
     "webpack": "4.29.6",

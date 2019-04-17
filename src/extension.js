@@ -1,22 +1,40 @@
-const vscode = require('vscode') // eslint-disable-line import/no-unresolved
+const vscode = require('vscode')
 const fontFamilies = require('./font-families')
 const {
   CODEFACE,
   MAC_OS_ONLY,
   WINDOWS_ONLY,
 } = require('./font-families/font-family-types')
+const {activateColorThemes, setRandomColorTheme} = require('./color-themes')
 const {activateShiftInterval, stopShiftInterval} = require('./shift-interval')
+const getRandomItem = require('./utils/get-random-item')
 
-const DARK_COLOR_THEME = 'vs-dark'
-const LIGHT_COLOR_THEME = 'vs'
+module.exports = {
+  activate,
+  deactivate,
+  initializeExtension,
+  getFontFamilies,
+  getCurrentFontFamily,
+  setRandomFontFamily,
+  setFontFamily,
+  set,
+}
 
 let config = {}
 
 async function activate(context) {
+  console.log('activate')
+
   config = vscode.workspace.getConfiguration('shifty')
 
-  // TODO: Handle extensions.onDidChange
-  // TODO: Handle workspace.onDidChnageConfiguration
+  vscode.extensions.onDidChange((...args) => {
+    console.log('shifty:extension:onDidChange', args, JSON.stringify(args))
+  })
+
+  // vscode.workspace.onDidChangeConfiguration(event => {
+  //   console.log('shifty:workspace:onDidChangeConfiguration')
+  //   console.log(event.affectsConfiguration('shifty.fontFamily'))
+  // })
 
   if (!config.enabled) {
     await deactivate()
@@ -24,6 +42,7 @@ async function activate(context) {
   }
 
   await initializeExtension(config)
+  await activateColorThemes(context)
   activateShiftInterval(context)
 
   context.subscriptions.push(
@@ -34,36 +53,9 @@ async function activate(context) {
   )
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.shiftColorTheme', async () => {
-      await setRandomColorTheme(config)
-    }),
-  )
-
-  context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftFontFamily', async () => {
       await setRandomFontFamily(config)
     }),
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'shifty.ignoreCurrentColorTheme',
-      async () => {
-        const currentColorTheme = getCurrentColorTheme()
-
-        await config.update(
-          'colorThemes.ignoreColorThemes',
-          [
-            ...config.colorThemes.ignoreColorThemes.split(',').filter(Boolean),
-            currentColorTheme,
-          ].join(','),
-          true,
-        )
-
-        config = vscode.workspace.getConfiguration('shifty')
-        await setRandomColorTheme(config)
-      },
-    ),
   )
 
   context.subscriptions.push(
@@ -93,10 +85,6 @@ async function activate(context) {
 exports.activate = activate
 
 async function initializeExtension(config) {
-  if (config.startup.shiftColorThemeOnStartup) {
-    await setRandomColorTheme(config)
-  }
-
   if (config.startup.shiftFontFamilyOnStartup) {
     await setRandomFontFamily(config)
   }
@@ -104,57 +92,6 @@ async function initializeExtension(config) {
 
 function deactivate() {
   stopShiftInterval()
-}
-
-function getColorThemes(config) {
-  const {
-    colorThemes: {
-      ignoreColorThemes,
-      ignoreDarkColorThemes,
-      ignoreLightColorThemes,
-    },
-  } = config
-
-  const currentColorTheme = getCurrentColorTheme()
-
-  return vscode.extensions.all
-    .reduce((colorThemes, extension) => {
-      if (!extension.packageJSON.contributes) return colorThemes
-      if (!extension.packageJSON.contributes.themes) return colorThemes
-
-      return [
-        ...colorThemes,
-        ...extension.packageJSON.contributes.themes.map(
-          ({id, label, uiTheme}) => ({id: id || label, uiTheme}),
-        ),
-      ]
-    }, [])
-    .filter(
-      ct =>
-        !(
-          ignoreColorThemes.split(',').includes(ct.id) ||
-          (ignoreLightColorThemes && ct.uiTheme === LIGHT_COLOR_THEME) ||
-          (ignoreDarkColorThemes && ct.uiTheme === DARK_COLOR_THEME) ||
-          ct.id === currentColorTheme
-        ),
-    )
-}
-
-function getCurrentColorTheme() {
-  return vscode.workspace.getConfiguration('workbench').colorTheme
-}
-
-async function setRandomColorTheme(config) {
-  const colorThemes = getColorThemes(config)
-  const {id} = getRandomItem(colorThemes)
-  await setColorTheme(id)
-
-  vscode.window.showInformationMessage(`Color theme shifted to "${id}".`)
-}
-
-async function setColorTheme(colorTheme) {
-  const workbench = vscode.workspace.getConfiguration('workbench')
-  return workbench.update('colorTheme', colorTheme, true)
 }
 
 function getFontFamilies(config) {
@@ -204,25 +141,4 @@ async function setFontFamily(fontFamily) {
 
 async function set(config, section, value) {
   return config.update(section, value, true)
-}
-
-function getRandomItem(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
-}
-
-module.exports = {
-  LIGHT_COLOR_THEME,
-  DARK_COLOR_THEME,
-  activate,
-  deactivate,
-  initializeExtension,
-  getColorThemes,
-  getCurrentColorTheme,
-  setRandomColorTheme,
-  setColorTheme,
-  getFontFamilies,
-  getCurrentFontFamily,
-  setRandomFontFamily,
-  setFontFamily,
-  set,
 }

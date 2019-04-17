@@ -15,25 +15,25 @@ const {DARK_COLOR_THEME, LIGHT_COLOR_THEME} = shifty
 let originalColorTheme = null
 let originalFontFamily = null
 
-setup(async () => {
-  originalColorTheme = shifty.getCurrentColorTheme()
-  await shifty.setColorTheme('Visual Studio Dark')
+// setup(async () => {
+//   originalColorTheme = shifty.getCurrentColorTheme()
+//   await shifty.setColorTheme('Visual Studio Dark')
 
-  originalFontFamily = shifty.getCurrentFontFamily()
-  await shifty.setFontFamily('Monaco')
-})
+//   originalFontFamily = shifty.getCurrentFontFamily()
+//   await shifty.setFontFamily('Monaco')
+// })
 
-teardown(async () => {
-  shifty.deactivate()
+// teardown(async () => {
+//   shifty.deactivate()
 
-  if (originalColorTheme) {
-    await shifty.setColorTheme(originalColorTheme)
-  }
+//   if (originalColorTheme) {
+//     await shifty.setColorTheme(originalColorTheme)
+//   }
 
-  if (originalColorTheme) {
-    await shifty.setFontFamily(originalFontFamily)
-  }
-})
+//   if (originalColorTheme) {
+//     await shifty.setFontFamily(originalFontFamily)
+//   }
+// })
 
 const getShiftyConfig = config => ({
   enabled: true,
@@ -174,200 +174,116 @@ const getShiftyConfig = config => ({
 //   test('should not shift font family using an interval when disabled')
 // })
 
-suite('getColorThemes', () => {
-  test('should return all color themes', () => {
-    const config = getShiftyConfig({})
+// suite('getFontFamilies', () => {
+//   test('should return all font families', () => {
+//     const config = getShiftyConfig({})
+//     const fontFamilies = shifty.getFontFamilies(config)
+//     assert.strictEqual(fontFamilies.length, allFontFamilies.length - 1)
+//   })
 
-    const DEFAULT_VSCODE_THEMES = 13
-    const colorThemes = shifty.getColorThemes(config)
+//   test('should return all font families except the current font family', async () => {
+//     const config = getShiftyConfig({})
 
-    assert.strictEqual(colorThemes.length, DEFAULT_VSCODE_THEMES - 1)
-  })
+//     const expectedFontFamily = 'Monaco'
+//     await shifty.setFontFamily(expectedFontFamily)
+//     const fontFamilies = shifty.getFontFamilies(config)
 
-  test('should return all color themes except the current color theme', async () => {
-    const config = getShiftyConfig({})
+//     assert.strictEqual(
+//       fontFamilies.find(ff => ff === expectedFontFamily),
+//       undefined,
+//     )
+//   })
 
-    const colorTheme = 'Visual Studio Dark'
-    await shifty.setColorTheme(colorTheme)
-    const colorThemes = shifty.getColorThemes(config)
+//   test('should return all font families except the ignored font families', () => {
+//     const monaco = 'Monaco'
+//     const sfMono = 'SF Mono'
 
-    assert.strictEqual(colorThemes.find(ct => ct.id === colorTheme), undefined)
-  })
+//     const config = getShiftyConfig({
+//       fontFamilies: {
+//         ignoreFontFamilies: `${monaco},${sfMono}`,
+//       },
+//     })
 
-  test('should return all color themes except the ignored color themes', () => {
-    const defaultHighContrast = 'Default High Contrast'
-    const visualStudioDark = 'Visual Studio Dark'
+//     const fontFamilies = shifty.getFontFamilies(config)
 
-    const config = getShiftyConfig({
-      colorThemes: {
-        ignoreColorThemes: `${defaultHighContrast},${visualStudioDark}`,
-      },
-    })
+//     assert.strictEqual(fontFamilies.find(ff => ff === monaco), undefined)
+//     assert.strictEqual(fontFamilies.find(ff => ff === sfMono), undefined)
+//   })
 
-    const colorThemes = shifty.getColorThemes(config)
+//   test('should return user specified font families', () => {
+//     const dankMono = 'Dank Mono'
+//     const operatorMono = 'Operator Mono'
 
-    assert.strictEqual(
-      colorThemes.find(ct => ct.id === defaultHighContrast),
-      undefined,
-    )
-    assert.strictEqual(
-      colorThemes.find(ct => ct.id === visualStudioDark),
-      undefined,
-    )
-  })
+//     const config = getShiftyConfig({
+//       fontFamilies: {
+//         includeFontFamilies: `${dankMono},${operatorMono}`,
+//       },
+//     })
 
-  test('should return no light themes when ignored', () => {
-    const config = getShiftyConfig({
-      colorThemes: {
-        ignoreLightColorThemes: true,
-      },
-    })
+//     const fontFamilies = shifty.getFontFamilies(config)
 
-    const colorThemes = shifty.getColorThemes(config)
+//     assert.notStrictEqual(fontFamilies.find(ff => ff === dankMono), undefined)
+//     assert.notStrictEqual(
+//       fontFamilies.find(ff => ff === operatorMono),
+//       undefined,
+//     )
+//   })
 
-    assert.strictEqual(
-      colorThemes.every(ct => ct.uiTheme !== LIGHT_COLOR_THEME),
-      true,
-    )
-  })
+//   test('should return no codeface font families when ignored', () => {
+//     const config = getShiftyConfig({
+//       fontFamilies: {
+//         ignoreCodefaceFontFamilies: true,
+//       },
+//     })
 
-  test('should return no dark themes when ignored', () => {
-    const config = getShiftyConfig({
-      colorThemes: {
-        ignoreDarkColorThemes: true,
-      },
-    })
+//     const fontFamilies = shifty.getFontFamilies(config)
 
-    const colorThemes = shifty.getColorThemes(config)
-    assert.strictEqual(
-      colorThemes.every(ct => ct.uiTheme !== DARK_COLOR_THEME),
-      true,
-    )
-  })
+//     assert.strictEqual(
+//       fontFamilies.every(ff => !ff.types.includes(CODEFACE)),
+//       true,
+//     )
+//   })
 
-  test('should return no themes when light & dark themes are ignored', () => {
-    const config = getShiftyConfig({
-      colorThemes: {
-        ignoreDarkColorThemes: true,
-        ignoreLightColorThemes: true,
-      },
-    })
+//   test('should return no macOS font families when ignored', () => {
+//     const config = getShiftyConfig({
+//       fontFamilies: {
+//         ignoreMacosFontFamilies: true,
+//       },
+//     })
 
-    const colorThemes = shifty.getColorThemes(config)
-    assert.strictEqual(colorThemes.length, 0)
-  })
-})
+//     const fontFamilies = shifty.getFontFamilies(config)
 
-suite('getFontFamilies', () => {
-  test('should return all font families', () => {
-    const config = getShiftyConfig({})
-    const fontFamilies = shifty.getFontFamilies(config)
-    assert.strictEqual(fontFamilies.length, allFontFamilies.length - 1)
-  })
+//     assert.strictEqual(
+//       fontFamilies.every(ff => !ff.types.includes(MAC_OS_ONLY)),
+//       true,
+//     )
+//   })
 
-  test('should return all font families except the current font family', async () => {
-    const config = getShiftyConfig({})
+//   test('should return no Windows font families when ignored', () => {
+//     const config = getShiftyConfig({
+//       fontFamilies: {
+//         ignoreWindowsFontFamilies: true,
+//       },
+//     })
 
-    const expectedFontFamily = 'Monaco'
-    await shifty.setFontFamily(expectedFontFamily)
-    const fontFamilies = shifty.getFontFamilies(config)
+//     const fontFamilies = shifty.getFontFamilies(config)
 
-    assert.strictEqual(
-      fontFamilies.find(ff => ff === expectedFontFamily),
-      undefined,
-    )
-  })
+//     assert.strictEqual(
+//       fontFamilies.every(ff => !ff.types.includes(WINDOWS_ONLY)),
+//       true,
+//     )
+//   })
 
-  test('should return all font families except the ignored font families', () => {
-    const monaco = 'Monaco'
-    const sfMono = 'SF Mono'
+//   test('should return no font families when all fonts are ignored', () => {
+//     const config = getShiftyConfig({
+//       fontFamilies: {
+//         ignoreCodefaceFontFamilies: true,
+//         ignoreMacosFontFamilies: true,
+//         ignoreWindowsFontFamilies: true,
+//       },
+//     })
 
-    const config = getShiftyConfig({
-      fontFamilies: {
-        ignoreFontFamilies: `${monaco},${sfMono}`,
-      },
-    })
-
-    const fontFamilies = shifty.getFontFamilies(config)
-
-    assert.strictEqual(fontFamilies.find(ff => ff === monaco), undefined)
-    assert.strictEqual(fontFamilies.find(ff => ff === sfMono), undefined)
-  })
-
-  test('should return user specified font families', () => {
-    const dankMono = 'Dank Mono'
-    const operatorMono = 'Operator Mono'
-
-    const config = getShiftyConfig({
-      fontFamilies: {
-        includeFontFamilies: `${dankMono},${operatorMono}`,
-      },
-    })
-
-    const fontFamilies = shifty.getFontFamilies(config)
-
-    assert.notStrictEqual(fontFamilies.find(ff => ff === dankMono), undefined)
-    assert.notStrictEqual(
-      fontFamilies.find(ff => ff === operatorMono),
-      undefined,
-    )
-  })
-
-  test('should return no codeface font families when ignored', () => {
-    const config = getShiftyConfig({
-      fontFamilies: {
-        ignoreCodefaceFontFamilies: true,
-      },
-    })
-
-    const fontFamilies = shifty.getFontFamilies(config)
-
-    assert.strictEqual(
-      fontFamilies.every(ff => !ff.types.includes(CODEFACE)),
-      true,
-    )
-  })
-
-  test('should return no macOS font families when ignored', () => {
-    const config = getShiftyConfig({
-      fontFamilies: {
-        ignoreMacosFontFamilies: true,
-      },
-    })
-
-    const fontFamilies = shifty.getFontFamilies(config)
-
-    assert.strictEqual(
-      fontFamilies.every(ff => !ff.types.includes(MAC_OS_ONLY)),
-      true,
-    )
-  })
-
-  test('should return no Windows font families when ignored', () => {
-    const config = getShiftyConfig({
-      fontFamilies: {
-        ignoreWindowsFontFamilies: true,
-      },
-    })
-
-    const fontFamilies = shifty.getFontFamilies(config)
-
-    assert.strictEqual(
-      fontFamilies.every(ff => !ff.types.includes(WINDOWS_ONLY)),
-      true,
-    )
-  })
-
-  test('should return no font families when all fonts are ignored', () => {
-    const config = getShiftyConfig({
-      fontFamilies: {
-        ignoreCodefaceFontFamilies: true,
-        ignoreMacosFontFamilies: true,
-        ignoreWindowsFontFamilies: true,
-      },
-    })
-
-    const fontFamilies = shifty.getFontFamilies(config)
-    assert.strictEqual(fontFamilies.length, 0)
-  })
-})
+//     const fontFamilies = shifty.getFontFamilies(config)
+//     assert.strictEqual(fontFamilies.length, 0)
+//   })
+// })
