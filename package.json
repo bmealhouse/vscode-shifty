@@ -57,9 +57,9 @@
           "description": "Determines if codeface font families should be ignored."
         },
         "shifty.fontFamilies.ignoreFontFamilies": {
-          "type": "string",
-          "default": "",
-          "description": "Ignores font families. (delimited by: ,)"
+          "type": "array",
+          "default": [],
+          "description": "Ignores font families."
         },
         "shifty.fontFamilies.ignoreMacosFontFamilies": {
           "type": "boolean",
@@ -72,9 +72,9 @@
           "description": "Determines if Windows font families should be ignored."
         },
         "shifty.fontFamilies.includeFontFamilies": {
-          "type": "string",
-          "default": "",
-          "description": "Includes font families. (delimited by: ,)"
+          "type": "array",
+          "default": [],
+          "description": "Includes font families."
         },
         "shifty.shiftInterval.shiftColorThemeIntervalMs": {
           "type": "number",

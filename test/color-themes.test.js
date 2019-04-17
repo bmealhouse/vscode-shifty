@@ -59,7 +59,7 @@ teardown(async () => {
 })
 
 suite('color-themes.test.js', () => {
-  test('should NOT shift the color theme when VS Code starts up if "shifty.startup.shiftColorThemeOnStartup" is disabled', async () => {
+  test('should not shift the color theme when VS Code starts up if "shifty.startup.shiftColorThemeOnStartup" is disabled', async () => {
     await maybeShiftColorThemeOnStartup()
     assert.strictEqual(getCurrentColorTheme(), DEFAULT_COLOR_THEME)
   })
@@ -88,13 +88,13 @@ suite('color-themes.test.js', () => {
     assert.notStrictEqual(getCurrentColorTheme(), DEFAULT_COLOR_THEME)
   })
 
-  test('should prime the color theme cache after the "shifty.colorThemes" config changes', async () => {
+  test('should prime the color themes cache after the "shifty.colorThemes" config changes', async () => {
     const originalColorThemesCache = __getColorThemesCache()
     await setConfig('shifty.colorThemes.ignoreLightColorThemes', true)
     assert.notDeepStrictEqual(__getColorThemesCache(), originalColorThemesCache)
   })
 
-  test('should return all color themes when no themes are ignored', () => {
+  test('should return all color themes when no color themes are ignored', () => {
     const colorThemes = getColorThemes()
     const TOTAL_DEFAULT_VSCODE_THEMES = 14
     assert.strictEqual(colorThemes.length, TOTAL_DEFAULT_VSCODE_THEMES - 1)
@@ -102,50 +102,39 @@ suite('color-themes.test.js', () => {
 
   test('should return all color themes except the current color theme', () => {
     const colorThemes = getColorThemes()
-    assert.strictEqual(
-      colorThemes.find(ct => ct.id === DEFAULT_COLOR_THEME),
-      undefined,
-    )
+    assert.ok(colorThemes.every(ct => ct.id !== DEFAULT_COLOR_THEME))
   })
 
   test('should return all color themes except the ignored color themes', async () => {
     const abyss = 'Abyss'
     await setConfig('shifty.colorThemes.ignoreColorThemes', [abyss])
     const colorThemes = getColorThemes()
-    assert.strictEqual(colorThemes.find(ct => ct.id === abyss), undefined)
+    assert.ok(colorThemes.every(ct => ct.id !== abyss))
   })
 
   test('should return no dark color themes when ignored', async () => {
     await setConfig('shifty.colorThemes.ignoreDarkColorThemes', true)
     const colorThemes = getColorThemes()
-    assert.strictEqual(
-      colorThemes.every(ct => ct.uiTheme !== DARK_COLOR_THEME),
-      true,
-    )
+    assert.ok(colorThemes.every(ct => ct.uiTheme !== DARK_COLOR_THEME))
   })
 
   test('should return no light color themes when ignored', async () => {
     await setConfig('shifty.colorThemes.ignoreLightColorThemes', true)
     const colorThemes = getColorThemes()
-    assert.strictEqual(
-      colorThemes.every(ct => ct.uiTheme !== LIGHT_COLOR_THEME),
-      true,
-    )
+    assert.ok(colorThemes.every(ct => ct.uiTheme !== LIGHT_COLOR_THEME))
   })
 
   test('should return no high contrast color themes when ignored', async () => {
     await setConfig('shifty.colorThemes.ignoreHighContrastColorThemes', true)
     const colorThemes = getColorThemes()
-    assert.strictEqual(
-      colorThemes.every(ct => ct.uiTheme !== HIGH_CONTRAST_COLOR_THEME),
-      true,
-    )
+    assert.ok(colorThemes.every(ct => ct.uiTheme !== HIGH_CONTRAST_COLOR_THEME))
   })
 
-  test('should return no themes when all color theme types are ignored', async () => {
+  test('should return no color themes when all color theme types are ignored', async () => {
     await setConfig('shifty.colorThemes.ignoreDarkColorThemes', true)
     await setConfig('shifty.colorThemes.ignoreLightColorThemes', true)
     await setConfig('shifty.colorThemes.ignoreHighContrastColorThemes', true)
+
     const colorThemes = getColorThemes()
     assert.strictEqual(colorThemes.length, 0)
   })

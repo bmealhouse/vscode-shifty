@@ -1,6 +1,6 @@
 const vscode = require('vscode')
 const {setRandomColorTheme} = require('./color-themes')
-const {setRandomFontFamily} = require('./extension')
+const {setRandomFontFamily} = require('./font-families')
 
 let shiftColorThemeIntervalId = null
 let shiftFontFamilyIntervalId = null
@@ -53,11 +53,10 @@ async function startShiftInterval() {
   }
 
   if (shiftFontFamilyIntervalMs > 0) {
-    shiftFontFamilyIntervalId = setInterval(async () => {
-      // FIXME: Should not need to pass config here
-      const config = vscode.workspace.getConfiguration('shifty')
-      await setRandomFontFamily(config)
-    }, shiftFontFamilyIntervalMs)
+    shiftFontFamilyIntervalId = setInterval(
+      setRandomFontFamily,
+      shiftFontFamilyIntervalMs,
+    )
   }
 }
 

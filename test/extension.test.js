@@ -1,19 +1,8 @@
-const assert = require('assert')
-const shifty = require('../src/extension')
-const allFontFamilies = require('../src/font-families')
-const {
-  CODEFACE,
-  MAC_OS_ONLY,
-  WINDOWS_ONLY,
-} = require('../src/font-families/font-family-types')
+// const assert = require('assert')
+// const shifty = require('../src/extension')
 // const codefaceFontFamilies = require('../src/font-families/codeface-font-families')
 // const macosFontFamilies = require('../src/font-families/macos-font-families')
 // const windowsFontFamilies = require('../src/font-families/windows-font-families')
-
-const {DARK_COLOR_THEME, LIGHT_COLOR_THEME} = shifty
-
-let originalColorTheme = null
-let originalFontFamily = null
 
 // setup(async () => {
 //   originalColorTheme = shifty.getCurrentColorTheme()
@@ -34,35 +23,6 @@ let originalFontFamily = null
 //     await shifty.setFontFamily(originalFontFamily)
 //   }
 // })
-
-const getShiftyConfig = config => ({
-  enabled: true,
-  colorThemes: {
-    ignoreColorThemes: 'Default High Contrast',
-    ignoreDarkColorThemes: false,
-    ignoreLightColorThemes: false,
-    ...config.colorThemes,
-  },
-  fontFamilies: {
-    ignoreCodefaceFontFamilies: false,
-    ignoreFontFamilies: '',
-    ignoreMacosFontFamilies: false,
-    ignoreWindowsFontFamilies: false,
-    includeFontFamilies: '',
-    ...config.fontFamilies,
-  },
-  shiftInterval: {
-    enabled: false,
-    shiftColorThemeIntervalMs: 0,
-    shiftFontFamilyIntervalMs: 0,
-    ...config.shiftInterval,
-  },
-  startup: {
-    shiftColorThemeOnStartup: false,
-    shiftFontFamilyOnStartup: false,
-    ...config.startup,
-  },
-})
 
 // suite('shifty', function() {
 //   test('should shift color theme on startup', async () => {
@@ -172,118 +132,4 @@ const getShiftyConfig = config => ({
 //   test('should shift font family using an 100ms interval')
 
 //   test('should not shift font family using an interval when disabled')
-// })
-
-// suite('getFontFamilies', () => {
-//   test('should return all font families', () => {
-//     const config = getShiftyConfig({})
-//     const fontFamilies = shifty.getFontFamilies(config)
-//     assert.strictEqual(fontFamilies.length, allFontFamilies.length - 1)
-//   })
-
-//   test('should return all font families except the current font family', async () => {
-//     const config = getShiftyConfig({})
-
-//     const expectedFontFamily = 'Monaco'
-//     await shifty.setFontFamily(expectedFontFamily)
-//     const fontFamilies = shifty.getFontFamilies(config)
-
-//     assert.strictEqual(
-//       fontFamilies.find(ff => ff === expectedFontFamily),
-//       undefined,
-//     )
-//   })
-
-//   test('should return all font families except the ignored font families', () => {
-//     const monaco = 'Monaco'
-//     const sfMono = 'SF Mono'
-
-//     const config = getShiftyConfig({
-//       fontFamilies: {
-//         ignoreFontFamilies: `${monaco},${sfMono}`,
-//       },
-//     })
-
-//     const fontFamilies = shifty.getFontFamilies(config)
-
-//     assert.strictEqual(fontFamilies.find(ff => ff === monaco), undefined)
-//     assert.strictEqual(fontFamilies.find(ff => ff === sfMono), undefined)
-//   })
-
-//   test('should return user specified font families', () => {
-//     const dankMono = 'Dank Mono'
-//     const operatorMono = 'Operator Mono'
-
-//     const config = getShiftyConfig({
-//       fontFamilies: {
-//         includeFontFamilies: `${dankMono},${operatorMono}`,
-//       },
-//     })
-
-//     const fontFamilies = shifty.getFontFamilies(config)
-
-//     assert.notStrictEqual(fontFamilies.find(ff => ff === dankMono), undefined)
-//     assert.notStrictEqual(
-//       fontFamilies.find(ff => ff === operatorMono),
-//       undefined,
-//     )
-//   })
-
-//   test('should return no codeface font families when ignored', () => {
-//     const config = getShiftyConfig({
-//       fontFamilies: {
-//         ignoreCodefaceFontFamilies: true,
-//       },
-//     })
-
-//     const fontFamilies = shifty.getFontFamilies(config)
-
-//     assert.strictEqual(
-//       fontFamilies.every(ff => !ff.types.includes(CODEFACE)),
-//       true,
-//     )
-//   })
-
-//   test('should return no macOS font families when ignored', () => {
-//     const config = getShiftyConfig({
-//       fontFamilies: {
-//         ignoreMacosFontFamilies: true,
-//       },
-//     })
-
-//     const fontFamilies = shifty.getFontFamilies(config)
-
-//     assert.strictEqual(
-//       fontFamilies.every(ff => !ff.types.includes(MAC_OS_ONLY)),
-//       true,
-//     )
-//   })
-
-//   test('should return no Windows font families when ignored', () => {
-//     const config = getShiftyConfig({
-//       fontFamilies: {
-//         ignoreWindowsFontFamilies: true,
-//       },
-//     })
-
-//     const fontFamilies = shifty.getFontFamilies(config)
-
-//     assert.strictEqual(
-//       fontFamilies.every(ff => !ff.types.includes(WINDOWS_ONLY)),
-//       true,
-//     )
-//   })
-
-//   test('should return no font families when all fonts are ignored', () => {
-//     const config = getShiftyConfig({
-//       fontFamilies: {
-//         ignoreCodefaceFontFamilies: true,
-//         ignoreMacosFontFamilies: true,
-//         ignoreWindowsFontFamilies: true,
-//       },
-//     })
-
-//     const fontFamilies = shifty.getFontFamilies(config)
-//     assert.strictEqual(fontFamilies.length, 0)
-//   })
 // })
