@@ -10,7 +10,7 @@ module.exports = {
   startShiftInterval,
   stopShiftInterval,
   hasShiftIntervalStarted,
-  getShiftIntervalIds,
+  __getShiftIntervalIds,
 }
 
 function activateShiftInterval(context) {
@@ -77,7 +77,7 @@ function hasShiftIntervalStarted() {
   return shiftColorThemeIntervalId || shiftFontFamilyIntervalId
 }
 
-function getShiftIntervalIds() {
+function __getShiftIntervalIds() {
   return {
     shiftColorThemeIntervalId,
     shiftFontFamilyIntervalId,

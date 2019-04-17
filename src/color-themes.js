@@ -75,7 +75,23 @@ function primeColorThemeCache() {
   } = vscode.workspace.getConfiguration('shifty.colorThemes')
 
   colorThemesCache = vscode.extensions.all
-    .reduce(normalizeColorThemesExtensions, [])
+    .reduce((colorThemes, extension) => {
+      const {
+        packageJSON: {contributes: {themes} = {}},
+      } = extension
+
+      if (!themes) {
+        return colorThemes
+      }
+
+      return [
+        ...colorThemes,
+        ...themes.map(({id, label, uiTheme}) => ({
+          id: id || label,
+          uiTheme,
+        })),
+      ]
+    }, [])
     .filter(
       ct =>
         !(
@@ -86,24 +102,6 @@ function primeColorThemeCache() {
           (ignoreDarkColorThemes && ct.uiTheme === DARK_COLOR_THEME)
         ),
     )
-}
-
-function normalizeColorThemesExtensions(colorThemes, extension) {
-  const {
-    packageJSON: {contributes: {themes} = {}},
-  } = extension
-
-  if (!themes) {
-    return colorThemes
-  }
-
-  return [
-    ...colorThemes,
-    ...themes.map(({id, label, uiTheme}) => ({
-      id: id || label,
-      uiTheme,
-    })),
-  ]
 }
 
 async function setRandomColorTheme() {

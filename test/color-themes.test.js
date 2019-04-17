@@ -33,27 +33,29 @@ teardown(async () => {
     await setColorTheme(originalColorTheme)
   }
 
-  // restor originalConfig
-  await setConfig(
-    'shifty.colorThemes.ignoreColorThemes',
-    originalConfig.colorThemes.ignoreColorThemes,
-  )
-  await setConfig(
-    'shifty.colorThemes.ignoreDarkColorThemes',
-    originalConfig.colorThemes.ignoreDarkColorThemes,
-  )
-  await setConfig(
-    'shifty.colorThemes.ignoreLightColorThemes',
-    originalConfig.colorThemes.ignoreLightColorThemes,
-  )
-  await setConfig(
-    'shifty.colorThemes.ignoreHighContrastColorThemes',
-    originalConfig.colorThemes.ignoreHighContrastColorThemes,
-  )
-  await setConfig(
-    'shifty.startup.shiftColorThemeOnStartup',
-    originalConfig.startup.shiftColorThemeOnStartup,
-  )
+  // restore originalConfig
+  if (originalConfig) {
+    await setConfig(
+      'shifty.colorThemes.ignoreColorThemes',
+      originalConfig.colorThemes.ignoreColorThemes,
+    )
+    await setConfig(
+      'shifty.colorThemes.ignoreDarkColorThemes',
+      originalConfig.colorThemes.ignoreDarkColorThemes,
+    )
+    await setConfig(
+      'shifty.colorThemes.ignoreLightColorThemes',
+      originalConfig.colorThemes.ignoreLightColorThemes,
+    )
+    await setConfig(
+      'shifty.colorThemes.ignoreHighContrastColorThemes',
+      originalConfig.colorThemes.ignoreHighContrastColorThemes,
+    )
+    await setConfig(
+      'shifty.startup.shiftColorThemeOnStartup',
+      originalConfig.startup.shiftColorThemeOnStartup,
+    )
+  }
 })
 
 suite('color-themes.test.js', () => {

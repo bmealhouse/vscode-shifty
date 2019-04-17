@@ -1,13 +1,35 @@
 const assert = require('assert')
 const vscode = require('vscode')
-
 const {
   hasShiftIntervalStarted,
-  getShiftIntervalIds,
+  __getShiftIntervalIds,
 } = require('../src/shift-interval')
+const setConfig = require('./utils/set-config')
+
+let originalConfig = null
+
+setup(async () => {
+  originalConfig = vscode.workspace.getConfiguration('shifty')
+  await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 1800000)
+  await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 1800000)
+})
+
+teardown(async () => {
+  // restore originalConfig
+  if (originalConfig) {
+    await setConfig(
+      'shifty.shiftInterval.shiftColorThemeIntervalMs',
+      originalConfig.shiftInterval.shiftColorThemeIntervalMs,
+    )
+    await setConfig(
+      'shifty.shiftInterval.shiftFontFamilyIntervalMs',
+      originalConfig.shiftInterval.shiftFontFamilyIntervalMs,
+    )
+  }
+})
 
 suite('shift-interval.test.js', () => {
-  test('should NOT start the shift interval when VS Code starts up', () => {
+  test('should not start the shift interval when VS Code starts up', () => {
     assert.ok(!hasShiftIntervalStarted())
   })
 
@@ -17,7 +39,7 @@ suite('shift-interval.test.js', () => {
     assert.ok(commands.includes('shifty.disableShiftInterval'))
   })
 
-  test('should start & stop the shift interval using commands', async () => {
+  test('should start and stop the shift interval using commands', async () => {
     assert.ok(!hasShiftIntervalStarted())
     await vscode.commands.executeCommand('shifty.enableShiftInterval')
     assert.ok(hasShiftIntervalStarted())
@@ -29,35 +51,26 @@ suite('shift-interval.test.js', () => {
     await vscode.commands.executeCommand('shifty.enableShiftInterval')
     assert.ok(hasShiftIntervalStarted())
 
-    const shiftIntervalIds = getShiftIntervalIds()
-
-    const config = vscode.workspace.getConfiguration('shifty.shiftInterval')
-    const originalValue = config.shiftColorThemeIntervalMs
-    await config.update('shiftColorThemeIntervalMs', 1337, true)
-
+    const shiftIntervalIds = __getShiftIntervalIds()
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 1337)
     assert.ok(hasShiftIntervalStarted())
-    assert.notDeepStrictEqual(getShiftIntervalIds(), shiftIntervalIds)
+    assert.notDeepStrictEqual(__getShiftIntervalIds(), shiftIntervalIds)
 
     await vscode.commands.executeCommand('shifty.disableShiftInterval')
-    await config.update('shiftColorThemeIntervalMs', originalValue, true)
   })
 
   test('should do nothing when the shift interval has not been started and the config changes', async () => {
     assert.ok(!hasShiftIntervalStarted())
 
-    const config = vscode.workspace.getConfiguration('shifty.shiftInterval')
-    const originalValue = config.shiftColorThemeIntervalMs
-    await config.update('shiftColorThemeIntervalMs', 1337, true)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 1337)
 
     const {
       shiftColorThemeIntervalId,
       shiftFontFamilyIntervalId,
-    } = getShiftIntervalIds()
+    } = __getShiftIntervalIds()
 
     assert.ok(!hasShiftIntervalStarted())
     assert.strictEqual(shiftColorThemeIntervalId, null)
     assert.strictEqual(shiftFontFamilyIntervalId, null)
-
-    await config.update('shiftColorThemeIntervalMs', originalValue, true)
   })
 })
