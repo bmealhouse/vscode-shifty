@@ -112,12 +112,12 @@
         "title": "Shifty: Shift font family"
       },
       {
-        "command": "shifty.enableShiftInterval",
-        "title": "Shifty: Enable shift interval"
+        "command": "shifty.startShiftInterval",
+        "title": "Shifty: Start shift interval"
       },
       {
-        "command": "shifty.disableShiftInterval",
-        "title": "Shifty: Disable shift interval"
+        "command": "shifty.stopShiftInterval",
+        "title": "Shifty: Stop shift interval"
       },
       {
         "command": "shifty.ignoreCurrentColorTheme",

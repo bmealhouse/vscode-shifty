@@ -35,20 +35,20 @@ suite('shift-interval.test.js', () => {
 
   test('should register shift interval commands when VS Code starts up', async () => {
     const commands = await vscode.commands.getCommands()
-    assert.ok(commands.includes('shifty.enableShiftInterval'))
-    assert.ok(commands.includes('shifty.disableShiftInterval'))
+    assert.ok(commands.includes('shifty.startShiftInterval'))
+    assert.ok(commands.includes('shifty.stopShiftInterval'))
   })
 
   test('should start and stop the shift interval using commands', async () => {
     assert.ok(!hasShiftIntervalStarted())
-    await vscode.commands.executeCommand('shifty.enableShiftInterval')
+    await vscode.commands.executeCommand('shifty.startShiftInterval')
     assert.ok(hasShiftIntervalStarted())
-    await vscode.commands.executeCommand('shifty.disableShiftInterval')
+    await vscode.commands.executeCommand('shifty.stopShiftInterval')
     assert.ok(!hasShiftIntervalStarted())
   })
 
   test('should restart the shift interval when the shift interval has been started and the config changes', async () => {
-    await vscode.commands.executeCommand('shifty.enableShiftInterval')
+    await vscode.commands.executeCommand('shifty.startShiftInterval')
     assert.ok(hasShiftIntervalStarted())
 
     const shiftIntervalIds = __getShiftIntervalIds()
@@ -56,7 +56,7 @@ suite('shift-interval.test.js', () => {
     assert.ok(hasShiftIntervalStarted())
     assert.notDeepStrictEqual(__getShiftIntervalIds(), shiftIntervalIds)
 
-    await vscode.commands.executeCommand('shifty.disableShiftInterval')
+    await vscode.commands.executeCommand('shifty.stopShiftInterval')
   })
 
   test('should do nothing when the shift interval has not been started and the config changes', async () => {

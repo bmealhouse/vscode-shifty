@@ -16,14 +16,14 @@ module.exports = {
 function activateShiftInterval(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'shifty.enableShiftInterval',
+      'shifty.startShiftInterval',
       startShiftInterval,
     ),
   )
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'shifty.disableShiftInterval',
+      'shifty.stopShiftInterval',
       stopShiftInterval,
     ),
   )
