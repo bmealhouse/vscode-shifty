@@ -27,14 +27,18 @@ async function activate(context) {
     }),
   )
 
-  // vscode.workspace.onDidChangeConfiguration(event => {
-  //   console.log('shifty:workspace:onDidChangeConfiguration')
-  //   console.log(event.affectsConfiguration('shifty.fontFamily'))
-  // })
+  // context.subscriptions.push(
+  //   vscode.workspace.onDidChangeConfiguration(event => {
+  //     console.log('shifty:workspace:onDidChangeConfiguration')
+  //     console.log(event.affectsConfiguration('shifty.fontFamily'))
+  //   }),
+  // )
 
-  vscode.extensions.onDidChange((...args) => {
-    console.log('shifty:extension:onDidChange', args, JSON.stringify(args))
-  })
+  context.subscriptions.push(
+    vscode.extensions.onDidChange((...args) => {
+      console.log('shifty:extension:onDidChange', args, JSON.stringify(args))
+    }),
+  )
 }
 
 exports.activate = activate

@@ -49,12 +49,14 @@ async function activateColorThemes(context) {
     ),
   )
 
-  vscode.workspace.onDidChangeConfiguration(event => {
-    if (event.affectsConfiguration('shifty.colorThemes')) {
-      colorThemesCache = null
-      primeColorThemeCache()
-    }
-  })
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(event => {
+      if (event.affectsConfiguration('shifty.colorThemes')) {
+        colorThemesCache = null
+        primeColorThemeCache()
+      }
+    }),
+  )
 }
 
 async function maybeShiftColorThemeOnStartup() {

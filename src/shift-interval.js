@@ -28,15 +28,17 @@ function activateShiftInterval(context) {
     ),
   )
 
-  vscode.workspace.onDidChangeConfiguration(event => {
-    if (
-      event.affectsConfiguration('shifty.shiftInterval') &&
-      hasShiftIntervalStarted()
-    ) {
-      stopShiftInterval()
-      startShiftInterval()
-    }
-  })
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(event => {
+      if (
+        event.affectsConfiguration('shifty.shiftInterval') &&
+        hasShiftIntervalStarted()
+      ) {
+        stopShiftInterval()
+        startShiftInterval()
+      }
+    }),
+  )
 }
 
 async function startShiftInterval() {

@@ -52,12 +52,14 @@ async function activateFontFamilies(context) {
     ),
   )
 
-  vscode.workspace.onDidChangeConfiguration(event => {
-    if (event.affectsConfiguration('shifty.fontFamilies')) {
-      fontFamiliesCache = null
-      primeFontFamiliesCache()
-    }
-  })
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(event => {
+      if (event.affectsConfiguration('shifty.fontFamilies')) {
+        fontFamiliesCache = null
+        primeFontFamiliesCache()
+      }
+    }),
+  )
 }
 
 async function maybeShiftFontFamilyOnStartup() {
