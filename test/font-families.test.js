@@ -8,11 +8,11 @@ const {
   allFontFamilies,
   __getFontFamiliesCache,
 } = require('../src/font-families')
-const {CODEFACE} = require('../src/font-families/types/font-families')
 const {
+  CODEFACE,
   MAC_OS,
   WINDOWS,
-} = require('../src/font-families/types/supported-platforms')
+} = require('../src/font-families/font-family-types')
 const setConfig = require('./utils/set-config')
 
 let originalConfig = null
@@ -131,15 +131,13 @@ suite('font-families.test.js', () => {
   test('should return no mac os font families when ignored', async () => {
     await setConfig('shifty.fontFamilies.ignoreMacosFontFamilies', true)
     const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => !ff.supportedPlatforms.includes(MAC_OS)))
+    assert.ok(fontFamilies.every(ff => !ff.type !== MAC_OS))
   })
 
   test('should return no windows font families when ignored', async () => {
     await setConfig('shifty.fontFamilies.ignoreWindowsFontFamilies', true)
     const fontFamilies = getFontFamilies()
-    assert.ok(
-      fontFamilies.every(ff => !ff.supportedPlatforms.includes(WINDOWS)),
-    )
+    assert.ok(fontFamilies.every(ff => !ff.type !== WINDOWS))
   })
 
   test('should return no font families when all font families types are ignored', async () => {

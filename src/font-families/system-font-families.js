@@ -1,12 +1,12 @@
-const {SYSTEM} = require('./types/font-families')
-const {MAC_OS, WINDOWS} = require('./types/supported-platforms')
+const {MAC_OS, WINDOWS} = require('./font-family-types')
 
 module.exports = [
-  {id: 'Consolas', type: SYSTEM, supportedPlatforms: [WINDOWS]},
-  {id: 'Courier', type: SYSTEM, supportedPlatforms: [MAC_OS]},
-  {id: 'Courier New', type: SYSTEM, supportedPlatforms: [WINDOWS]},
-  {id: 'Lucida Console', type: SYSTEM, supportedPlatforms: [WINDOWS]},
-  {id: 'Menlo', type: SYSTEM, supportedPlatforms: [MAC_OS]},
-  {id: 'Monaco', type: SYSTEM, supportedPlatforms: [MAC_OS]},
-  {id: 'SF Mono', type: SYSTEM, supportedPlatforms: [MAC_OS]},
+  {id: 'Consolas', type: WINDOWS, supportedPlatforms: [WINDOWS]},
+  // TODO: figure out how to handle platforms
+  // {id: 'Courier', type: SYSTEM, supportedPlatforms: [MAC_OS, WINDOWS]}
+  // {id: 'Courier New', type: SYSTEM, supportedPlatforms: [MAC_OS, WINDOWS]}
+  {id: 'Lucida Console', type: WINDOWS, supportedPlatforms: [WINDOWS]},
+  {id: 'Menlo', type: MAC_OS, supportedPlatforms: [MAC_OS]},
+  {id: 'Monaco', type: MAC_OS, supportedPlatforms: [MAC_OS]},
+  {id: 'SF Mono', type: MAC_OS, supportedPlatforms: [MAC_OS]},
 ]

@@ -1,7 +1,6 @@
 const vscode = require('vscode')
 const getRandomItem = require('../utils/get-random-item')
-const {CODEFACE, USER} = require('./types/font-families')
-const {MAC_OS, WINDOWS} = require('./types/supported-platforms')
+const {CODEFACE, MAC_OS, USER, WINDOWS} = require('./font-family-types')
 
 // TODO: provide documenation for font installation on MacOS & Windows
 const allFontFamilies = [
@@ -86,8 +85,8 @@ function primeFontFamiliesCache() {
         !(
           ignoreFontFamilies.includes(ff.id) ||
           (ignoreCodefaceFontFamilies && ff.type === CODEFACE) ||
-          (ignoreMacosFontFamilies && ff.supportedPlatforms.includes(MAC_OS)) ||
-          (ignoreWindowsFontFamilies && ff.supportedPlatforms.includes(WINDOWS))
+          (ignoreMacosFontFamilies && ff.type === MAC_OS) ||
+          (ignoreWindowsFontFamilies && ff.type === WINDOWS)
         ),
     ),
     ...includeFontFamilies.map(ff => ({
