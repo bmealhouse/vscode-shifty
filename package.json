@@ -79,12 +79,12 @@
         "shifty.shiftInterval.shiftColorThemeIntervalMs": {
           "type": "number",
           "default": 1800000,
-          "description": "Number of milliseconds to wait before shifting the color theme. (defaults to 30min)"
+          "description": "Number of milliseconds to wait before shifting the color theme. (defaults to 30min, use zero to disable color theme shift interval)"
         },
         "shifty.shiftInterval.shiftFontFamilyIntervalMs": {
           "type": "number",
           "default": 1800000,
-          "description": "Number of milliseconds to wait before shifting the font family. (defaults to 30min)"
+          "description": "Number of milliseconds to wait before shifting the font family. (defaults to 30min, use zero to disable font family shift interval)"
         },
         "shifty.startup.shiftColorThemeOnStartup": {
           "type": "boolean",
@@ -126,6 +126,10 @@
       {
         "command": "shifty.ignoreCurrentFontFamily",
         "title": "Shifty: Ignore current font family"
+      },
+      {
+        "command": "shifty.showCurrentStatus",
+        "title": "Shifty: Show current status"
       }
     ]
   },

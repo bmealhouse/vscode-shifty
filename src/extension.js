@@ -2,6 +2,7 @@ const vscode = require('vscode')
 const {activateColorThemes, setRandomColorTheme} = require('./color-themes')
 const {activateFontFamilies, setRandomFontFamily} = require('./font-families')
 const {activateShiftInterval, stopShiftInterval} = require('./shift-interval')
+const {activateStatusBar} = require('./status-bar')
 
 module.exports = {
   activate,
@@ -19,6 +20,7 @@ async function activate(context) {
   await activateColorThemes(context)
   await activateFontFamilies(context)
   activateShiftInterval(context)
+  activateStatusBar(context)
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftAll', async () => {
@@ -26,13 +28,6 @@ async function activate(context) {
       await setRandomFontFamily()
     }),
   )
-
-  // context.subscriptions.push(
-  //   vscode.workspace.onDidChangeConfiguration(event => {
-  //     console.log('shifty:workspace:onDidChangeConfiguration')
-  //     console.log(event.affectsConfiguration('shifty.fontFamily'))
-  //   }),
-  // )
 
   context.subscriptions.push(
     vscode.extensions.onDidChange((...args) => {
