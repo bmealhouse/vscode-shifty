@@ -29,8 +29,20 @@ This extension contributes the following settings:
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.1.0
+
+- Use arrays for list based config values
+- Add "Shifty: Show current status" command
+- Display "shifty" status bar item for showing current status
+
+### 0.0.3
+
+- Filter extensions that don't have a "contributes" section in package.json
+
+### 0.0.2
+
+- Release without bundling
 
 ### 0.0.1
 
-Initial release
+- Initial release
