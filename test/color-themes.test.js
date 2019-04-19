@@ -94,6 +94,14 @@ suite('color-themes.test.js', () => {
     assert.notDeepStrictEqual(__getColorThemesCache(), originalColorThemesCache)
   })
 
+  // FIXME: figure out if there is a way to test this
+  test.skip('should prime the color themes cache after an extension has been installed, uninstalled, enabled, or disabled', async () => {
+    const originalColorThemesCache = __getColorThemesCache()
+    const themeAbyss = vscode.extensions.getExtension('vscode.theme-abyss')
+    await themeAbyss.activate()
+    assert.notDeepStrictEqual(__getColorThemesCache(), originalColorThemesCache)
+  })
+
   test('should return all color themes when no color themes are ignored', () => {
     const colorThemes = getColorThemes()
     const TOTAL_DEFAULT_VSCODE_THEMES = 14

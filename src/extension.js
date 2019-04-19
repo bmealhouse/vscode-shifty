@@ -28,12 +28,6 @@ async function activate(context) {
       await setRandomFontFamily()
     }),
   )
-
-  context.subscriptions.push(
-    vscode.extensions.onDidChange((...args) => {
-      console.log('shifty:extension:onDidChange', args, JSON.stringify(args))
-    }),
-  )
 }
 
 exports.activate = activate

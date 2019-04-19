@@ -57,6 +57,13 @@ async function activateColorThemes(context) {
       }
     }),
   )
+
+  context.subscriptions.push(
+    vscode.extensions.onDidChange(() => {
+      colorThemesCache = null
+      primeColorThemeCache()
+    }),
+  )
 }
 
 async function maybeShiftColorThemeOnStartup() {
