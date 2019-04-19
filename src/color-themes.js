@@ -110,8 +110,6 @@ async function setRandomColorTheme() {
   const colorThemes = getColorThemes()
   const {id} = getRandomItem(colorThemes)
   await setColorTheme(id)
-
-  vscode.window.showInformationMessage(`Color theme shifted to "${id}".`)
 }
 
 function getColorThemes() {

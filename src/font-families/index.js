@@ -102,8 +102,6 @@ async function setRandomFontFamily() {
   const fontFamilies = getFontFamilies()
   const {id} = getRandomItem(fontFamilies)
   await setFontFamily(id)
-
-  vscode.window.showInformationMessage(`Font family shifted to "${id}".`)
 }
 
 function getFontFamilies() {

@@ -19,7 +19,7 @@ test.skip('check all font familes for platform', function(done) {
 
     setFontFamily(nextFontFamily.id).then(() => {
       console.log(nextFontFamily.id)
-      delay(5000).then(() => {
+      delay(7000).then(() => {
         getNextFontFamily(index + 1)
       })
     })
