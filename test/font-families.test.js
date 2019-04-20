@@ -4,7 +4,6 @@ const {
   maybeShiftFontFamilyOnStartup,
   getFontFamilies,
   getCurrentFontFamily,
-  setFontFamily,
   allFontFamilies,
   __getFontFamiliesCache,
 } = require('../src/font-families')
@@ -13,60 +12,22 @@ const {
   MAC_OS,
   WINDOWS,
 } = require('../src/font-families/font-family-types')
-const setConfig = require('./utils/set-config')
-
-let originalConfig = null
-let originalFontFamily = null
-const DEFUALT_FONT_FAMILY = 'Monaco'
-
-setup(async () => {
-  originalFontFamily = getCurrentFontFamily()
-  await setFontFamily(DEFUALT_FONT_FAMILY)
-
-  originalConfig = vscode.workspace.getConfiguration('shifty')
-  await setConfig('shifty.fontFamilies.ignoreCodefaceFontFamilies', false)
-  await setConfig('shifty.fontFamilies.ignoreFontFamilies', [])
-  await setConfig('shifty.fontFamilies.ignoreMacosFontFamilies', false)
-  await setConfig('shifty.fontFamilies.ignoreWindowsFontFamilies', false)
-  await setConfig('shifty.fontFamilies.includeFontFamilies', [])
-  await setConfig('shifty.startup.shiftFontFamilyOnStartup', false)
-})
-
-teardown(async () => {
-  if (originalFontFamily) {
-    await setFontFamily(originalFontFamily)
-  }
-
-  // restore originalConfig
-  if (originalConfig) {
-    await setConfig(
-      'shifty.fontFamilies.ignoreCodefaceFontFamilies',
-      originalConfig.fontFamilies.ignoreCodefaceFontFamilies,
-    )
-    await setConfig(
-      'shifty.fontFamilies.ignoreFontFamilies',
-      originalConfig.fontFamilies.ignoreFontFamilies,
-    )
-    await setConfig(
-      'shifty.fontFamilies.ignoreMacosFontFamilies',
-      originalConfig.fontFamilies.ignoreMacosFontFamilies,
-    )
-    await setConfig(
-      'shifty.fontFamilies.ignoreWindowsFontFamilies',
-      originalConfig.fontFamilies.ignoreWindowsFontFamilies,
-    )
-    await setConfig(
-      'shifty.fontFamilies.includeFontFamilies',
-      originalConfig.fontFamilies.includeFontFamilies,
-    )
-    await setConfig(
-      'shifty.startup.shiftFontFamilyOnStartup',
-      originalConfig.startup.shiftFontFamilyOnStartup,
-    )
-  }
-})
+const {
+  setupTest,
+  teardownTest,
+  setConfig,
+  DEFUALT_FONT_FAMILY,
+} = require('./test-utils')
 
 suite('font-families.test.js', () => {
+  setup(async () => {
+    await setupTest()
+  })
+
+  teardown(async () => {
+    await teardownTest()
+  })
+
   test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {
     await maybeShiftFontFamilyOnStartup()
     assert.strictEqual(getCurrentFontFamily(), DEFUALT_FONT_FAMILY)

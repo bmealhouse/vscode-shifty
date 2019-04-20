@@ -1,32 +1,23 @@
 const assert = require('assert')
 const vscode = require('vscode')
-const {getCurrentColorTheme, setColorTheme} = require('../src/color-themes')
-const {getCurrentFontFamily, setFontFamily} = require('../src/font-families')
-
-let originalColorTheme = null
-let originalFontFamily = null
-const DEFAULT_COLOR_THEME = 'Visual Studio Dark'
-const DEFUALT_FONT_FAMILY = 'Monaco'
-
-setup(async () => {
-  originalColorTheme = getCurrentColorTheme()
-  await setColorTheme(DEFAULT_COLOR_THEME)
-
-  originalFontFamily = getCurrentFontFamily()
-  setFontFamily(DEFUALT_FONT_FAMILY)
-})
-
-teardown(async () => {
-  if (originalColorTheme) {
-    await setColorTheme(originalColorTheme)
-  }
-
-  if (originalColorTheme) {
-    await setFontFamily(originalFontFamily)
-  }
-})
+const {getCurrentColorTheme} = require('../src/color-themes')
+const {getCurrentFontFamily} = require('../src/font-families')
+const {
+  setupTest,
+  teardownTest,
+  DEFAULT_COLOR_THEME,
+  DEFUALT_FONT_FAMILY,
+} = require('./test-utils')
 
 suite('extension.test.js', () => {
+  setup(async () => {
+    await setupTest()
+  })
+
+  teardown(async () => {
+    await teardownTest()
+  })
+
   test('should register global commands when VS Code starts up', async () => {
     const commands = await vscode.commands.getCommands()
     assert.ok(commands.includes('shifty.shiftAll'))

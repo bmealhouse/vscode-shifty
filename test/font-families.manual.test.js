@@ -3,6 +3,7 @@ const {
   setFontFamily,
   allFontFamilies,
 } = require('../src/font-families')
+const {wait} = require('./test-utils')
 
 test.skip('check all font familes for platform', function(done) {
   this.timeout(0)
@@ -19,7 +20,7 @@ test.skip('check all font familes for platform', function(done) {
 
     setFontFamily(nextFontFamily.id).then(() => {
       console.log(nextFontFamily.id)
-      delay(7000).then(() => {
+      wait(7000).then(() => {
         getNextFontFamily(index + 1)
       })
     })
@@ -28,7 +29,3 @@ test.skip('check all font familes for platform', function(done) {
   // TODO: test this!
   getNextFontFamily()
 })
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}

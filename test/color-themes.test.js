@@ -4,61 +4,27 @@ const {
   maybeShiftColorThemeOnStartup,
   getColorThemes,
   getCurrentColorTheme,
-  setColorTheme,
   DARK_COLOR_THEME,
   LIGHT_COLOR_THEME,
   HIGH_CONTRAST_COLOR_THEME,
   __getColorThemesCache,
 } = require('../src/color-themes')
-const setConfig = require('./utils/set-config')
-
-let originalConfig = null
-let originalColorTheme = null
-const DEFAULT_COLOR_THEME = 'Visual Studio Dark'
-
-setup(async () => {
-  originalColorTheme = getCurrentColorTheme()
-  await setColorTheme(DEFAULT_COLOR_THEME)
-
-  originalConfig = vscode.workspace.getConfiguration('shifty')
-  await setConfig('shifty.colorThemes.ignoreColorThemes', [])
-  await setConfig('shifty.colorThemes.ignoreDarkColorThemes', false)
-  await setConfig('shifty.colorThemes.ignoreHighContrastColorThemes', false)
-  await setConfig('shifty.colorThemes.ignoreLightColorThemes', false)
-  await setConfig('shifty.startup.shiftColorThemeOnStartup', false)
-})
-
-teardown(async () => {
-  if (originalColorTheme) {
-    await setColorTheme(originalColorTheme)
-  }
-
-  // restore originalConfig
-  if (originalConfig) {
-    await setConfig(
-      'shifty.colorThemes.ignoreColorThemes',
-      originalConfig.colorThemes.ignoreColorThemes,
-    )
-    await setConfig(
-      'shifty.colorThemes.ignoreDarkColorThemes',
-      originalConfig.colorThemes.ignoreDarkColorThemes,
-    )
-    await setConfig(
-      'shifty.colorThemes.ignoreLightColorThemes',
-      originalConfig.colorThemes.ignoreLightColorThemes,
-    )
-    await setConfig(
-      'shifty.colorThemes.ignoreHighContrastColorThemes',
-      originalConfig.colorThemes.ignoreHighContrastColorThemes,
-    )
-    await setConfig(
-      'shifty.startup.shiftColorThemeOnStartup',
-      originalConfig.startup.shiftColorThemeOnStartup,
-    )
-  }
-})
+const {
+  setupTest,
+  teardownTest,
+  setConfig,
+  DEFAULT_COLOR_THEME,
+} = require('./test-utils')
 
 suite('color-themes.test.js', () => {
+  setup(async () => {
+    await setupTest()
+  })
+
+  teardown(async () => {
+    await teardownTest()
+  })
+
   test('should not shift the color theme when VS Code starts up if "shifty.startup.shiftColorThemeOnStartup" is disabled', async () => {
     await maybeShiftColorThemeOnStartup()
     assert.strictEqual(getCurrentColorTheme(), DEFAULT_COLOR_THEME)
