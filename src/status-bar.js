@@ -13,7 +13,7 @@ module.exports = {
 let statusBar = null
 const STATUS_BAR_COMMAND_ID = 'shifty.showCurrentStatus'
 const STATUS_BAR_DISPLAY_TEXT = 'shifty'
-const STATUS_BAR_PRIORITY = 100
+const STATUS_BAR_PRIORITY = 0
 
 function activateStatusBar(context) {
   context.subscriptions.push(
@@ -26,29 +26,29 @@ function activateStatusBar(context) {
       const messages = [
         shiftColorThemeRemainingTime &&
           !shiftFontFamilyRemainingTime &&
-          `${shiftColorThemeRemainingTime} until color theme will shift.`,
+          `${shiftColorThemeRemainingTime} until color theme will shift`,
         !shiftColorThemeRemainingTime &&
           shiftFontFamilyRemainingTime &&
-          `${shiftFontFamilyRemainingTime} until font family will shift.`,
+          `${shiftFontFamilyRemainingTime} until font family will shift`,
         shiftColorThemeRemainingTime &&
           shiftFontFamilyRemainingTime &&
           shiftColorThemeRemainingTime === shiftFontFamilyRemainingTime &&
-          `${shiftColorThemeRemainingTime} until color theme & font family will shift.`,
+          `${shiftColorThemeRemainingTime} until color theme & font family will shift`,
         ...(shiftColorThemeRemainingTime &&
         shiftFontFamilyRemainingTime &&
         shiftColorThemeRemainingTime !== shiftFontFamilyRemainingTime
           ? [
-              `${shiftColorThemeRemainingTime} until color theme will shift.`,
-              `${shiftFontFamilyRemainingTime} until font family will shift.`,
+              `${shiftColorThemeRemainingTime} until color theme will shift`,
+              `${shiftFontFamilyRemainingTime} until font family will shift`,
             ]
           : []),
-        `Using "${getCurrentColorTheme()}" with the "${getCurrentFontFamily()}" font family.`,
+        `Using "${getCurrentColorTheme()}" with "${getCurrentFontFamily()}" font family`,
       ].filter(Boolean)
 
       if (!shiftColorThemeRemainingTime && !shiftFontFamilyRemainingTime) {
         const cta = 'Start shift interval'
         vscode.window
-          .showInformationMessage('Shift interval has not been started.', cta)
+          .showInformationMessage('Shift interval has not been started', cta)
           .then(action => {
             if (action === cta) {
               startShiftInterval()

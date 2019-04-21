@@ -6,7 +6,7 @@ const {
   setupTest,
   teardownTest,
   DEFAULT_COLOR_THEME,
-  DEFUALT_FONT_FAMILY,
+  DEFAULT_FONT_FAMILY,
 } = require('./test-utils')
 
 suite('extension.test.js', () => {
@@ -26,6 +26,6 @@ suite('extension.test.js', () => {
   test('should shift the color theme and font family when running the "shifty.shiftAll" command', async () => {
     await vscode.commands.executeCommand('shifty.shiftAll')
     assert.notStrictEqual(getCurrentColorTheme(), DEFAULT_COLOR_THEME)
-    assert.notStrictEqual(getCurrentFontFamily(), DEFUALT_FONT_FAMILY)
+    assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
   })
 })

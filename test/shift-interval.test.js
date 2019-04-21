@@ -13,7 +13,7 @@ const {
   setConfig,
   wait,
   DEFAULT_COLOR_THEME,
-  DEFUALT_FONT_FAMILY,
+  DEFAULT_FONT_FAMILY,
 } = require('./test-utils')
 
 suite('shift-interval.test.js', () => {
@@ -89,13 +89,13 @@ suite('shift-interval.test.js', () => {
     assert.ok(hasShiftIntervalStarted())
 
     await setConfig('shifty.fontFamilies.ignoreFontFamilies', [
-      DEFUALT_FONT_FAMILY,
+      DEFAULT_FONT_FAMILY,
     ])
     await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 25)
     await wait(100) // need to wait at least 100ms for this test to work
     await vscode.commands.executeCommand('shifty.stopShiftInterval')
 
-    assert.notStrictEqual(getCurrentFontFamily(), DEFUALT_FONT_FAMILY)
+    assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
   })
 
   test('should return nulls for remaining time when the shift interval has not been started', () => {

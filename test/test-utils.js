@@ -3,7 +3,7 @@ const {getCurrentColorTheme, setColorTheme} = require('../src/color-themes')
 const {getCurrentFontFamily, setFontFamily} = require('../src/font-families')
 
 const DEFAULT_COLOR_THEME = 'Visual Studio Dark'
-const DEFUALT_FONT_FAMILY = 'Monaco'
+const DEFAULT_FONT_FAMILY = 'Monaco'
 
 module.exports = {
   setupTest,
@@ -12,7 +12,7 @@ module.exports = {
   setConfig,
   wait,
   DEFAULT_COLOR_THEME,
-  DEFUALT_FONT_FAMILY,
+  DEFAULT_FONT_FAMILY,
 }
 
 let originalConfig = {}
@@ -24,7 +24,7 @@ async function setupTest() {
   await setColorTheme(DEFAULT_COLOR_THEME)
 
   originalFontFamily = getCurrentFontFamily()
-  await setFontFamily(DEFUALT_FONT_FAMILY)
+  await setFontFamily(DEFAULT_FONT_FAMILY)
 
   await setDefault('shifty.colorThemes.ignoreColorThemes', [])
   await setDefault('shifty.colorThemes.ignoreDarkColorThemes', false)

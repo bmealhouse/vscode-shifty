@@ -16,7 +16,7 @@ const {
   setupTest,
   teardownTest,
   setConfig,
-  DEFUALT_FONT_FAMILY,
+  DEFAULT_FONT_FAMILY,
 } = require('./test-utils')
 
 suite('font-families.test.js', () => {
@@ -30,13 +30,13 @@ suite('font-families.test.js', () => {
 
   test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {
     await maybeShiftFontFamilyOnStartup()
-    assert.strictEqual(getCurrentFontFamily(), DEFUALT_FONT_FAMILY)
+    assert.strictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
   })
 
   test('should shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is enabled', async () => {
     await setConfig('shifty.startup.shiftFontFamilyOnStartup', true)
     await maybeShiftFontFamilyOnStartup()
-    assert.notStrictEqual(getCurrentFontFamily(), DEFUALT_FONT_FAMILY)
+    assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
   })
 
   test('should register font family commands when VS Code starts up', async () => {
@@ -47,14 +47,14 @@ suite('font-families.test.js', () => {
 
   test('should shift the font family when running the "shifty.shiftFontFamily" command', async () => {
     await vscode.commands.executeCommand('shifty.shiftFontFamily')
-    assert.notStrictEqual(getCurrentFontFamily(), DEFUALT_FONT_FAMILY)
+    assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
   })
 
   test('should ignore the current font family and shift the font family when running the "shifty.ignoreCurrentFontFamily" command', async () => {
     await vscode.commands.executeCommand('shifty.ignoreCurrentFontFamily')
     const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
-    assert.ok(config.ignoreFontFamilies.includes(DEFUALT_FONT_FAMILY))
-    assert.notStrictEqual(getCurrentFontFamily(), DEFUALT_FONT_FAMILY)
+    assert.ok(config.ignoreFontFamilies.includes(DEFAULT_FONT_FAMILY))
+    assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
   })
 
   test('should prime the font families cache after the "shifty.fontFamilies" config changes', async () => {
@@ -73,7 +73,7 @@ suite('font-families.test.js', () => {
 
   test('should return all font families except the current font family', () => {
     const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => ff.id !== DEFUALT_FONT_FAMILY))
+    assert.ok(fontFamilies.every(ff => ff.id !== DEFAULT_FONT_FAMILY))
   })
 
   test('should return all font families except the ignored font families', async () => {
