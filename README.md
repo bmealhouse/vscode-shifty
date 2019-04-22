@@ -29,6 +29,15 @@ This extension contributes the following settings:
 
 ## Release Notes
 
+### 0.2.1
+
+- Update release notes
+
+### 0.2.0
+
+- Add color theme and font family favorites
+- Enabling favorites will only cycle through color themes and font families that are favorited
+
 ### 0.1.0
 
 - Use arrays for list based config values
