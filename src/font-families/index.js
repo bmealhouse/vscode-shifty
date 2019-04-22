@@ -15,6 +15,7 @@ module.exports = {
   setRandomFontFamily,
   getFontFamilies,
   getCurrentFontFamily,
+  favoriteCurrentFontFamily,
   setFontFamily,
   allFontFamilies,
   __getFontFamiliesCache,
@@ -36,20 +37,7 @@ async function activateFontFamilies(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       'shifty.favoriteCurrentFontFamily',
-      async () => {
-        const currentFontFamily = getCurrentFontFamily()
-
-        const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
-        await config.update(
-          'favoriteFontFamilies',
-          [...new Set([...config.favoriteFontFamilies, currentFontFamily])],
-          true,
-        )
-
-        vscode.window.showInformationMessage(
-          `Added ${currentFontFamily} to favorites`,
-        )
-      },
+      favoriteCurrentFontFamily,
     ),
   )
 
@@ -146,6 +134,21 @@ function getFontFamilies() {
 
 function getCurrentFontFamily() {
   return vscode.workspace.getConfiguration('editor').fontFamily
+}
+
+async function favoriteCurrentFontFamily() {
+  const currentFontFamily = getCurrentFontFamily()
+
+  const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
+  await config.update(
+    'favoriteFontFamilies',
+    [...new Set([...config.favoriteFontFamilies, currentFontFamily])],
+    true,
+  )
+
+  vscode.window.showInformationMessage(
+    `Added "${currentFontFamily}" to favorites`,
+  )
 }
 
 async function setFontFamily(fontFamily) {

@@ -11,6 +11,7 @@ module.exports = {
   setRandomColorTheme,
   getColorThemes,
   getCurrentColorTheme,
+  favoriteCurrentColorTheme,
   setColorTheme,
   DARK_COLOR_THEME,
   LIGHT_COLOR_THEME,
@@ -34,20 +35,7 @@ async function activateColorThemes(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand(
       'shifty.favoriteCurrentColorTheme',
-      async () => {
-        const currentColorTheme = getCurrentColorTheme()
-
-        const config = vscode.workspace.getConfiguration('shifty.colorThemes')
-        await config.update(
-          'favoriteColorThemes',
-          [...new Set([...config.favoriteColorThemes, currentColorTheme])],
-          true,
-        )
-
-        vscode.window.showInformationMessage(
-          `Added "${currentColorTheme}" to favorites`,
-        )
-      },
+      favoriteCurrentColorTheme,
     ),
   )
 
@@ -162,6 +150,21 @@ function getColorThemes() {
 
 function getCurrentColorTheme() {
   return vscode.workspace.getConfiguration('workbench').colorTheme
+}
+
+async function favoriteCurrentColorTheme() {
+  const currentColorTheme = getCurrentColorTheme()
+
+  const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+  await config.update(
+    'favoriteColorThemes',
+    [...new Set([...config.favoriteColorThemes, currentColorTheme])],
+    true,
+  )
+
+  vscode.window.showInformationMessage(
+    `Added "${currentColorTheme}" to favorites`,
+  )
 }
 
 async function setColorTheme(colorTheme) {

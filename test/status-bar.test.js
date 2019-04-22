@@ -24,9 +24,13 @@ suite('status-bar.test.js', () => {
 
   test('should display the current color theme and font family when running the "shifty.showCurrentStatus" command', async () => {
     await vscode.commands.executeCommand('shifty.showCurrentStatus')
-    assert.strictEqual(
-      vscode.window.showInformationMessage.secondCall.lastArg,
-      `Using "${DEFAULT_COLOR_THEME}" with "${DEFAULT_FONT_FAMILY}" font family`,
+    assert.deepStrictEqual(
+      vscode.window.showInformationMessage.secondCall.args,
+      [
+        `Using "${DEFAULT_COLOR_THEME}" with "${DEFAULT_FONT_FAMILY}" font family`,
+        'Favorite color theme',
+        'Favorite font family',
+      ],
     )
   })
 
