@@ -35,6 +35,26 @@ async function activateFontFamilies(context) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
+      'shifty.favoriteCurrentFontFamily',
+      async () => {
+        const currentFontFamily = getCurrentFontFamily()
+
+        const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
+        await config.update(
+          'favoriteFontFamilies',
+          [...new Set([...config.favoriteFontFamilies, currentFontFamily])],
+          true,
+        )
+
+        vscode.window.showInformationMessage(
+          `Added ${currentFontFamily} to favorites`,
+        )
+      },
+    ),
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
       'shifty.ignoreCurrentFontFamily',
       async () => {
         const currentFontFamily = getCurrentFontFamily()
@@ -53,7 +73,10 @@ async function activateFontFamilies(context) {
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(event => {
-      if (event.affectsConfiguration('shifty.fontFamilies')) {
+      if (
+        event.affectsConfiguration('shifty.fontFamilies') ||
+        event.affectsConfiguration('shifty.favoritesEnabled')
+      ) {
         fontFamiliesCache = null
         primeFontFamiliesCache()
       }
@@ -72,12 +95,21 @@ function primeFontFamiliesCache() {
   if (fontFamiliesCache !== null) return
 
   const {
-    ignoreCodefaceFontFamilies,
-    ignoreFontFamilies,
-    ignoreMacosFontFamilies,
-    ignoreWindowsFontFamilies,
-    includeFontFamilies,
-  } = vscode.workspace.getConfiguration('shifty.fontFamilies')
+    favoritesEnabled,
+    fontFamilies: {
+      favoriteFontFamilies,
+      ignoreCodefaceFontFamilies,
+      ignoreFontFamilies,
+      ignoreMacosFontFamilies,
+      ignoreWindowsFontFamilies,
+      includeFontFamilies,
+    },
+  } = vscode.workspace.getConfiguration('shifty')
+
+  if (favoritesEnabled) {
+    fontFamiliesCache = favoriteFontFamilies
+    return
+  }
 
   fontFamiliesCache = [
     ...allFontFamilies.filter(

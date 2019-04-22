@@ -42,12 +42,23 @@ suite('font-families.test.js', () => {
   test('should register font family commands when VS Code starts up', async () => {
     const commands = await vscode.commands.getCommands()
     assert.ok(commands.includes('shifty.shiftFontFamily'))
+    assert.ok(commands.includes('shifty.favoriteCurrentFontFamily'))
     assert.ok(commands.includes('shifty.ignoreCurrentFontFamily'))
   })
 
   test('should shift the font family when running the "shifty.shiftFontFamily" command', async () => {
     await vscode.commands.executeCommand('shifty.shiftFontFamily')
     assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
+  })
+
+  test('should favorite the current font family when running the "shifty.favoriteCurrentFontFamily" command', async () => {
+    await vscode.commands.executeCommand('shifty.favoriteCurrentFontFamily')
+    const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
+    assert.ok(config.favoriteFontFamilies.includes(DEFAULT_FONT_FAMILY))
+    assert.strictEqual(
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Added "${DEFAULT_FONT_FAMILY}" to favorites`,
+    )
   })
 
   test('should ignore the current font family and shift the font family when running the "shifty.ignoreCurrentFontFamily" command', async () => {
@@ -115,5 +126,12 @@ suite('font-families.test.js', () => {
     await setConfig('shifty.fontFamilies.includeFontFamilies', [dankMono])
     const fontFamilies = getFontFamilies()
     assert.ok(fontFamilies.find(ff => ff.id === dankMono))
+  })
+
+  test('should return favorite font familes when favorites are enabled', async () => {
+    const favorites = ['Dank Mono', 'monofur', 'Operator Mono']
+    await setConfig('shifty.fontFamilies.favoriteFontFamilies', favorites)
+    await setConfig('shifty.favoritesEnabled', true)
+    assert.deepStrictEqual(getFontFamilies(), favorites)
   })
 })

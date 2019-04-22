@@ -1,6 +1,5 @@
 const assert = require('assert')
 const vscode = require('vscode')
-const sinon = require('sinon')
 const {
   setupTest,
   teardownTest,
@@ -12,12 +11,10 @@ const {
 suite('status-bar.test.js', () => {
   setup(async () => {
     await setupTest()
-    sinon.spy(vscode.window, 'showInformationMessage')
   })
 
   teardown(async () => {
     await teardownTest()
-    vscode.window.showInformationMessage.restore()
   })
 
   test('should register status bar commands when VS Code starts up', async () => {

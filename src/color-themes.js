@@ -33,6 +33,26 @@ async function activateColorThemes(context) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
+      'shifty.favoriteCurrentColorTheme',
+      async () => {
+        const currentColorTheme = getCurrentColorTheme()
+
+        const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+        await config.update(
+          'favoriteColorThemes',
+          [...new Set([...config.favoriteColorThemes, currentColorTheme])],
+          true,
+        )
+
+        vscode.window.showInformationMessage(
+          `Added "${currentColorTheme}" to favorites`,
+        )
+      },
+    ),
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
       'shifty.ignoreCurrentColorTheme',
       async () => {
         const currentColorTheme = getCurrentColorTheme()
@@ -51,7 +71,10 @@ async function activateColorThemes(context) {
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(event => {
-      if (event.affectsConfiguration('shifty.colorThemes')) {
+      if (
+        event.affectsConfiguration('shifty.colorThemes') ||
+        event.affectsConfiguration('shifty.favoritesEnabled')
+      ) {
         colorThemesCache = null
         primeColorThemeCache()
       }
@@ -77,11 +100,20 @@ function primeColorThemeCache() {
   if (colorThemesCache !== null) return
 
   const {
-    ignoreColorThemes,
-    ignoreDarkColorThemes,
-    ignoreHighContrastColorThemes,
-    ignoreLightColorThemes,
-  } = vscode.workspace.getConfiguration('shifty.colorThemes')
+    favoritesEnabled,
+    colorThemes: {
+      favoriteColorThemes,
+      ignoreColorThemes,
+      ignoreDarkColorThemes,
+      ignoreHighContrastColorThemes,
+      ignoreLightColorThemes,
+    },
+  } = vscode.workspace.getConfiguration('shifty')
+
+  if (favoritesEnabled) {
+    colorThemesCache = favoriteColorThemes
+    return
+  }
 
   colorThemesCache = vscode.extensions.all
     .reduce((colorThemes, extension) => {

@@ -31,10 +31,20 @@
           "default": true,
           "description": "Determines if shifty is enabled."
         },
+        "shifty.favoritesEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if shifty should cycle through favorite color themes and font families."
+        },
+        "shifty.colorThemes.favoriteColorThemes": {
+          "type": "array",
+          "default": [],
+          "description": "Favorite color themes."
+        },
         "shifty.colorThemes.ignoreColorThemes": {
           "type": "array",
           "default": [],
-          "description": "Ignores color themes by id/label."
+          "description": "Color themes to ignore."
         },
         "shifty.colorThemes.ignoreDarkColorThemes": {
           "type": "boolean",
@@ -51,6 +61,11 @@
           "default": true,
           "description": "Determines if light color themes should be ignored."
         },
+        "shifty.fontFamilies.favoriteFontFamilies": {
+          "type": "array",
+          "default": [],
+          "description": "Favorite font families."
+        },
         "shifty.fontFamilies.ignoreCodefaceFontFamilies": {
           "type": "boolean",
           "default": false,
@@ -59,7 +74,7 @@
         "shifty.fontFamilies.ignoreFontFamilies": {
           "type": "array",
           "default": [],
-          "description": "Ignores font families."
+          "description": "Font families to ignore."
         },
         "shifty.fontFamilies.ignoreMacosFontFamilies": {
           "type": "boolean",
@@ -101,35 +116,53 @@
     "commands": [
       {
         "command": "shifty.shiftAll",
-        "title": "Shifty: Shift color theme and font family"
+        "title": "Shift color theme & font family",
+        "category": "Shifty"
       },
       {
         "command": "shifty.shiftColorTheme",
-        "title": "Shifty: Shift color theme"
+        "title": "Shift color theme",
+        "category": "Shifty"
       },
       {
         "command": "shifty.shiftFontFamily",
-        "title": "Shifty: Shift font family"
+        "title": "Shift font family",
+        "category": "Shifty"
       },
       {
         "command": "shifty.startShiftInterval",
-        "title": "Shifty: Start shift interval"
+        "title": "Start shift interval",
+        "category": "Shifty"
       },
       {
         "command": "shifty.stopShiftInterval",
-        "title": "Shifty: Stop shift interval"
+        "title": "Stop shift interval",
+        "category": "Shifty"
+      },
+      {
+        "command": "shifty.favoriteCurrentColorTheme",
+        "title": "Add current color theme to favorites",
+        "category": "Shifty"
+      },
+      {
+        "command": "shifty.favoriteCurrentFontFamily",
+        "title": "Add current font family to favorites",
+        "category": "Shifty"
       },
       {
         "command": "shifty.ignoreCurrentColorTheme",
-        "title": "Shifty: Ignore current color theme"
+        "title": "Ignore current color theme",
+        "category": "Shifty"
       },
       {
         "command": "shifty.ignoreCurrentFontFamily",
-        "title": "Shifty: Ignore current font family"
+        "title": "Ignore current font family",
+        "category": "Shifty"
       },
       {
         "command": "shifty.showCurrentStatus",
-        "title": "Shifty: Show current status"
+        "title": "Show current status",
+        "category": "Shifty"
       }
     ]
   },

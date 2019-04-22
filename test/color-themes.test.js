@@ -39,12 +39,23 @@ suite('color-themes.test.js', () => {
   test('should register color theme commands when VS Code starts up', async () => {
     const commands = await vscode.commands.getCommands()
     assert.ok(commands.includes('shifty.shiftColorTheme'))
+    assert.ok(commands.includes('shifty.favoriteCurrentColorTheme'))
     assert.ok(commands.includes('shifty.ignoreCurrentColorTheme'))
   })
 
   test('should shift the color theme when running the "shifty.shiftColorTheme" command', async () => {
     await vscode.commands.executeCommand('shifty.shiftColorTheme')
     assert.notStrictEqual(getCurrentColorTheme(), DEFAULT_COLOR_THEME)
+  })
+
+  test('should favorite the current color theme when running the "shifty.favoriteCurrentColorTheme" command', async () => {
+    await vscode.commands.executeCommand('shifty.favoriteCurrentColorTheme')
+    const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+    assert.ok(config.favoriteColorThemes.includes(DEFAULT_COLOR_THEME))
+    assert.strictEqual(
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Added "${DEFAULT_COLOR_THEME}" to favorites`,
+    )
   })
 
   test('should ignore the current color theme and shift the color theme when running the "shifty.ignoreCurrentColorTheme" command', async () => {
@@ -111,5 +122,12 @@ suite('color-themes.test.js', () => {
 
     const colorThemes = getColorThemes()
     assert.strictEqual(colorThemes.length, 0)
+  })
+
+  test('should return favorite color themes when favorites are enabled', async () => {
+    const favorites = ['Cyberpunk', 'Default Dark+', 'Snazzy']
+    await setConfig('shifty.colorThemes.favoriteColorThemes', favorites)
+    await setConfig('shifty.favoritesEnabled', true)
+    assert.deepStrictEqual(getColorThemes(), favorites)
   })
 })

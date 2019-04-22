@@ -1,4 +1,5 @@
 const vscode = require('vscode')
+const sinon = require('sinon')
 const {getCurrentColorTheme, setColorTheme} = require('../src/color-themes')
 const {getCurrentFontFamily, setFontFamily} = require('../src/font-families')
 
@@ -20,16 +21,21 @@ let originalColorTheme = null
 let originalFontFamily = null
 
 async function setupTest() {
+  sinon.spy(vscode.window, 'showInformationMessage')
+
   originalColorTheme = getCurrentColorTheme()
   await setColorTheme(DEFAULT_COLOR_THEME)
 
   originalFontFamily = getCurrentFontFamily()
   await setFontFamily(DEFAULT_FONT_FAMILY)
 
+  await setDefault('shifty.favoritesEnabled', false)
+  await setDefault('shifty.colorThemes.favoriteColorThemes', [])
   await setDefault('shifty.colorThemes.ignoreColorThemes', [])
   await setDefault('shifty.colorThemes.ignoreDarkColorThemes', false)
   await setDefault('shifty.colorThemes.ignoreHighContrastColorThemes', false)
   await setDefault('shifty.colorThemes.ignoreLightColorThemes', false)
+  await setDefault('shifty.fontFamilies.favoriteFontFamilies', [])
   await setDefault('shifty.fontFamilies.ignoreCodefaceFontFamilies', false)
   await setDefault('shifty.fontFamilies.ignoreFontFamilies', [])
   await setDefault('shifty.fontFamilies.ignoreMacosFontFamilies', false)
@@ -42,6 +48,8 @@ async function setupTest() {
 }
 
 async function teardownTest() {
+  vscode.window.showInformationMessage.restore()
+
   if (originalColorTheme) {
     await setColorTheme(originalColorTheme)
     originalColorTheme = null
@@ -53,10 +61,13 @@ async function teardownTest() {
   }
 
   // restore original config
+  await restoreOriginal('shifty.favoritesEnabled')
+  await restoreOriginal('shifty.colorThemes.favoriteColorThemes')
   await restoreOriginal('shifty.colorThemes.ignoreColorThemes')
   await restoreOriginal('shifty.colorThemes.ignoreDarkColorThemes')
   await restoreOriginal('shifty.colorThemes.ignoreHighContrastColorThemes')
   await restoreOriginal('shifty.colorThemes.ignoreLightColorThemes')
+  await restoreOriginal('shifty.fontFamilies.favoriteFontFamilies')
   await restoreOriginal('shifty.fontFamilies.ignoreCodefaceFontFamilies')
   await restoreOriginal('shifty.fontFamilies.ignoreFontFamilies')
   await restoreOriginal('shifty.fontFamilies.ignoreMacosFontFamilies')
