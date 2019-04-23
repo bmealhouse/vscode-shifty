@@ -29,6 +29,10 @@ This extension contributes the following settings:
 
 ## Release Notes
 
+### 0.3.0
+
+- Support fallback font family
+
 ### 0.2.1
 
 - Update release notes
