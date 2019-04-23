@@ -15,6 +15,7 @@ const {
 const {
   setupTest,
   teardownTest,
+  getConfig,
   setConfig,
   DEFAULT_FONT_FAMILY,
 } = require('./test-utils')
@@ -26,6 +27,11 @@ suite('font-families.test.js', () => {
 
   teardown(async () => {
     await teardownTest()
+  })
+
+  test('should include the fallback font family', async () => {
+    const editorFontFamily = getConfig('editor.fontFamily')
+    assert.strictEqual(editorFontFamily, `${DEFAULT_FONT_FAMILY}, monospace`)
   })
 
   test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {

@@ -61,6 +61,11 @@
           "default": true,
           "description": "Determines if light color themes should be ignored."
         },
+        "shifty.fontFamilies.fallbackFontFamily": {
+          "type": "string",
+          "default": "monospace",
+          "description": "Fallback font family. This is useful when a font is not supported inside the integrated terminal."
+        },
         "shifty.fontFamilies.favoriteFontFamilies": {
           "type": "array",
           "default": [],

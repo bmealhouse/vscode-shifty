@@ -133,7 +133,9 @@ function getFontFamilies() {
 }
 
 function getCurrentFontFamily() {
-  return vscode.workspace.getConfiguration('editor').fontFamily
+  const {fontFamily} = vscode.workspace.getConfiguration('editor')
+  const [editorFontFamily] = fontFamily.split(',')
+  return editorFontFamily
 }
 
 async function favoriteCurrentFontFamily() {
@@ -152,8 +154,13 @@ async function favoriteCurrentFontFamily() {
 }
 
 async function setFontFamily(fontFamily) {
-  const editor = vscode.workspace.getConfiguration('editor')
-  return editor.update('fontFamily', fontFamily, true)
+  const {fallbackFontFamily} = vscode.workspace.getConfiguration(
+    'shifty.fontFamilies',
+  )
+
+  return vscode.workspace
+    .getConfiguration('editor')
+    .update('fontFamily', `${fontFamily}, ${fallbackFontFamily}`, true)
 }
 
 function __getFontFamiliesCache() {
