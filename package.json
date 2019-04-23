@@ -81,16 +81,6 @@
           "default": [],
           "description": "Font families to ignore."
         },
-        "shifty.fontFamilies.ignoreMacosFontFamilies": {
-          "type": "boolean",
-          "default": false,
-          "description": "Determines if macOS font families should be ignored."
-        },
-        "shifty.fontFamilies.ignoreWindowsFontFamilies": {
-          "type": "boolean",
-          "default": true,
-          "description": "Determines if Windows font families should be ignored."
-        },
         "shifty.fontFamilies.includeFontFamilies": {
           "type": "array",
           "default": [],

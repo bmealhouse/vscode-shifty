@@ -1,5 +1,7 @@
+const os = require('os')
 const assert = require('assert')
 const vscode = require('vscode')
+const sinon = require('sinon')
 const {
   maybeShiftFontFamilyOnStartup,
   getFontFamilies,
@@ -9,6 +11,7 @@ const {
 } = require('../src/font-families')
 const {
   CODEFACE,
+  LINUX,
   MAC_OS,
   WINDOWS,
 } = require('../src/font-families/font-family-types')
@@ -18,6 +21,7 @@ const {
   getConfig,
   setConfig,
   DEFAULT_FONT_FAMILY,
+  DEFAULT_PLATFORM,
 } = require('./test-utils')
 
 suite('font-families.test.js', () => {
@@ -76,7 +80,7 @@ suite('font-families.test.js', () => {
 
   test('should prime the font families cache after the "shifty.fontFamilies" config changes', async () => {
     const originalFontFamiliesCache = __getFontFamiliesCache()
-    await setConfig('shifty.fontFamilies.ignoreWindowsFontFamilies', true)
+    await setConfig('shifty.fontFamilies.ignoreCodefaceFontFamilies', true)
     assert.notDeepStrictEqual(
       __getFontFamiliesCache(),
       originalFontFamiliesCache,
@@ -85,7 +89,12 @@ suite('font-families.test.js', () => {
 
   test('should return all font families when no font families are ignored', () => {
     const fontFamilies = getFontFamilies()
-    assert.strictEqual(fontFamilies.length, allFontFamilies.length - 1)
+    assert.strictEqual(
+      fontFamilies.length,
+      allFontFamilies.filter(ff =>
+        ff.supportedPlatforms.includes(DEFAULT_PLATFORM),
+      ).length - 1,
+    )
   })
 
   test('should return all font families except the current font family', () => {
@@ -106,23 +115,41 @@ suite('font-families.test.js', () => {
     assert.ok(fontFamilies.every(ff => ff.type !== CODEFACE))
   })
 
-  test('should return no mac os font families when ignored', async () => {
-    await setConfig('shifty.fontFamilies.ignoreMacosFontFamilies', true)
+  test('should return font families that are supported on linux', async () => {
+    os.type.returns(LINUX)
+
+    // change any shifty.fontFamilies config to reprime the cache
+    await setConfig('shifty.fontFamilies.includeFontFamilies', ['Dank Mono'])
     const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => !ff.type !== MAC_OS))
+    assert.ok(fontFamilies.every(ff => ff.supportedPlatforms.includes(LINUX)))
   })
 
-  test('should return no windows font families when ignored', async () => {
-    await setConfig('shifty.fontFamilies.ignoreWindowsFontFamilies', true)
+  test('should return font families that are supported on mac os', async () => {
+    os.type.returns(MAC_OS)
+
+    // change any shifty.fontFamilies config to reprime the cache
+    await setConfig('shifty.fontFamilies.includeFontFamilies', ['Dank Mono'])
     const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => !ff.type !== WINDOWS))
+    assert.ok(fontFamilies.every(ff => ff.supportedPlatforms.includes(MAC_OS)))
   })
 
-  test('should return no font families when all font families types are ignored', async () => {
-    await setConfig('shifty.fontFamilies.ignoreCodefaceFontFamilies', true)
-    await setConfig('shifty.fontFamilies.ignoreMacosFontFamilies', true)
-    await setConfig('shifty.fontFamilies.ignoreWindowsFontFamilies', true)
+  test('should return font families that are supported on windows', async () => {
+    os.type.returns(WINDOWS)
 
+    // change any shifty.fontFamilies config to reprime the cache
+    await setConfig('shifty.fontFamilies.includeFontFamilies', ['Dank Mono'])
+    const fontFamilies = getFontFamilies()
+    assert.ok(fontFamilies.every(ff => ff.supportedPlatforms.includes(WINDOWS)))
+  })
+
+  test('should return no font families when dealing with an unsupported platform', async () => {
+    os.type.returns('Unsupported platform')
+
+    // change any shifty.fontFamilies config to reprime the cache
+    await setConfig(
+      'shifty.fontFamilies.fallbackFontFamily',
+      'SF Mono, monospace',
+    )
     const fontFamilies = getFontFamilies()
     assert.strictEqual(fontFamilies.length, 0)
   })

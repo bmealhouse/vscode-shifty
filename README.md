@@ -29,6 +29,10 @@ This extension contributes the following settings:
 
 ## Release Notes
 
+### 0.3.1
+
+- Use OS type to filter unsupported font families
+
 ### 0.3.0
 
 - Support fallback font family

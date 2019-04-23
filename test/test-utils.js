@@ -1,10 +1,13 @@
+const os = require('os')
 const vscode = require('vscode')
 const sinon = require('sinon')
 const {getCurrentColorTheme, setColorTheme} = require('../src/color-themes')
 const {getCurrentFontFamily, setFontFamily} = require('../src/font-families')
+const {MAC_OS} = require('../src/font-families/font-family-types')
 
 const DEFAULT_COLOR_THEME = 'Visual Studio Dark'
 const DEFAULT_FONT_FAMILY = 'Monaco'
+const DEFAULT_PLATFORM = MAC_OS
 
 module.exports = {
   setupTest,
@@ -14,6 +17,7 @@ module.exports = {
   wait,
   DEFAULT_COLOR_THEME,
   DEFAULT_FONT_FAMILY,
+  DEFAULT_PLATFORM,
 }
 
 let originalConfig = {}
@@ -21,6 +25,7 @@ let originalColorTheme = null
 let originalFontFamily = null
 
 async function setupTest() {
+  sinon.stub(os, 'type').returns(DEFAULT_PLATFORM)
   sinon.spy(vscode.window, 'showInformationMessage')
 
   originalColorTheme = getCurrentColorTheme()
@@ -39,8 +44,6 @@ async function setupTest() {
   await setDefault('shifty.fontFamilies.favoriteFontFamilies', [])
   await setDefault('shifty.fontFamilies.ignoreCodefaceFontFamilies', false)
   await setDefault('shifty.fontFamilies.ignoreFontFamilies', [])
-  await setDefault('shifty.fontFamilies.ignoreMacosFontFamilies', false)
-  await setDefault('shifty.fontFamilies.ignoreWindowsFontFamilies', false)
   await setDefault('shifty.fontFamilies.includeFontFamilies', [])
   await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMs', 1800000)
   await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMs', 1800000)
@@ -49,6 +52,7 @@ async function setupTest() {
 }
 
 async function teardownTest() {
+  os.type.restore()
   vscode.window.showInformationMessage.restore()
 
   if (originalColorTheme) {
@@ -72,8 +76,6 @@ async function teardownTest() {
   await restoreOriginal('shifty.fontFamilies.favoriteFontFamilies')
   await restoreOriginal('shifty.fontFamilies.ignoreCodefaceFontFamilies')
   await restoreOriginal('shifty.fontFamilies.ignoreFontFamilies')
-  await restoreOriginal('shifty.fontFamilies.ignoreMacosFontFamilies')
-  await restoreOriginal('shifty.fontFamilies.ignoreWindowsFontFamilies')
   await restoreOriginal('shifty.fontFamilies.includeFontFamilies')
   await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMs')
   await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMs')
