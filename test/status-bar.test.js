@@ -30,6 +30,7 @@ suite('status-bar.test.js', () => {
         `Using "${DEFAULT_COLOR_THEME}" with "${DEFAULT_FONT_FAMILY}" font family`,
         'Favorite color theme',
         'Favorite font family',
+        'Favorite both',
       ],
     )
   })

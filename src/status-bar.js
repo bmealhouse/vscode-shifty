@@ -33,12 +33,17 @@ function activateStatusBar(context) {
         START_SHIFT_INTERVAL: 'Start shift interval',
         FAVORITE_COLOR_THEME: 'Favorite color theme',
         FAVORITE_FONT_FAMILY: 'Favorite font family',
+        FAVORITE_BOTH: 'Favorite both',
       }
 
       const actionFuncMap = {
-        'Start shift interval': startShiftInterval,
-        'Favorite color theme': favoriteCurrentColorTheme,
-        'Favorite font family': favoriteCurrentFontFamily,
+        [actionTextMap.START_SHIFT_INTERVAL]: startShiftInterval,
+        [actionTextMap.FAVORITE_COLOR_THEME]: favoriteCurrentColorTheme,
+        [actionTextMap.FAVORITE_FONT_FAMILY]: favoriteCurrentFontFamily,
+        [actionTextMap.FAVORITE_BOTH]: () => {
+          favoriteCurrentColorTheme()
+          favoriteCurrentFontFamily()
+        },
       }
 
       const messages = [
@@ -72,6 +77,7 @@ function activateStatusBar(context) {
           `Using "${getCurrentColorTheme()}" with "${getCurrentFontFamily()}" font family`,
           actionTextMap.FAVORITE_COLOR_THEME,
           actionTextMap.FAVORITE_FONT_FAMILY,
+          actionTextMap.FAVORITE_BOTH,
         ],
       ].filter(Boolean)
 
