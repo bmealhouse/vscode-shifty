@@ -1,12 +1,8 @@
 const assert = require('assert')
 const vscode = require('vscode')
-const {
-  setupTest,
-  teardownTest,
-  setConfig,
-  DEFAULT_COLOR_THEME,
-  DEFAULT_FONT_FAMILY,
-} = require('./test-utils')
+const {DEFAULT_COLOR_THEME} = require('../src/color-themes')
+const {DEFAULT_FONT_FAMILY} = require('../src/font-families')
+const {setupTest, teardownTest, setConfig} = require('./test-utils')
 
 suite('status-bar.test.js', () => {
   setup(async () => {

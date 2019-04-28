@@ -3,6 +3,8 @@ const vscode = require('vscode')
 const getRandomItem = require('../utils/get-random-item')
 const {CODEFACE, LINUX, MAC_OS, USER, WINDOWS} = require('./font-family-types')
 
+const DEFAULT_FONT_FAMILY = 'Courier'
+
 // TODO: provide documenation for font installation on MacOS & Windows
 const allFontFamilies = [
   ...require('./codeface-font-families'),
@@ -19,6 +21,7 @@ module.exports = {
   favoriteCurrentFontFamily,
   setFontFamily,
   allFontFamilies,
+  DEFAULT_FONT_FAMILY,
   __getFontFamiliesCache,
 }
 
@@ -64,7 +67,7 @@ async function activateFontFamilies(context) {
     vscode.workspace.onDidChangeConfiguration(event => {
       if (
         event.affectsConfiguration('shifty.fontFamilies') ||
-        event.affectsConfiguration('shifty.favoritesEnabled')
+        event.affectsConfiguration('shifty.shiftMode')
       ) {
         fontFamiliesCache = null
         primeFontFamiliesCache()
@@ -84,7 +87,7 @@ function primeFontFamiliesCache() {
   if (fontFamiliesCache !== null) return
 
   const {
-    favoritesEnabled,
+    shiftMode,
     fontFamilies: {
       favoriteFontFamilies,
       ignoreCodefaceFontFamilies,
@@ -93,7 +96,7 @@ function primeFontFamiliesCache() {
     },
   } = vscode.workspace.getConfiguration('shifty')
 
-  if (favoritesEnabled) {
+  if (shiftMode === 'favorites') {
     fontFamiliesCache = favoriteFontFamilies
     return
   }
@@ -104,6 +107,7 @@ function primeFontFamiliesCache() {
         !(
           ignoreFontFamilies.includes(ff.id) ||
           (ignoreCodefaceFontFamilies && ff.type === CODEFACE) ||
+          (shiftMode === 'discovery' && favoriteFontFamilies.includes(ff.id)) ||
           !ff.supportedPlatforms.includes(os.type())
         ),
     ),
@@ -113,6 +117,14 @@ function primeFontFamiliesCache() {
       type: USER,
     })),
   ]
+
+  if (fontFamiliesCache.length === 0) {
+    fontFamiliesCache = favoriteFontFamilies
+  }
+
+  if (fontFamiliesCache.length === 0) {
+    fontFamiliesCache = [DEFAULT_FONT_FAMILY]
+  }
 }
 
 async function setRandomFontFamily() {

@@ -1,20 +1,19 @@
 const assert = require('assert')
 const vscode = require('vscode')
-const {getCurrentColorTheme} = require('../src/color-themes')
-const {getCurrentFontFamily} = require('../src/font-families')
+const {
+  getCurrentColorTheme,
+  DEFAULT_COLOR_THEME,
+} = require('../src/color-themes')
+const {
+  getCurrentFontFamily,
+  DEFAULT_FONT_FAMILY,
+} = require('../src/font-families')
 const {
   hasShiftIntervalStarted,
   getRemainingTimeForShiftIntervals,
   __getShiftIntervalIds,
 } = require('../src/shift-interval')
-const {
-  setupTest,
-  teardownTest,
-  setConfig,
-  wait,
-  DEFAULT_COLOR_THEME,
-  DEFAULT_FONT_FAMILY,
-} = require('./test-utils')
+const {setupTest, teardownTest, setConfig, wait} = require('./test-utils')
 
 suite('shift-interval.test.js', () => {
   setup(async () => {

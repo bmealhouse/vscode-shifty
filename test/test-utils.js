@@ -1,12 +1,18 @@
 const os = require('os')
 const vscode = require('vscode')
 const sinon = require('sinon')
-const {getCurrentColorTheme, setColorTheme} = require('../src/color-themes')
-const {getCurrentFontFamily, setFontFamily} = require('../src/font-families')
+const {
+  getCurrentColorTheme,
+  setColorTheme,
+  DEFAULT_COLOR_THEME,
+} = require('../src/color-themes')
+const {
+  getCurrentFontFamily,
+  setFontFamily,
+  DEFAULT_FONT_FAMILY,
+} = require('../src/font-families')
 const {MAC_OS} = require('../src/font-families/font-family-types')
 
-const DEFAULT_COLOR_THEME = 'Visual Studio Dark'
-const DEFAULT_FONT_FAMILY = 'Monaco'
 const DEFAULT_PLATFORM = MAC_OS
 
 module.exports = {
@@ -15,8 +21,6 @@ module.exports = {
   getConfig,
   setConfig,
   wait,
-  DEFAULT_COLOR_THEME,
-  DEFAULT_FONT_FAMILY,
   DEFAULT_PLATFORM,
 }
 
@@ -34,7 +38,7 @@ async function setupTest() {
   originalFontFamily = getCurrentFontFamily()
   await setFontFamily(DEFAULT_FONT_FAMILY)
 
-  await setDefault('shifty.favoritesEnabled', false)
+  await setDefault('shifty.shiftMode', 'all')
   await setDefault('shifty.colorThemes.favoriteColorThemes', [])
   await setDefault('shifty.colorThemes.ignoreColorThemes', [])
   await setDefault('shifty.colorThemes.ignoreDarkColorThemes', false)
@@ -66,7 +70,7 @@ async function teardownTest() {
   }
 
   // restore original config
-  await restoreOriginal('shifty.favoritesEnabled')
+  await restoreOriginal('shifty.shiftMode')
   await restoreOriginal('shifty.colorThemes.favoriteColorThemes')
   await restoreOriginal('shifty.colorThemes.ignoreColorThemes')
   await restoreOriginal('shifty.colorThemes.ignoreDarkColorThemes')

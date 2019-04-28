@@ -1,13 +1,14 @@
 const assert = require('assert')
 const vscode = require('vscode')
-const {getCurrentColorTheme} = require('../src/color-themes')
-const {getCurrentFontFamily} = require('../src/font-families')
 const {
-  setupTest,
-  teardownTest,
+  getCurrentColorTheme,
   DEFAULT_COLOR_THEME,
+} = require('../src/color-themes')
+const {
+  getCurrentFontFamily,
   DEFAULT_FONT_FAMILY,
-} = require('./test-utils')
+} = require('../src/font-families')
+const {setupTest, teardownTest} = require('./test-utils')
 
 suite('extension.test.js', () => {
   setup(async () => {

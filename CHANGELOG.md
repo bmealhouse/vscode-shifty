@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add **discovery** mode to shift through color themes & font families that have not been favorited
+- Add `shifty.shiftMode` setting
+
+### Removed
+
+- Remove `shifty.favoritesEnabled` setting
+
 ## [0.4.0] - 2019-04-29
 
 ### Added

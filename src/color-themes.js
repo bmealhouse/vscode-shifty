@@ -4,6 +4,7 @@ const getRandomItem = require('./utils/get-random-item')
 const DARK_COLOR_THEME = 'vs-dark'
 const LIGHT_COLOR_THEME = 'vs'
 const HIGH_CONTRAST_COLOR_THEME = 'hc-black'
+const DEFAULT_COLOR_THEME = 'Default Dark+'
 
 module.exports = {
   activateColorThemes,
@@ -16,6 +17,7 @@ module.exports = {
   DARK_COLOR_THEME,
   LIGHT_COLOR_THEME,
   HIGH_CONTRAST_COLOR_THEME,
+  DEFAULT_COLOR_THEME,
   __getColorThemesCache,
 }
 
@@ -61,7 +63,7 @@ async function activateColorThemes(context) {
     vscode.workspace.onDidChangeConfiguration(event => {
       if (
         event.affectsConfiguration('shifty.colorThemes') ||
-        event.affectsConfiguration('shifty.favoritesEnabled')
+        event.affectsConfiguration('shifty.shiftMode')
       ) {
         colorThemesCache = null
         primeColorThemeCache()
@@ -88,7 +90,7 @@ function primeColorThemeCache() {
   if (colorThemesCache !== null) return
 
   const {
-    favoritesEnabled,
+    shiftMode,
     colorThemes: {
       favoriteColorThemes,
       ignoreColorThemes,
@@ -98,7 +100,7 @@ function primeColorThemeCache() {
     },
   } = vscode.workspace.getConfiguration('shifty')
 
-  if (favoritesEnabled) {
+  if (shiftMode === 'favorites') {
     colorThemesCache = favoriteColorThemes
     return
   }
@@ -128,9 +130,18 @@ function primeColorThemeCache() {
           (ignoreHighContrastColorThemes &&
             ct.uiTheme === HIGH_CONTRAST_COLOR_THEME) ||
           (ignoreLightColorThemes && ct.uiTheme === LIGHT_COLOR_THEME) ||
-          (ignoreDarkColorThemes && ct.uiTheme === DARK_COLOR_THEME)
+          (ignoreDarkColorThemes && ct.uiTheme === DARK_COLOR_THEME) ||
+          (shiftMode === 'discovery' && favoriteColorThemes.includes(ct.id))
         ),
     )
+
+  if (colorThemesCache.length === 0) {
+    colorThemesCache = favoriteColorThemes
+  }
+
+  if (colorThemesCache.length === 0) {
+    colorThemesCache = [DEFAULT_COLOR_THEME]
+  }
 }
 
 async function setRandomColorTheme() {

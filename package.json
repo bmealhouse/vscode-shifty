@@ -1,7 +1,7 @@
 {
   "name": "shifty",
   "displayName": "shifty",
-  "description": "Keeps your day interesting by randomly shifting your color theme and/or font family",
+  "description": "Keeps your day interesting by randomly shifting your color theme & font family",
   "version": "0.4.0",
   "license": "MIT",
   "repository": {
@@ -26,10 +26,20 @@
       "type": "object",
       "title": "shifty",
       "properties": {
-        "shifty.favoritesEnabled": {
-          "type": "boolean",
-          "default": false,
-          "description": "Determines if shifty should cycle through favorite color themes and font families."
+        "shifty.shiftMode": {
+          "type": "string",
+          "default": "all",
+          "description": "Controls how shifty cycles through color themes & font families.",
+          "enum": [
+            "all",
+            "discovery",
+            "favorites"
+          ],
+          "enumDescriptions": [
+            "Shifts through all color themes & font families.",
+            "Shifts through color themes & font families that have not been favorited.",
+            "Shifts through favorited color themes & font families."
+          ]
         },
         "shifty.colorThemes.favoriteColorThemes": {
           "type": "array",
