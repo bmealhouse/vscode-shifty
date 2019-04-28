@@ -1,6 +1,41 @@
 # shifty
 
-> Keeps your day interesting by randomly shifting your color theme and/or font family
+> Keeps your day interesting by randomly shifting your color theme and font family
+
+## Table of contents
+
+- [Prerequisites](#prerequisites)
+  - [Mac, Linux](#mac-linux)
+  - [Windows](#windows)
+- [Changelog](https://github.com/bmealhouse/vscode-shifty/blob/master/CHANGELOG.md)
+- [Contributing](#contributing)
+- [License](#license)
+
+<!-- - [Features](#features) -->
+<!-- - [Using shifty](#using-shifty)
+  - [Commands](#commands)
+  - [Settings](#settings) -->
+
+## Prerequisites
+
+shifty depends on [codeface](https://github.com/chrissimpkins/codeface) typefaces. The easiest way to get started is to use our install script, however, you can also download the `.zip` or `.tar.xz` directly from [codeface](https://github.com/chrissimpkins/codeface) and install the fonts on your system manually.
+
+> After installing fonts, **restart VS Code** for them to take affect
+
+### Mac, Linux
+
+```sh
+git clone git://github.com/bmealhouse/vscode-shifty-font-families.git
+cd vscode-shifty-font-families && ./install.sh
+```
+
+### Windows
+
+```sh
+git clone git://github.com/bmealhouse/vscode-shifty-font-families.git
+cd vscode-shifty-font-families
+./install.ps1
+```
 
 <!-- ## Features
 
@@ -12,11 +47,11 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow. -->
 
-## Requirements
+<!-- ## Using shifty -->
 
-- [codeface](https://github.com/chrissimpkins/codeface)
+<!-- ### Commands -->
 
-<!-- ## Extension Settings
+<!-- ### Settings
 
 Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
@@ -27,39 +62,15 @@ This extension contributes the following settings:
 - `myExtension.enable`: enable/disable this extension
 - `myExtension.thing`: set to `blah` to do something -->
 
-## Release Notes
+## Contributing
 
-### 0.3.1
+1. [Fork](https://help.github.com/en/articles/fork-a-repo) this repository to your own GitHub account and then [clone](https://help.github.com/en/articles/cloning-a-repository) it to your local device
+1. Install the dependecies using `yarn`
+1. Use VS Code launch configurations to debug or run integration tests
+   - **Extension** - runs the extension from source with debugging enabled
+   - **Extension Tests** - runs the integration test suite
+1. Ensure any changes are documented in `CHANGELOG.md`
 
-- Use OS type to filter unsupported font families
+## License
 
-### 0.3.0
-
-- Support fallback font family
-
-### 0.2.1
-
-- Update release notes
-
-### 0.2.0
-
-- Add color theme and font family favorites
-- Enabling favorites will only cycle through color themes and font families that are favorited
-
-### 0.1.0
-
-- Use arrays for list based config values
-- Add "Shifty: Show current status" command
-- Display "shifty" status bar item for showing current status
-
-### 0.0.3
-
-- Filter extensions that don't have a "contributes" section in package.json
-
-### 0.0.2
-
-- Release without bundling
-
-### 0.0.1
-
-- Initial release
+MIT © Brent Mealhouse
