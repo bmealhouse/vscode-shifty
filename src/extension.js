@@ -17,8 +17,7 @@ async function activate(context) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftAll', async () => {
-      await setRandomColorTheme()
-      await setRandomFontFamily()
+      return Promise.all([setRandomColorTheme(), setRandomFontFamily()])
     }),
   )
 }

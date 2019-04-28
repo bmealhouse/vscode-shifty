@@ -40,9 +40,11 @@ function activateStatusBar(context) {
         [actionTextMap.START_SHIFT_INTERVAL]: startShiftInterval,
         [actionTextMap.FAVORITE_COLOR_THEME]: favoriteCurrentColorTheme,
         [actionTextMap.FAVORITE_FONT_FAMILY]: favoriteCurrentFontFamily,
-        [actionTextMap.FAVORITE_BOTH]: () => {
-          favoriteCurrentColorTheme()
-          favoriteCurrentFontFamily()
+        [actionTextMap.FAVORITE_BOTH]: async () => {
+          return Promise.all([
+            favoriteCurrentColorTheme(),
+            favoriteCurrentFontFamily(),
+          ])
         },
       }
 
