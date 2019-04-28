@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Move release notes from `README.md` to `CHANGELONG.md`
+- Allow `null` shift interval ms values
 
 ### Fixed
 

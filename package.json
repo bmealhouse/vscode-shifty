@@ -90,14 +90,20 @@
           "description": "Includes font families."
         },
         "shifty.shiftInterval.shiftColorThemeIntervalMs": {
-          "type": "number",
+          "type": [
+            "number",
+            "null"
+          ],
           "default": 1800000,
-          "description": "Number of milliseconds to wait before shifting the color theme. (defaults to 30min, use zero to disable color theme shift interval)"
+          "description": "Number of milliseconds to wait before shifting the color theme. (defaults to 30min, use zero or null to disable color theme shift interval)"
         },
         "shifty.shiftInterval.shiftFontFamilyIntervalMs": {
-          "type": "number",
+          "type": [
+            "number",
+            "null"
+          ],
           "default": 1800000,
-          "description": "Number of milliseconds to wait before shifting the font family. (defaults to 30min, use zero to disable font family shift interval)"
+          "description": "Number of milliseconds to wait before shifting the font family. (defaults to 30min, use zero or null to disable font family shift interval)"
         },
         "shifty.startup.shiftColorThemeOnStartup": {
           "type": "boolean",
