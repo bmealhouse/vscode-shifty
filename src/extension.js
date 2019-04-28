@@ -10,13 +10,6 @@ module.exports = {
 }
 
 async function activate(context) {
-  const shifty = vscode.workspace.getConfiguration('shifty')
-
-  if (!shifty.enabled) {
-    await deactivate()
-    return
-  }
-
   await activateColorThemes(context)
   await activateFontFamilies(context)
   activateShiftInterval(context)

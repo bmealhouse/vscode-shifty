@@ -26,11 +26,6 @@
       "type": "object",
       "title": "shifty",
       "properties": {
-        "shifty.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Determines if shifty is enabled."
-        },
         "shifty.favoritesEnabled": {
           "type": "boolean",
           "default": false,

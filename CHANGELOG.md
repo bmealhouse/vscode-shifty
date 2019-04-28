@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Allow `null` fallback font family
 
+### Removed
+
+- Remove `shifty.enabled` setting since it's built-in to VS Code
+
 ## [0.3.1] - 2019-04-23
 
 ### Changed
