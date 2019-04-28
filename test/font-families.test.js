@@ -1,7 +1,6 @@
 const os = require('os')
 const assert = require('assert')
 const vscode = require('vscode')
-const sinon = require('sinon')
 const {
   maybeShiftFontFamilyOnStartup,
   getFontFamilies,
@@ -36,6 +35,13 @@ suite('font-families.test.js', () => {
   test('should include the fallback font family', async () => {
     const editorFontFamily = getConfig('editor.fontFamily')
     assert.strictEqual(editorFontFamily, `${DEFAULT_FONT_FAMILY}, monospace`)
+  })
+
+  test(`should set the font family with out a fallback`, async () => {
+    await setConfig('shifty.fontFamilies.fallbackFontFamily', null)
+    await vscode.commands.executeCommand('shifty.shiftFontFamily')
+    const editorFontFamily = getConfig('editor.fontFamily')
+    assert.ok(!editorFontFamily.includes(', '))
   })
 
   test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {

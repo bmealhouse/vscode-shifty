@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Move release notes from `README.md` to `CHANGELONG.md`
 
+### Fixed
+
+- Allow `null` fallback font family
+
 ## [0.3.1] - 2019-04-23
 
 ### Changed

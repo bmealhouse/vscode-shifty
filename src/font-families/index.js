@@ -156,9 +156,13 @@ async function setFontFamily(fontFamily) {
     'shifty.fontFamilies',
   )
 
+  const fontFamilyWithFallback = fallbackFontFamily
+    ? `${fontFamily}, ${fallbackFontFamily}`
+    : fontFamily
+
   return vscode.workspace
     .getConfiguration('editor')
-    .update('fontFamily', `${fontFamily}, ${fallbackFontFamily}`, true)
+    .update('fontFamily', fontFamilyWithFallback, true)
 }
 
 function __getFontFamiliesCache() {
