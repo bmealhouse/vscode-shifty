@@ -33,15 +33,16 @@ suite('font-families.test.js', () => {
   })
 
   test('should include the fallback font family', async () => {
-    const editorFontFamily = getConfig('editor.fontFamily')
-    assert.strictEqual(editorFontFamily, `${DEFAULT_FONT_FAMILY}, monospace`)
+    assert.strictEqual(
+      getConfig('editor.fontFamily'),
+      `${DEFAULT_FONT_FAMILY}, monospace`,
+    )
   })
 
   test(`should set the font family with out a fallback`, async () => {
     await setConfig('shifty.fontFamilies.fallbackFontFamily', null)
     await vscode.commands.executeCommand('shifty.shiftFontFamily')
-    const editorFontFamily = getConfig('editor.fontFamily')
-    assert.ok(!editorFontFamily.includes(', '))
+    assert.ok(!getConfig('editor.fontFamily').includes(', '))
   })
 
   test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {
@@ -69,8 +70,11 @@ suite('font-families.test.js', () => {
 
   test('should favorite the current font family when running the "shifty.favoriteCurrentFontFamily" command', async () => {
     await vscode.commands.executeCommand('shifty.favoriteCurrentFontFamily')
-    const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
-    assert.ok(config.favoriteFontFamilies.includes(DEFAULT_FONT_FAMILY))
+    assert.ok(
+      getConfig('shifty.fontFamilies.favoriteFontFamilies').includes(
+        DEFAULT_FONT_FAMILY,
+      ),
+    )
     assert.strictEqual(
       vscode.window.showInformationMessage.firstCall.lastArg,
       `Added "${DEFAULT_FONT_FAMILY}" to favorites`,
@@ -79,9 +83,34 @@ suite('font-families.test.js', () => {
 
   test('should ignore the current font family and shift the font family when running the "shifty.ignoreCurrentFontFamily" command', async () => {
     await vscode.commands.executeCommand('shifty.ignoreCurrentFontFamily')
-    const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
-    assert.ok(config.ignoreFontFamilies.includes(DEFAULT_FONT_FAMILY))
+    assert.ok(
+      getConfig('shifty.fontFamilies.ignoreFontFamilies').includes(
+        DEFAULT_FONT_FAMILY,
+      ),
+    )
     assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
+  })
+
+  test('should ignore the current font family and remove the font family from favorites when running the "shifty.ignoreCurrentFontFamily" command', async () => {
+    const favorites = [DEFAULT_FONT_FAMILY, 'SF Mono']
+    await setConfig('shifty.fontFamilies.favoriteFontFamilies', favorites)
+    assert.deepStrictEqual(
+      getConfig('shifty.fontFamilies.favoriteFontFamilies'),
+      favorites,
+    )
+
+    await vscode.commands.executeCommand('shifty.ignoreCurrentFontFamily')
+    assert.ok(
+      getConfig('shifty.fontFamilies.ignoreFontFamilies').includes(
+        DEFAULT_FONT_FAMILY,
+      ),
+    )
+
+    const favoriteFontFamilies = getConfig(
+      'shifty.fontFamilies.favoriteFontFamilies',
+    )
+    assert.ok(!favoriteFontFamilies.includes(DEFAULT_FONT_FAMILY))
+    assert.strictEqual(favoriteFontFamilies.length, favorites.length - 1)
   })
 
   test('should prime the font families cache after the "shifty.fontFamilies" config changes', async () => {
@@ -94,9 +123,8 @@ suite('font-families.test.js', () => {
   })
 
   test('should return all font families when no font families are ignored', () => {
-    const fontFamilies = getFontFamilies()
     assert.strictEqual(
-      fontFamilies.length,
+      getFontFamilies().length,
       allFontFamilies.filter(ff =>
         ff.supportedPlatforms.includes(DEFAULT_PLATFORM),
       ).length - 1,
@@ -104,21 +132,18 @@ suite('font-families.test.js', () => {
   })
 
   test('should return all font families except the current font family', () => {
-    const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => ff.id !== DEFAULT_FONT_FAMILY))
+    assert.ok(getFontFamilies().every(ff => ff.id !== DEFAULT_FONT_FAMILY))
   })
 
   test('should return all font families except the ignored font families', async () => {
     const sfMono = 'SF Mono'
     await setConfig('shifty.fontFamilies.ignoreFontFamilies', [sfMono])
-    const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => ff.id !== sfMono))
+    assert.ok(getFontFamilies().every(ff => ff.id !== sfMono))
   })
 
   test('should return no codeface font families when ignored', async () => {
     await setConfig('shifty.fontFamilies.ignoreCodefaceFontFamilies', true)
-    const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => ff.type !== CODEFACE))
+    assert.ok(getFontFamilies().every(ff => ff.type !== CODEFACE))
   })
 
   test('should return font families that are supported on linux', async () => {
@@ -127,8 +152,9 @@ suite('font-families.test.js', () => {
     // change any shifty.fontFamilies config to reprime the cache
     await setConfig('shifty.fontFamilies.fallbackFontFamily', '')
 
-    const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => ff.supportedPlatforms.includes(LINUX)))
+    assert.ok(
+      getFontFamilies().every(ff => ff.supportedPlatforms.includes(LINUX)),
+    )
   })
 
   test('should return font families that are supported on mac os', async () => {
@@ -137,8 +163,9 @@ suite('font-families.test.js', () => {
     // change any shifty.fontFamilies config to reprime the cache
     await setConfig('shifty.fontFamilies.fallbackFontFamily', '')
 
-    const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => ff.supportedPlatforms.includes(MAC_OS)))
+    assert.ok(
+      getFontFamilies().every(ff => ff.supportedPlatforms.includes(MAC_OS)),
+    )
   })
 
   test('should return font families that are supported on windows', async () => {
@@ -147,8 +174,9 @@ suite('font-families.test.js', () => {
     // change any shifty.fontFamilies config to reprime the cache
     await setConfig('shifty.fontFamilies.fallbackFontFamily', '')
 
-    const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.every(ff => ff.supportedPlatforms.includes(WINDOWS)))
+    assert.ok(
+      getFontFamilies().every(ff => ff.supportedPlatforms.includes(WINDOWS)),
+    )
   })
 
   test('should return the default font family when dealing with an unsupported platform', async () => {
@@ -163,8 +191,7 @@ suite('font-families.test.js', () => {
   test('should return user specified font families', async () => {
     const dankMono = 'Dank Mono'
     await setConfig('shifty.fontFamilies.includeFontFamilies', [dankMono])
-    const fontFamilies = getFontFamilies()
-    assert.ok(fontFamilies.find(ff => ff.id === dankMono))
+    assert.ok(getFontFamilies().find(ff => ff.id === dankMono))
   })
 
   test('should return favorite font familes when shiftMode is set to "favorites"', async () => {
@@ -178,9 +205,7 @@ suite('font-families.test.js', () => {
     const sfMono = 'SF Mono'
     await setConfig('shifty.fontFamilies.favoriteFontFamilies', [sfMono])
     await setConfig('shifty.shiftMode', 'discovery')
-
-    const fontFamilies = getFontFamilies()
-    assert.ok(!fontFamilies.find(ff => ff.id === sfMono))
+    assert.ok(!getFontFamilies().find(ff => ff.id === sfMono))
   })
 
   test('should return favorite font families when shiftMode is set to "discovery" and all font families have been ignored or favorited', async () => {

@@ -53,6 +53,13 @@ async function activateColorThemes(context) {
           [...new Set([...config.ignoreColorThemes, currentColorTheme])].sort(),
           true,
         )
+        await config.update(
+          'favoriteColorThemes',
+          config.favoriteColorThemes
+            .filter(ct => ct !== currentColorTheme)
+            .sort(),
+          true,
+        )
 
         await setRandomColorTheme()
       },

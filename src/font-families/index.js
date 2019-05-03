@@ -58,6 +58,13 @@ async function activateFontFamilies(context) {
           ].sort(),
           true,
         )
+        await config.update(
+          'favoriteFontFamilies',
+          config.favoriteFontFamilies
+            .filter(ff => ff !== currentFontFamily)
+            .sort(),
+          true,
+        )
 
         await setRandomFontFamily()
       },

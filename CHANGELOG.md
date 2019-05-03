@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Sort all array settings alphabetically
+- When a favorite is ignored, add it to the ignore list and remove it from favorites
 
 ### Removed
 
