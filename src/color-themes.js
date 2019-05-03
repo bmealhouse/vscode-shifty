@@ -50,7 +50,7 @@ async function activateColorThemes(context) {
         const config = vscode.workspace.getConfiguration('shifty.colorThemes')
         await config.update(
           'ignoreColorThemes',
-          [...new Set([...config.ignoreColorThemes, currentColorTheme])],
+          [...new Set([...config.ignoreColorThemes, currentColorTheme])].sort(),
           true,
         )
 
@@ -169,7 +169,7 @@ async function favoriteCurrentColorTheme() {
   const config = vscode.workspace.getConfiguration('shifty.colorThemes')
   await config.update(
     'favoriteColorThemes',
-    [...new Set([...config.favoriteColorThemes, currentColorTheme])],
+    [...new Set([...config.favoriteColorThemes, currentColorTheme])].sort(),
     true,
   )
 

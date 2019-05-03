@@ -54,7 +54,9 @@ async function activateFontFamilies(context) {
         const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
         await config.update(
           'ignoreFontFamilies',
-          [...new Set([...config.ignoreFontFamilies, currentFontFamily])],
+          [
+            ...new Set([...config.ignoreFontFamilies, currentFontFamily]),
+          ].sort(),
           true,
         )
 
@@ -154,7 +156,7 @@ async function favoriteCurrentFontFamily() {
   const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
   await config.update(
     'favoriteFontFamilies',
-    [...new Set([...config.favoriteFontFamilies, currentFontFamily])],
+    [...new Set([...config.favoriteFontFamilies, currentFontFamily])].sort(),
     true,
   )
 

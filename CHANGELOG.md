@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add **discovery** mode to shift through color themes & font families that have not been favorited
 - Add `shifty.shiftMode` setting
 
+### Changed
+
+- Sort all array settings alphabetically
+
 ### Removed
 
 - Remove `shifty.favoritesEnabled` setting
