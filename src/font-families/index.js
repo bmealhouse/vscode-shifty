@@ -5,7 +5,6 @@ const {CODEFACE, LINUX, MAC_OS, USER, WINDOWS} = require('./font-family-types')
 
 const DEFAULT_FONT_FAMILY = 'Courier'
 
-// TODO: provide documenation for font installation on MacOS & Windows
 const allFontFamilies = [
   ...require('./codeface-font-families'),
   ...require('./system-font-families'),
