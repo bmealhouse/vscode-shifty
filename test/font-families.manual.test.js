@@ -5,7 +5,7 @@ const {
 } = require('../src/font-families')
 const {wait} = require('./test-utils')
 
-test.only('check all font familes for platform', function(done) {
+test.skip('manually test font families on different platforms', function(done) {
   this.timeout(0)
 
   const originalFontFamily = getCurrentFontFamily()
@@ -30,10 +30,13 @@ test.only('check all font familes for platform', function(done) {
 })
 
 // .mac {
-//   --monaco-monospace-font:Monaco,Menlo,Inconsolata,"Courier New",monospace}
+//   --monaco-monospace-font:Monaco,Menlo,Inconsolata,"Courier New",monospace
+// }
 
 // .windows {
-//   --monaco-monospace-font:Consolas,Inconsolata,"Courier New",monospace}
+//   --monaco-monospace-font:Consolas,Inconsolata,"Courier New",monospace
+// }
 
 // .linux {
-//   --monaco-monospace-font:"Droid Sans Mono",Inconsolata,"Courier New",monospace,"Droid Sans Fallback"}
+//   --monaco-monospace-font:"Droid Sans Mono",Inconsolata,"Courier New",monospace,"Droid Sans Fallback"
+// }
