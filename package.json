@@ -11,12 +11,22 @@
   "bugs": {
     "url": "https://github.com/bmealhouse/vscode-shifty/issues"
   },
-  "author": "",
+  "author": "Brent Mealhouse <bmealhouse@gmail.com>",
   "publisher": "bmealhouse",
   "engines": {
-    "vscode": "^0.10.2"
+    "vscode": "^1.0.0"
   },
-  "categories": [],
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "keywords": [
+    "shift",
+    "random",
+    "theme",
+    "font",
+    "syntax"
+  ],
   "activationEvents": [
     "*"
   ],
@@ -126,52 +136,52 @@
       {
         "command": "shifty.shiftAll",
         "title": "Shift color theme & font family",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.shiftColorTheme",
         "title": "Shift color theme",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.shiftFontFamily",
         "title": "Shift font family",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.startShiftInterval",
         "title": "Start shift interval",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.stopShiftInterval",
         "title": "Stop shift interval",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.favoriteCurrentColorTheme",
         "title": "Add current color theme to favorites",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.favoriteCurrentFontFamily",
         "title": "Add current font family to favorites",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.ignoreCurrentColorTheme",
         "title": "Ignore current color theme",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.ignoreCurrentFontFamily",
         "title": "Ignore current font family",
-        "category": "Shifty"
+        "category": "shifty"
       },
       {
         "command": "shifty.showCurrentStatus",
         "title": "Show current status",
-        "category": "Shifty"
+        "category": "shifty"
       }
     ]
   },
@@ -181,6 +191,18 @@
     "vscode:prepublish": "webpack --mode production",
     "wp": "webpack --mode development",
     "wp-dev": "webpack --mode development --watch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "xo",
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "useTabs": false,
@@ -221,17 +243,14 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "7.4.3",
-    "@babel/preset-env": "7.4.3",
     "babel-eslint": "10.0.1",
-    "babel-loader": "8.0.5",
     "eslint": "5.16.0",
     "eslint-plugin-filenames": "1.3.2",
-    "sinon": "7.3.1",
-    "vsce": "1.59.0",
+    "husky": "2.2.0",
+    "lint-staged": "8.1.6",
+    "sinon": "7.3.2",
+    "vsce": "1.61.0",
     "vscode": "1.1.33",
-    "webpack": "4.29.6",
-    "webpack-cli": "3.3.0",
     "xo": "0.24.0"
   }
 }

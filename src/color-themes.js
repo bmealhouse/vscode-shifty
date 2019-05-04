@@ -7,6 +7,7 @@ const HIGH_CONTRAST_COLOR_THEME = 'hc-black'
 const DEFAULT_COLOR_THEME = 'Default Dark+'
 
 module.exports = {
+  _getColorThemesCache,
   activateColorThemes,
   maybeShiftColorThemeOnStartup,
   setRandomColorTheme,
@@ -18,13 +19,15 @@ module.exports = {
   LIGHT_COLOR_THEME,
   HIGH_CONTRAST_COLOR_THEME,
   DEFAULT_COLOR_THEME,
-  __getColorThemesCache,
 }
 
 let colorThemesCache = null
+function _getColorThemesCache() {
+  return colorThemesCache
+}
 
 async function activateColorThemes(context) {
-  primeColorThemeCache()
+  primeColorThemesCache()
   await maybeShiftColorThemeOnStartup()
 
   context.subscriptions.push(
@@ -73,7 +76,7 @@ async function activateColorThemes(context) {
         event.affectsConfiguration('shifty.shiftMode')
       ) {
         colorThemesCache = null
-        primeColorThemeCache()
+        primeColorThemesCache()
       }
     }),
   )
@@ -81,7 +84,7 @@ async function activateColorThemes(context) {
   context.subscriptions.push(
     vscode.extensions.onDidChange(() => {
       colorThemesCache = null
-      primeColorThemeCache()
+      primeColorThemesCache()
     }),
   )
 }
@@ -93,7 +96,7 @@ async function maybeShiftColorThemeOnStartup() {
   }
 }
 
-function primeColorThemeCache() {
+function primeColorThemesCache() {
   if (colorThemesCache !== null) return
 
   const {
@@ -158,8 +161,8 @@ async function setRandomColorTheme() {
 }
 
 function getColorThemes() {
-  if (colorThemesCache !== null) {
-    primeColorThemeCache()
+  if (colorThemesCache === null) {
+    primeColorThemesCache()
   }
 
   const currentColorTheme = getCurrentColorTheme()
@@ -188,8 +191,4 @@ async function favoriteCurrentColorTheme() {
 async function setColorTheme(colorTheme) {
   const workbench = vscode.workspace.getConfiguration('workbench')
   return workbench.update('colorTheme', colorTheme, true)
-}
-
-function __getColorThemesCache() {
-  return colorThemesCache
 }

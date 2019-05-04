@@ -8,12 +8,12 @@ let shiftFontFamilyIntervalId = null
 let shiftFontFamilyIntervalStartTime = null
 
 module.exports = {
+  _getShiftIntervalIds,
   activateShiftInterval,
   startShiftInterval,
   stopShiftInterval,
   hasShiftIntervalStarted,
   getRemainingTimeForShiftIntervals,
-  __getShiftIntervalIds,
 }
 
 function activateShiftInterval(context) {
@@ -124,7 +124,7 @@ function calculateRemainingTime(startTime, intervalId) {
   return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
 }
 
-function __getShiftIntervalIds() {
+function _getShiftIntervalIds() {
   return {
     shiftColorThemeIntervalId,
     shiftFontFamilyIntervalId,

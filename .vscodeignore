@@ -1,6 +1,6 @@
+.editorconfig
 .gitignore
 .vscode
+.vscode-test
 node_modules
-dist/**
 test/**
-webpack.config.js

@@ -9,9 +9,9 @@ const {
   DEFAULT_FONT_FAMILY,
 } = require('../src/font-families')
 const {
+  _getShiftIntervalIds,
   hasShiftIntervalStarted,
   getRemainingTimeForShiftIntervals,
-  __getShiftIntervalIds,
 } = require('../src/shift-interval')
 const {setupTest, teardownTest, setConfig, wait} = require('./test-utils')
 
@@ -50,7 +50,7 @@ suite('shift-interval.test.js', () => {
     const {
       shiftColorThemeIntervalId,
       shiftFontFamilyIntervalId,
-    } = __getShiftIntervalIds()
+    } = _getShiftIntervalIds()
 
     assert.ok(!hasShiftIntervalStarted())
     assert.strictEqual(shiftColorThemeIntervalId, null)
@@ -65,7 +65,7 @@ suite('shift-interval.test.js', () => {
     const {
       shiftColorThemeIntervalId,
       shiftFontFamilyIntervalId,
-    } = __getShiftIntervalIds()
+    } = _getShiftIntervalIds()
 
     assert.ok(!hasShiftIntervalStarted())
     assert.strictEqual(shiftColorThemeIntervalId, null)
@@ -76,10 +76,10 @@ suite('shift-interval.test.js', () => {
     await vscode.commands.executeCommand('shifty.startShiftInterval')
     assert.ok(hasShiftIntervalStarted())
 
-    const shiftIntervalIds = __getShiftIntervalIds()
+    const shiftIntervalIds = _getShiftIntervalIds()
     await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 1337)
     assert.ok(hasShiftIntervalStarted())
-    assert.notDeepStrictEqual(__getShiftIntervalIds(), shiftIntervalIds)
+    assert.notDeepStrictEqual(_getShiftIntervalIds(), shiftIntervalIds)
 
     await vscode.commands.executeCommand('shifty.stopShiftInterval')
   })
@@ -92,7 +92,7 @@ suite('shift-interval.test.js', () => {
     const {
       shiftColorThemeIntervalId,
       shiftFontFamilyIntervalId,
-    } = __getShiftIntervalIds()
+    } = _getShiftIntervalIds()
 
     assert.ok(!hasShiftIntervalStarted())
     assert.strictEqual(shiftColorThemeIntervalId, null)

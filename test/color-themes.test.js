@@ -1,6 +1,7 @@
 const assert = require('assert')
 const vscode = require('vscode')
 const {
+  _getColorThemesCache,
   maybeShiftColorThemeOnStartup,
   getColorThemes,
   getCurrentColorTheme,
@@ -8,7 +9,6 @@ const {
   LIGHT_COLOR_THEME,
   HIGH_CONTRAST_COLOR_THEME,
   DEFAULT_COLOR_THEME,
-  __getColorThemesCache,
 } = require('../src/color-themes')
 const {setupTest, teardownTest, getConfig, setConfig} = require('./test-utils')
 
@@ -87,9 +87,9 @@ suite('color-themes.test.js', () => {
   })
 
   test('should prime the color themes cache after the "shifty.colorThemes" config changes', async () => {
-    const originalColorThemesCache = __getColorThemesCache()
+    const originalColorThemesCache = _getColorThemesCache()
     await setConfig('shifty.colorThemes.ignoreLightColorThemes', true)
-    assert.notDeepStrictEqual(__getColorThemesCache(), originalColorThemesCache)
+    assert.notDeepStrictEqual(_getColorThemesCache(), originalColorThemesCache)
   })
 
   test('should return all color themes when no color themes are ignored', () => {

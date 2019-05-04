@@ -12,6 +12,7 @@ const allFontFamilies = [
 ]
 
 module.exports = {
+  _getFontFamiliesCache,
   activateFontFamilies,
   maybeShiftFontFamilyOnStartup,
   setRandomFontFamily,
@@ -21,10 +22,12 @@ module.exports = {
   setFontFamily,
   allFontFamilies,
   DEFAULT_FONT_FAMILY,
-  __getFontFamiliesCache,
 }
 
 let fontFamiliesCache = null
+function _getFontFamiliesCache() {
+  return fontFamiliesCache
+}
 
 async function activateFontFamilies(context) {
   primeFontFamiliesCache()
@@ -142,7 +145,7 @@ async function setRandomFontFamily() {
 }
 
 function getFontFamilies() {
-  if (fontFamiliesCache !== null) {
+  if (fontFamiliesCache === null) {
     primeFontFamiliesCache()
   }
 
@@ -187,8 +190,4 @@ async function setFontFamily(fontFamily) {
   return vscode.workspace
     .getConfiguration('editor')
     .update('fontFamily', fontFamilyWithFallback, true)
-}
-
-function __getFontFamiliesCache() {
-  return fontFamiliesCache
 }

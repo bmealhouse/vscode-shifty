@@ -2,13 +2,13 @@ const os = require('os')
 const assert = require('assert')
 const vscode = require('vscode')
 const {
+  _getFontFamiliesCache,
   maybeShiftFontFamilyOnStartup,
   getFontFamilies,
   getCurrentFontFamily,
   allFontFamilies,
   setFontFamily,
   DEFAULT_FONT_FAMILY,
-  __getFontFamiliesCache,
 } = require('../src/font-families')
 const {
   CODEFACE,
@@ -134,10 +134,10 @@ suite('font-families.test.js', () => {
   })
 
   test('should prime the font families cache after the "shifty.fontFamilies" config changes', async () => {
-    const originalFontFamiliesCache = __getFontFamiliesCache()
+    const originalFontFamiliesCache = _getFontFamiliesCache()
     await setConfig('shifty.fontFamilies.ignoreCodefaceFontFamilies', true)
     assert.notDeepStrictEqual(
-      __getFontFamiliesCache(),
+      _getFontFamiliesCache(),
       originalFontFamiliesCache,
     )
   })
