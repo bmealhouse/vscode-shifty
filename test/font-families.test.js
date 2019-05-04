@@ -6,6 +6,7 @@ const {
   getFontFamilies,
   getCurrentFontFamily,
   allFontFamilies,
+  setFontFamily,
   DEFAULT_FONT_FAMILY,
   __getFontFamiliesCache,
 } = require('../src/font-families')
@@ -35,7 +36,7 @@ suite('font-families.test.js', () => {
   test('should include the fallback font family', async () => {
     assert.strictEqual(
       getConfig('editor.fontFamily'),
-      `${DEFAULT_FONT_FAMILY}, monospace`,
+      `"${DEFAULT_FONT_FAMILY}", monospace`,
     )
   })
 
@@ -43,6 +44,25 @@ suite('font-families.test.js', () => {
     await setConfig('shifty.fontFamilies.fallbackFontFamily', null)
     await vscode.commands.executeCommand('shifty.shiftFontFamily')
     assert.ok(!getConfig('editor.fontFamily').includes(', '))
+  })
+
+  test('should wrap font families with quotes when they include spaces', async () => {
+    const {id: fontFamilyWithSpace} = allFontFamilies.find(ff =>
+      /\s/.test(ff.id),
+    )
+    await setFontFamily(fontFamilyWithSpace)
+    assert.strictEqual(
+      getConfig('editor.fontFamily'),
+      `"${fontFamilyWithSpace}", monospace`,
+    )
+  })
+
+  test('should return the current font family without quotes', async () => {
+    const {id: fontFamilyWithSpace} = allFontFamilies.find(ff =>
+      /\s/.test(ff.id),
+    )
+    await setFontFamily(fontFamilyWithSpace)
+    assert.strictEqual(getCurrentFontFamily(), fontFamilyWithSpace)
   })
 
   test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {

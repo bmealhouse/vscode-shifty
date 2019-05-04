@@ -3,7 +3,7 @@ const vscode = require('vscode')
 const getRandomItem = require('../utils/get-random-item')
 const {CODEFACE, LINUX, MAC_OS, USER, WINDOWS} = require('./font-family-types')
 
-const DEFAULT_FONT_FAMILY = 'Courier'
+const DEFAULT_FONT_FAMILY = 'Courier New'
 
 const allFontFamilies = [
   ...require('./codeface-font-families'),
@@ -153,7 +153,7 @@ function getFontFamilies() {
 function getCurrentFontFamily() {
   const {fontFamily} = vscode.workspace.getConfiguration('editor')
   const [editorFontFamily] = fontFamily.split(',')
-  return editorFontFamily
+  return editorFontFamily.replace(/"/g, '')
 }
 
 async function favoriteCurrentFontFamily() {
@@ -176,8 +176,12 @@ async function setFontFamily(fontFamily) {
     'shifty.fontFamilies',
   )
 
+  const formattedFontFamily = /\s/.test(fontFamily)
+    ? `"${fontFamily}"`
+    : fontFamily
+
   const fontFamilyWithFallback = fallbackFontFamily
-    ? `${fontFamily}, ${fallbackFontFamily}`
+    ? `${formattedFontFamily}, ${fallbackFontFamily}`
     : fontFamily
 
   return vscode.workspace
