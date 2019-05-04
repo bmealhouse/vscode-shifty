@@ -9,7 +9,7 @@ module.exports = [
   },
   {
     id: 'Courier',
-    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS],
     type: SYSTEM,
   },
   {
@@ -24,17 +24,17 @@ module.exports = [
   },
   {
     id: 'Menlo',
-    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS],
     type: SYSTEM,
   },
   {
     id: 'Monaco',
-    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS],
     type: SYSTEM,
   },
   {
     id: 'SF Mono',
-    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS],
     type: SYSTEM,
   },
 ]

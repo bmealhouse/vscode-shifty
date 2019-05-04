@@ -194,7 +194,13 @@ module.exports = [
   },
   {
     id: 'Latin Modern Mono Light',
-    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS],
+    type: CODEFACE,
+  },
+  {
+    // Windows uses a different font identifier 🙄
+    id: 'Latin Modern Mono 10',
+    supportedPlatforms: [WINDOWS],
     type: CODEFACE,
   },
   {
@@ -258,6 +264,7 @@ module.exports = [
     type: CODEFACE,
   },
   {
+    // VS Code displays "The terminal only supports monospace fonts." warning message
     id: 'MonospaceTypewriter',
     supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: CODEFACE,
@@ -410,7 +417,7 @@ module.exports = [
   },
   {
     id: 'SV Basic Manual',
-    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS],
     type: CODEFACE,
   },
   {
@@ -435,7 +442,13 @@ module.exports = [
   },
   {
     id: 'Whois',
-    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS],
+    type: CODEFACE,
+  },
+  {
+    // Windows uses a different font identifier 🙄
+    id: 'Whois mono',
+    supportedPlatforms: [WINDOWS],
     type: CODEFACE,
   },
 ]
