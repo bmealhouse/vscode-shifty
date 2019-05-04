@@ -2,7 +2,7 @@
   "name": "shifty",
   "displayName": "shifty",
   "description": "Keeps your day interesting by randomly shifting your color theme & font family",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "MIT",
   "repository": {
     "type": "git",
