@@ -47,6 +47,7 @@ module.exports = [
     type: CODEFACE,
   },
   {
+    // VS Code displays "The terminal only supports monospace fonts." warning message
     id: 'Code New Roman',
     supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: CODEFACE,
@@ -262,7 +263,8 @@ module.exports = [
     type: CODEFACE,
   },
   {
-    id: 'Monospace',
+    // Must be wrapped in quotes to prevent conflicts with system monospace font family
+    id: '"Monospace"',
     supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: CODEFACE,
   },

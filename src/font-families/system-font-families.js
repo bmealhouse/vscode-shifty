@@ -1,39 +1,40 @@
-const {MAC_OS, SYSTEM, WINDOWS} = require('./font-family-types')
+const {LINUX, MAC_OS, SYSTEM, WINDOWS} = require('./font-family-types')
 
 module.exports = [
   {
+    // Only available on MAC_OS when Microsoft Office products have been installed
     id: 'Consolas',
-    supportedPlatforms: [WINDOWS],
+    supportedPlatforms: [LINUX, WINDOWS],
     type: SYSTEM,
   },
   {
     id: 'Courier',
-    supportedPlatforms: [MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: SYSTEM,
   },
   {
     id: 'Courier New',
-    supportedPlatforms: [MAC_OS, WINDOWS],
+    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: SYSTEM,
   },
   {
     id: 'Lucida Console',
-    supportedPlatforms: [WINDOWS],
+    supportedPlatforms: [LINUX, WINDOWS],
     type: SYSTEM,
   },
   {
     id: 'Menlo',
-    supportedPlatforms: [MAC_OS],
+    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: SYSTEM,
   },
   {
     id: 'Monaco',
-    supportedPlatforms: [MAC_OS],
+    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: SYSTEM,
   },
   {
     id: 'SF Mono',
-    supportedPlatforms: [MAC_OS],
+    supportedPlatforms: [LINUX, MAC_OS, WINDOWS],
     type: SYSTEM,
   },
 ]
