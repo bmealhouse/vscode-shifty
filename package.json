@@ -27,6 +27,11 @@
     "font",
     "syntax"
   ],
+  "icon": "images/shifty-logo.png",
+  "galleryBanner": {
+    "color": "#282A36",
+    "theme": "dark"
+  },
   "activationEvents": [
     "*"
   ],
