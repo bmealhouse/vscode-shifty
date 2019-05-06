@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.4] - 2019-05-06
+
+### Changed
+
+- Change gallery banner color to #193549
+
 ## [0.5.3] - 2019-05-06
 
 ### Added
