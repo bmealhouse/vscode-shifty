@@ -5,7 +5,6 @@
 - [Prerequisites](#prerequisites)
   - [Mac, Linux](#mac-linux)
   - [Windows](#windows)
-- [Changelog](https://github.com/bmealhouse/vscode-shifty/blob/master/CHANGELOG.md)
 - [Contributing](#contributing)
 - [License](#license)
 
