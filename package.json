@@ -192,10 +192,7 @@
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test",
-    "vscode:prepublish": "webpack --mode production",
-    "wp": "webpack --mode development",
-    "wp-dev": "webpack --mode development --watch"
+    "test": "node ./node_modules/vscode/bin/test"
   },
   "husky": {
     "hooks": {
