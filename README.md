@@ -1,6 +1,4 @@
-# shifty
-
-> Keeps your day interesting by randomly shifting your color theme and font family
+![shifty banner](/images/shifty-banner.png?raw=true 'shifty banner')
 
 ## Table of contents
 
