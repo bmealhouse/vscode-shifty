@@ -7,11 +7,11 @@
   - [Windows](#windows)
 - [Using shifty](#using-shifty)
   - [Commands](#commands)
+  - [Settings](#settings)
 - [Contributing](#contributing)
 - [License](#license)
 
 <!-- - [Features](#features) -->
-  <!-- - [Settings](#settings) -->
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ For example if there is an image subfolder under your extension project workspac
 
 ### Commands
 
-| Command                            | Description                          |
+| Name                               | Description                          |
 | ---------------------------------- | ------------------------------------ |
 | `shifty.shiftAll`                  | Shift color theme & font family      |
 | `shifty.shiftColorTheme`           | Shift color theme                    |
@@ -61,16 +61,25 @@ For example if there is an image subfolder under your extension project workspac
 | `shifty.ignoreCurrentFontFamily`   | Ignore current font family           |
 | `shifty.showCurrentStatus`         | Show current status                  |
 
-<!-- ### Settings
+### Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-- `myExtension.enable`: enable/disable this extension
-- `myExtension.thing`: set to `blah` to do something -->
+| Name                                               | Description                                                                                                                                 | Default       |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| `shifty.shiftMode`                                 | Controls how shifty cycles through color themes & font families.                                                                            | `all`         |
+| `shifty.colorThemes.favoriteColorThemes`           | Favorite color themes.                                                                                                                      | `[]`          |
+| `shifty.colorThemes.ignoreColorThemes`             | Color themes to ignore.                                                                                                                     | `[]`          |
+| `shifty.colorThemes.ignoreDarkColorThemes`         | Determines if dark color themes should be ignored.                                                                                          | `false`       |
+| `shifty.colorThemes.ignoreHighContrastColorThemes` | Determines if high contrast color themes should be ignored.                                                                                 | `true`        |
+| `shifty.colorThemes.ignoreLightColorThemes`        | Determines if light color themes should be ignored.                                                                                         | `true`        |
+| `shifty.fontFamilies.fallbackFontFamily`           | Fallback font family. This is useful when a font is not supported inside the integrated terminal.                                           | `"monospace"` |
+| `shifty.fontFamilies.favoriteFontFamilies`         | Favorite font families.                                                                                                                     | `[]`          |
+| `shifty.fontFamilies.ignoreCodefaceFontFamilies`   | Determines if codeface font families should be ignored.                                                                                     | `false`       |
+| `shifty.fontFamilies.ignoreFontFamilies`           | Font families to ignore.                                                                                                                    | `[]`          |
+| `shifty.fontFamilies.includeFontFamilies`          | Includes font families.                                                                                                                     | `[]`          |
+| `shifty.shiftInterval.shiftColorThemeIntervalMs`   | Number of milliseconds to wait before shifting the color theme. (defaults to 30min, use zero or null to disable color theme shift interval) | `1800000`     |
+| `shifty.shiftInterval.shiftFontFamilyIntervalMs`   | Number of milliseconds to wait before shifting the font family. (defaults to 30min, use zero or null to disable font family shift interval) | `1800000`     |
+| `shifty.startup.shiftColorThemeOnStartup`          | Determines if the color theme shifts when VS Code starts up.                                                                                | `false`       |
+| `shifty.startup.shiftFontFamilyOnStartup`          | Determines if the font family shifts when VS Code starts up.                                                                                | `false`       |
 
 ## Contributing
 
