@@ -5,13 +5,13 @@
 - [Prerequisites](#prerequisites)
   - [Mac, Linux](#mac-linux)
   - [Windows](#windows)
+- [Using shifty](#using-shifty)
+  - [Commands](#commands)
 - [Contributing](#contributing)
 - [License](#license)
 
 <!-- - [Features](#features) -->
-<!-- - [Using shifty](#using-shifty)
-  - [Commands](#commands)
-  - [Settings](#settings) -->
+  <!-- - [Settings](#settings) -->
 
 ## Prerequisites
 
@@ -44,9 +44,22 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow. -->
 
-<!-- ## Using shifty -->
+## Using shifty
 
-<!-- ### Commands -->
+### Commands
+
+| Command                            | Description                          |
+| ---------------------------------- | ------------------------------------ |
+| `shifty.shiftAll`                  | Shift color theme & font family      |
+| `shifty.shiftColorTheme`           | Shift color theme                    |
+| `shifty.shiftFontFamily`           | Shift font family                    |
+| `shifty.startShiftInterval`        | Start shift interval                 |
+| `shifty.stopShiftInterval`         | Stop shift interval                  |
+| `shifty.favoriteCurrentColorTheme` | Add current color theme to favorites |
+| `shifty.favoriteCurrentFontFamily` | Add current font family to favorites |
+| `shifty.ignoreCurrentColorTheme`   | Ignore current color theme           |
+| `shifty.ignoreCurrentFontFamily`   | Ignore current font family           |
+| `shifty.showCurrentStatus`         | Show current status                  |
 
 <!-- ### Settings
 
