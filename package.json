@@ -139,11 +139,6 @@
     },
     "commands": [
       {
-        "command": "shifty.shiftAll",
-        "title": "Shift color theme & font family",
-        "category": "shifty"
-      },
-      {
         "command": "shifty.shiftColorTheme",
         "title": "Shift color theme",
         "category": "shifty"
@@ -151,6 +146,41 @@
       {
         "command": "shifty.shiftFontFamily",
         "title": "Shift font family",
+        "category": "shifty"
+      },
+      {
+        "command": "shifty.shiftBoth",
+        "title": "Shift color theme & font family",
+        "category": "shifty"
+      },
+      {
+        "command": "shifty.favoriteColorTheme",
+        "title": "Favorite color theme",
+        "category": "shifty"
+      },
+      {
+        "command": "shifty.favoriteFontFamily",
+        "title": "Favorite font family",
+        "category": "shifty"
+      },
+      {
+        "command": "shifty.favoriteBoth",
+        "title": "Favorite color theme & font family",
+        "category": "shifty"
+      },
+      {
+        "command": "shifty.ignoreColorTheme",
+        "title": "Ignore color theme",
+        "category": "shifty"
+      },
+      {
+        "command": "shifty.ignoreFontFamily",
+        "title": "Ignore font family",
+        "category": "shifty"
+      },
+      {
+        "command": "shifty.ignoreBoth",
+        "title": "Ignore color theme & font family",
         "category": "shifty"
       },
       {
@@ -164,28 +194,8 @@
         "category": "shifty"
       },
       {
-        "command": "shifty.favoriteCurrentColorTheme",
-        "title": "Add current color theme to favorites",
-        "category": "shifty"
-      },
-      {
-        "command": "shifty.favoriteCurrentFontFamily",
-        "title": "Add current font family to favorites",
-        "category": "shifty"
-      },
-      {
-        "command": "shifty.ignoreCurrentColorTheme",
-        "title": "Ignore current color theme",
-        "category": "shifty"
-      },
-      {
-        "command": "shifty.ignoreCurrentFontFamily",
-        "title": "Ignore current font family",
-        "category": "shifty"
-      },
-      {
-        "command": "shifty.showCurrentStatus",
-        "title": "Show current status",
+        "command": "shifty.showStatus",
+        "title": "Show status",
         "category": "shifty"
       }
     ]

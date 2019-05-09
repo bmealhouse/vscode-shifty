@@ -9,12 +9,13 @@ const DEFAULT_COLOR_THEME = 'Default Dark+'
 module.exports = {
   _getColorThemesCache,
   activateColorThemes,
-  maybeShiftColorThemeOnStartup,
-  setRandomColorTheme,
-  getColorThemes,
-  getCurrentColorTheme,
-  favoriteCurrentColorTheme,
+  shiftColorTheme,
+  shiftColorThemeOnStartup,
+  favoriteColorTheme,
+  ignoreColorTheme,
+  getColorTheme,
   setColorTheme,
+  getAvailableColorThemes,
   DARK_COLOR_THEME,
   LIGHT_COLOR_THEME,
   HIGH_CONTRAST_COLOR_THEME,
@@ -28,44 +29,23 @@ function _getColorThemesCache() {
 
 async function activateColorThemes(context) {
   primeColorThemesCache()
-  await maybeShiftColorThemeOnStartup()
+  await shiftColorThemeOnStartup()
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('shifty.shiftColorTheme', shiftColorTheme),
+  )
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'shifty.shiftColorTheme',
-      setRandomColorTheme,
+      'shifty.favoriteColorTheme',
+      favoriteColorTheme,
     ),
   )
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'shifty.favoriteCurrentColorTheme',
-      favoriteCurrentColorTheme,
-    ),
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'shifty.ignoreCurrentColorTheme',
-      async () => {
-        const currentColorTheme = getCurrentColorTheme()
-
-        const config = vscode.workspace.getConfiguration('shifty.colorThemes')
-        await config.update(
-          'ignoreColorThemes',
-          [...new Set([...config.ignoreColorThemes, currentColorTheme])].sort(),
-          true,
-        )
-        await config.update(
-          'favoriteColorThemes',
-          config.favoriteColorThemes
-            .filter(ct => ct !== currentColorTheme)
-            .sort(),
-          true,
-        )
-
-        await setRandomColorTheme()
-      },
+      'shifty.ignoreColorTheme',
+      ignoreColorTheme,
     ),
   )
 
@@ -89,11 +69,66 @@ async function activateColorThemes(context) {
   )
 }
 
-async function maybeShiftColorThemeOnStartup() {
+async function shiftColorTheme() {
+  const colorThemes = getAvailableColorThemes()
+  const {id} = getRandomItem(colorThemes)
+  await setColorTheme(id)
+}
+
+async function shiftColorThemeOnStartup() {
   const config = vscode.workspace.getConfiguration('shifty.startup')
   if (config.shiftColorThemeOnStartup) {
-    await setRandomColorTheme()
+    await shiftColorTheme()
   }
+}
+
+async function favoriteColorTheme() {
+  const colorTheme = getColorTheme()
+
+  const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+  await config.update(
+    'favoriteColorThemes',
+    [...new Set([...config.favoriteColorThemes, colorTheme])].sort(),
+    true,
+  )
+
+  vscode.window.showInformationMessage(`Added "${colorTheme}" to favorites`)
+}
+
+async function ignoreColorTheme() {
+  const colorTheme = getColorTheme()
+
+  const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+  await config.update(
+    'ignoreColorThemes',
+    [...new Set([...config.ignoreColorThemes, colorTheme])].sort(),
+    true,
+  )
+  await config.update(
+    'favoriteColorThemes',
+    config.favoriteColorThemes.filter(ct => ct !== colorTheme).sort(),
+    true,
+  )
+
+  await shiftColorTheme()
+}
+
+function getColorTheme() {
+  return vscode.workspace.getConfiguration('workbench').colorTheme
+}
+
+async function setColorTheme(colorTheme) {
+  const workbench = vscode.workspace.getConfiguration('workbench')
+  return workbench.update('colorTheme', colorTheme, true)
+}
+
+function getAvailableColorThemes() {
+  if (colorThemesCache === null) {
+    primeColorThemesCache()
+  }
+
+  const colorTheme = getColorTheme()
+  return colorThemesCache.filter(ct => ct.id !== colorTheme)
 }
 
 function primeColorThemesCache() {
@@ -152,43 +187,4 @@ function primeColorThemesCache() {
   if (colorThemesCache.length === 0) {
     colorThemesCache = [DEFAULT_COLOR_THEME]
   }
-}
-
-async function setRandomColorTheme() {
-  const colorThemes = getColorThemes()
-  const {id} = getRandomItem(colorThemes)
-  await setColorTheme(id)
-}
-
-function getColorThemes() {
-  if (colorThemesCache === null) {
-    primeColorThemesCache()
-  }
-
-  const currentColorTheme = getCurrentColorTheme()
-  return colorThemesCache.filter(ct => ct.id !== currentColorTheme)
-}
-
-function getCurrentColorTheme() {
-  return vscode.workspace.getConfiguration('workbench').colorTheme
-}
-
-async function favoriteCurrentColorTheme() {
-  const currentColorTheme = getCurrentColorTheme()
-
-  const config = vscode.workspace.getConfiguration('shifty.colorThemes')
-  await config.update(
-    'favoriteColorThemes',
-    [...new Set([...config.favoriteColorThemes, currentColorTheme])].sort(),
-    true,
-  )
-
-  vscode.window.showInformationMessage(
-    `Added "${currentColorTheme}" to favorites`,
-  )
-}
-
-async function setColorTheme(colorTheme) {
-  const workbench = vscode.workspace.getConfiguration('workbench')
-  return workbench.update('colorTheme', colorTheme, true)
 }

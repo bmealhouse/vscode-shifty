@@ -1,6 +1,6 @@
 const vscode = require('vscode')
-const {setRandomColorTheme} = require('./color-themes')
-const {setRandomFontFamily} = require('./font-families')
+const {shiftColorTheme} = require('./color-themes')
+const {shiftFontFamily} = require('./font-families')
 
 let shiftColorThemeIntervalId = null
 let shiftColorThemeIntervalStartTime = null
@@ -58,7 +58,7 @@ async function startShiftInterval() {
     shiftColorThemeIntervalStartTime = startTime
     shiftColorThemeIntervalId = setInterval(async () => {
       const nextStartTime = Date.now()
-      await setRandomColorTheme()
+      await shiftColorTheme()
 
       shiftColorThemeIntervalStartTime = nextStartTime
       if (shouldSyncStartTime) {
@@ -71,7 +71,7 @@ async function startShiftInterval() {
     shiftFontFamilyIntervalStartTime = startTime
     shiftFontFamilyIntervalId = setInterval(async () => {
       const nextStartTime = Date.now()
-      await setRandomFontFamily()
+      await shiftFontFamily()
 
       shiftFontFamilyIntervalStartTime = nextStartTime
       if (shouldSyncStartTime) {

@@ -48,18 +48,22 @@ For example if there is an image subfolder under your extension project workspac
 
 ### Commands
 
-| Name                               | Description                          |
-| ---------------------------------- | ------------------------------------ |
-| `shifty.shiftAll`                  | Shift color theme & font family      |
-| `shifty.shiftColorTheme`           | Shift color theme                    |
-| `shifty.shiftFontFamily`           | Shift font family                    |
-| `shifty.startShiftInterval`        | Start shift interval                 |
-| `shifty.stopShiftInterval`         | Stop shift interval                  |
-| `shifty.favoriteCurrentColorTheme` | Add current color theme to favorites |
-| `shifty.favoriteCurrentFontFamily` | Add current font family to favorites |
-| `shifty.ignoreCurrentColorTheme`   | Ignore current color theme           |
-| `shifty.ignoreCurrentFontFamily`   | Ignore current font family           |
-| `shifty.showCurrentStatus`         | Show current status                  |
+Open the VS Code command palette (`⇧⌘P`) and type `shifty`.
+
+| Name                        | Description                        |
+| --------------------------- | ---------------------------------- |
+| `shifty.shiftColorTheme`    | Shift color theme                  |
+| `shifty.shiftFontFamily`    | Shift font family                  |
+| `shifty.shiftBoth`          | Shift color theme & font family    |
+| `shifty.favoriteColorTheme` | Favorite color theme               |
+| `shifty.favoriteFontFamily` | Favorite font family               |
+| `shifty.favoriteBoth`       | Favorite color theme & font family |
+| `shifty.ignoreColorTheme`   | Ignore color theme                 |
+| `shifty.ignoreFontFamily`   | Ignore font family                 |
+| `shifty.ignoreBoth`         | Ignore color theme & font family   |
+| `shifty.startShiftInterval` | Start shift interval               |
+| `shifty.stopShiftInterval`  | Stop shift interval                |
+| `shifty.showStatus`         | Show status                        |
 
 ### Settings
 

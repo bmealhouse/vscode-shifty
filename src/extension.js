@@ -1,6 +1,16 @@
 const vscode = require('vscode')
-const {activateColorThemes, setRandomColorTheme} = require('./color-themes')
-const {activateFontFamilies, setRandomFontFamily} = require('./font-families')
+const {
+  activateColorThemes,
+  shiftColorTheme,
+  favoriteColorTheme,
+  ignoreColorTheme,
+} = require('./color-themes')
+const {
+  activateFontFamilies,
+  shiftFontFamily,
+  favoriteFontFamily,
+  ignoreFontFamily,
+} = require('./font-families')
 const {activateShiftInterval, stopShiftInterval} = require('./shift-interval')
 const {activateStatusBar} = require('./status-bar')
 
@@ -16,8 +26,20 @@ async function activate(context) {
   activateStatusBar(context)
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.shiftAll', async () => {
-      return Promise.all([setRandomColorTheme(), setRandomFontFamily()])
+    vscode.commands.registerCommand('shifty.shiftBoth', async () => {
+      return Promise.all([shiftColorTheme(), shiftFontFamily()])
+    }),
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('shifty.favoriteBoth', async () => {
+      return Promise.all([favoriteColorTheme(), favoriteFontFamily()])
+    }),
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('shifty.ignoreBoth', async () => {
+      return Promise.all([ignoreColorTheme(), ignoreFontFamily()])
     }),
   )
 }

@@ -14,13 +14,14 @@ const allFontFamilies = [
 module.exports = {
   _getFontFamiliesCache,
   activateFontFamilies,
-  maybeShiftFontFamilyOnStartup,
-  setRandomFontFamily,
-  getFontFamilies,
-  getCurrentFontFamily,
-  favoriteCurrentFontFamily,
+  shiftFontFamily,
+  shiftFontFamilyOnStartup,
+  favoriteFontFamily,
+  ignoreFontFamily,
+  getFontFamily,
   setFontFamily,
   allFontFamilies,
+  getAvailableFontFamilies,
   DEFAULT_FONT_FAMILY,
 }
 
@@ -31,46 +32,23 @@ function _getFontFamiliesCache() {
 
 async function activateFontFamilies(context) {
   primeFontFamiliesCache()
-  await maybeShiftFontFamilyOnStartup()
+  await shiftFontFamilyOnStartup()
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('shifty.shiftFontFamily', shiftFontFamily),
+  )
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'shifty.shiftFontFamily',
-      setRandomFontFamily,
+      'shifty.favoriteFontFamily',
+      favoriteFontFamily,
     ),
   )
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'shifty.favoriteCurrentFontFamily',
-      favoriteCurrentFontFamily,
-    ),
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'shifty.ignoreCurrentFontFamily',
-      async () => {
-        const currentFontFamily = getCurrentFontFamily()
-
-        const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
-        await config.update(
-          'ignoreFontFamilies',
-          [
-            ...new Set([...config.ignoreFontFamilies, currentFontFamily]),
-          ].sort(),
-          true,
-        )
-        await config.update(
-          'favoriteFontFamilies',
-          config.favoriteFontFamilies
-            .filter(ff => ff !== currentFontFamily)
-            .sort(),
-          true,
-        )
-
-        await setRandomFontFamily()
-      },
+      'shifty.ignoreFontFamily',
+      ignoreFontFamily,
     ),
   )
 
@@ -87,11 +65,81 @@ async function activateFontFamilies(context) {
   )
 }
 
-async function maybeShiftFontFamilyOnStartup() {
+async function shiftFontFamily() {
+  const fontFamilies = getAvailableFontFamilies()
+  const {id} = getRandomItem(fontFamilies)
+  await setFontFamily(id)
+}
+
+async function shiftFontFamilyOnStartup() {
   const config = vscode.workspace.getConfiguration('shifty.startup')
   if (config.shiftFontFamilyOnStartup) {
-    await setRandomFontFamily()
+    await shiftFontFamily()
   }
+}
+
+async function favoriteFontFamily() {
+  const fontFamily = getFontFamily()
+
+  const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
+  await config.update(
+    'favoriteFontFamilies',
+    [...new Set([...config.favoriteFontFamilies, fontFamily])].sort(),
+    true,
+  )
+
+  vscode.window.showInformationMessage(`Added "${fontFamily}" to favorites`)
+}
+
+async function ignoreFontFamily() {
+  const fontFamily = getFontFamily()
+
+  const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
+  await config.update(
+    'ignoreFontFamilies',
+    [...new Set([...config.ignoreFontFamilies, fontFamily])].sort(),
+    true,
+  )
+  await config.update(
+    'favoriteFontFamilies',
+    config.favoriteFontFamilies.filter(ff => ff !== fontFamily).sort(),
+    true,
+  )
+
+  await shiftFontFamily()
+}
+
+function getFontFamily() {
+  const {fontFamily} = vscode.workspace.getConfiguration('editor')
+  const [primaryFontFamily] = fontFamily.split(',')
+  return primaryFontFamily.replace(/"/g, '')
+}
+
+async function setFontFamily(fontFamily) {
+  const {fallbackFontFamily} = vscode.workspace.getConfiguration(
+    'shifty.fontFamilies',
+  )
+
+  const formattedFontFamily = /\s/.test(fontFamily)
+    ? `"${fontFamily}"`
+    : fontFamily
+
+  const fontFamilyWithFallback = fallbackFontFamily
+    ? `${formattedFontFamily}, ${fallbackFontFamily}`
+    : fontFamily
+
+  return vscode.workspace
+    .getConfiguration('editor')
+    .update('fontFamily', fontFamilyWithFallback, true)
+}
+
+function getAvailableFontFamilies() {
+  if (fontFamiliesCache === null) {
+    primeFontFamiliesCache()
+  }
+
+  const fontFamily = getFontFamily()
+  return fontFamiliesCache.filter(ff => ff.id !== fontFamily)
 }
 
 function primeFontFamiliesCache() {
@@ -136,58 +184,4 @@ function primeFontFamiliesCache() {
   if (fontFamiliesCache.length === 0) {
     fontFamiliesCache = [DEFAULT_FONT_FAMILY]
   }
-}
-
-async function setRandomFontFamily() {
-  const fontFamilies = getFontFamilies()
-  const {id} = getRandomItem(fontFamilies)
-  await setFontFamily(id)
-}
-
-function getFontFamilies() {
-  if (fontFamiliesCache === null) {
-    primeFontFamiliesCache()
-  }
-
-  const currentFontFamily = getCurrentFontFamily()
-  return fontFamiliesCache.filter(ff => ff.id !== currentFontFamily)
-}
-
-function getCurrentFontFamily() {
-  const {fontFamily} = vscode.workspace.getConfiguration('editor')
-  const [editorFontFamily] = fontFamily.split(',')
-  return editorFontFamily.replace(/"/g, '')
-}
-
-async function favoriteCurrentFontFamily() {
-  const currentFontFamily = getCurrentFontFamily()
-
-  const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
-  await config.update(
-    'favoriteFontFamilies',
-    [...new Set([...config.favoriteFontFamilies, currentFontFamily])].sort(),
-    true,
-  )
-
-  vscode.window.showInformationMessage(
-    `Added "${currentFontFamily}" to favorites`,
-  )
-}
-
-async function setFontFamily(fontFamily) {
-  const {fallbackFontFamily} = vscode.workspace.getConfiguration(
-    'shifty.fontFamilies',
-  )
-
-  const formattedFontFamily = /\s/.test(fontFamily)
-    ? `"${fontFamily}"`
-    : fontFamily
-
-  const fontFamilyWithFallback = fallbackFontFamily
-    ? `${formattedFontFamily}, ${fallbackFontFamily}`
-    : fontFamily
-
-  return vscode.workspace
-    .getConfiguration('editor')
-    .update('fontFamily', fontFamilyWithFallback, true)
 }

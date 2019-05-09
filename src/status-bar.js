@@ -1,12 +1,6 @@
 const vscode = require('vscode')
-const {
-  getCurrentColorTheme,
-  favoriteCurrentColorTheme,
-} = require('./color-themes')
-const {
-  getCurrentFontFamily,
-  favoriteCurrentFontFamily,
-} = require('./font-families')
+const {getColorTheme, favoriteColorTheme} = require('./color-themes')
+const {getFontFamily, favoriteFontFamily} = require('./font-families')
 const {
   startShiftInterval,
   getRemainingTimeForShiftIntervals,
@@ -17,7 +11,7 @@ module.exports = {
 }
 
 let statusBar = null
-const STATUS_BAR_COMMAND_ID = 'shifty.showCurrentStatus'
+const STATUS_BAR_COMMAND_ID = 'shifty.showStatus'
 const STATUS_BAR_DISPLAY_TEXT = 'shifty'
 const STATUS_BAR_PRIORITY = 0
 
@@ -38,13 +32,10 @@ function activateStatusBar(context) {
 
       const actionFuncMap = {
         [actionTextMap.START_SHIFT_INTERVAL]: startShiftInterval,
-        [actionTextMap.FAVORITE_COLOR_THEME]: favoriteCurrentColorTheme,
-        [actionTextMap.FAVORITE_FONT_FAMILY]: favoriteCurrentFontFamily,
+        [actionTextMap.FAVORITE_COLOR_THEME]: favoriteColorTheme,
+        [actionTextMap.FAVORITE_FONT_FAMILY]: favoriteFontFamily,
         [actionTextMap.FAVORITE_BOTH]: async () => {
-          return Promise.all([
-            favoriteCurrentColorTheme(),
-            favoriteCurrentFontFamily(),
-          ])
+          return Promise.all([favoriteColorTheme(), favoriteFontFamily()])
         },
       }
 
@@ -76,7 +67,7 @@ function activateStatusBar(context) {
             ]
           : []),
         [
-          `Using "${getCurrentColorTheme()}" with "${getCurrentFontFamily()}" font family`,
+          `Using "${getColorTheme()}" with "${getFontFamily()}" font family`,
           actionTextMap.FAVORITE_COLOR_THEME,
           actionTextMap.FAVORITE_FONT_FAMILY,
           actionTextMap.FAVORITE_BOTH,

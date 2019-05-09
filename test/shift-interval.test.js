@@ -1,13 +1,7 @@
 const assert = require('assert')
 const vscode = require('vscode')
-const {
-  getCurrentColorTheme,
-  DEFAULT_COLOR_THEME,
-} = require('../src/color-themes')
-const {
-  getCurrentFontFamily,
-  DEFAULT_FONT_FAMILY,
-} = require('../src/font-families')
+const {getColorTheme, DEFAULT_COLOR_THEME} = require('../src/color-themes')
+const {getFontFamily, DEFAULT_FONT_FAMILY} = require('../src/font-families')
 const {
   _getShiftIntervalIds,
   hasShiftIntervalStarted,
@@ -110,7 +104,7 @@ suite('shift-interval.test.js', () => {
     await wait(100) // need to wait at least 100ms for this test to work
     await vscode.commands.executeCommand('shifty.stopShiftInterval')
 
-    assert.notStrictEqual(getCurrentColorTheme(), DEFAULT_COLOR_THEME)
+    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME)
   })
 
   test('should shift the color theme when the shift interval has completed', async () => {
@@ -124,7 +118,7 @@ suite('shift-interval.test.js', () => {
     await wait(100) // need to wait at least 100ms for this test to work
     await vscode.commands.executeCommand('shifty.stopShiftInterval')
 
-    assert.notStrictEqual(getCurrentFontFamily(), DEFAULT_FONT_FAMILY)
+    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY)
   })
 
   test('should return nulls for remaining time when the shift interval has not been started', () => {

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2019-05-09
+
+### Added
+
+- Add commands for consistency
+  - _"shifty: Favorite color theme & font family"_
+  - _"shifty: Ignore color theme & font family"_
+
+### Changed
+
+- Rename commands for consistency
+  - `shifty.shiftAll` -> `shifty.shiftBoth`
+  - `shifty.favoriteCurrentColorTheme` -> `shifty.favoriteColorTheme`
+  - `shifty.favoriteCurrentFontFamily` -> `shifty.favoriteFontFamily`
+  - `shifty.ignoreCurrentColorTheme` -> `shifty.ignoreColorTheme`
+  - `shifty.ignoreCurrentFontFamily` -> `shifty.ignoreFontFamily`
+  - `shifty.showCurrentStatus` -> `shifty.showStatus`
+- Update command descriptions for consistency
+  - _"shifty: Add current color theme to favorites"_ -> _"shifty: Favorite color theme"_
+  - _"shifty: Add current font family to favorites"_ -> _"shifty: Favorite font family"_
+  - _"shifty: Ignore current color theme"_ -> _"shifty: Ignore color theme"_
+  - _"shifty: Ignore current font family"_ -> _"shifty: Ignore font family"_
+  - _"shifty: Show current status"_ -> _"shifty: Show status"_
+
 ## [0.5.5] - 2019-05-06
 
 ### Changed
@@ -112,15 +136,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `shifty.colorThemes.favoriteColorThemes`
   - `shifty.fontFamilies.favoriteFontFamilies`
 - Add commands to support favorites
-  - _"Shifty: Add current color themes to favorites"_
-  - _"Shifty: Add current font family to favorites"_
+  - _"shifty: Add current color themes to favorites"_
+  - _"shifty: Add current font family to favorites"_
 
 ## [0.1.0] - 2019-04-19
 
 ### Added
 
 - Add **shifty** status bar item
-- Add command _"Shifty: Show current status"_
+- Add command _"shifty: Show current status"_
 - Show **Start shift interval** action in the shift interval status notification
 - Add LICENSE
 
@@ -132,8 +156,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `shifty.fontFamilies.ignoreFontFamilies`
   - `shifty.fontFamilies.includeFontFamilies`
 - Rename shift interval commands
-  - _"Shifty: Enable shift interval"_ -> _"Shifty: Start shift interval"_
-  - _"Shifty: Disable shift interval"_ -> _"Shifty: Stop shift interval"_
+  - _"shifty: Enable shift interval"_ -> _"shifty: Start shift interval"_
+  - _"shifty: Disable shift interval"_ -> _"shifty: Stop shift interval"_
 
 ### Fixed
 

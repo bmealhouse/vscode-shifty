@@ -2,12 +2,12 @@ const os = require('os')
 const vscode = require('vscode')
 const sinon = require('sinon')
 const {
-  getCurrentColorTheme,
+  getColorTheme,
   setColorTheme,
   DEFAULT_COLOR_THEME,
 } = require('../src/color-themes')
 const {
-  getCurrentFontFamily,
+  getFontFamily,
   setFontFamily,
   DEFAULT_FONT_FAMILY,
 } = require('../src/font-families')
@@ -32,10 +32,10 @@ async function setupTest() {
   sinon.stub(os, 'type').returns(DEFAULT_PLATFORM)
   sinon.spy(vscode.window, 'showInformationMessage')
 
-  originalColorTheme = getCurrentColorTheme()
+  originalColorTheme = getColorTheme()
   await setColorTheme(DEFAULT_COLOR_THEME)
 
-  originalFontFamily = getCurrentFontFamily()
+  originalFontFamily = getFontFamily()
   await setFontFamily(DEFAULT_FONT_FAMILY)
 
   await setDefault('shifty.shiftMode', 'all')

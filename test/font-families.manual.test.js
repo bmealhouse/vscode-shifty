@@ -1,5 +1,5 @@
 const {
-  getCurrentFontFamily,
+  getFontFamily,
   setFontFamily,
   allFontFamilies,
 } = require('../src/font-families')
@@ -8,7 +8,7 @@ const {wait} = require('./test-utils')
 test.skip('manually test font families on different platforms', function(done) {
   this.timeout(0)
 
-  const originalFontFamily = getCurrentFontFamily()
+  const originalFontFamily = getFontFamily()
 
   function getNextFontFamily(index = 0) {
     const nextFontFamily = allFontFamilies[index]
