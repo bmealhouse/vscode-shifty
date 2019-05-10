@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add codeface dependency notice
+
 ## [0.6.0] - 2019-05-09
 
 ### Added

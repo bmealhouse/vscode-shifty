@@ -1,8 +1,12 @@
+# ⚠️ Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces ⚠️
+
+### To experience shifty in it's full glory please follow our [Codeface installation](#codeface-installation) docs.
+
 ![shifty banner](/images/shifty-banner.png?raw=true 'shifty banner')
 
 ## Table of contents
 
-- [Prerequisites](#prerequisites)
+- [Codeface installation](#codeface-installation)
   - [Mac, Linux](#mac-linux)
   - [Windows](#windows)
 - [Using shifty](#using-shifty)
@@ -13,11 +17,11 @@
 
 <!-- - [Features](#features) -->
 
-## Prerequisites
+## Codeface installation
 
-shifty depends on [codeface](https://github.com/chrissimpkins/codeface) typefaces. The easiest way to get started is to use our install script, however, you can also download the `.zip` or `.tar.xz` directly from [codeface](https://github.com/chrissimpkins/codeface) and install the fonts on your system manually.
+Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces. The easiest way to get started is to use our install script, however, you can also download the `.zip` or `.tar.xz` directly from Codeface and install the fonts on your system manually.
 
-> After installing fonts, **restart VS Code** for them to take affect
+> After installing Codeface font families, **restart VS Code** to have them take affect
 
 ### Mac, Linux
 
