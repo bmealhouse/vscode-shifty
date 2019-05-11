@@ -109,21 +109,21 @@
           "default": [],
           "description": "List of font families to include. Useful for including fonts you've purchased."
         },
-        "shifty.shiftInterval.shiftColorThemeIntervalMs": {
+        "shifty.shiftInterval.shiftColorThemeIntervalMin": {
           "type": [
-            "number",
+            "integer",
             "null"
           ],
-          "default": 1800000,
-          "description": "Number of milliseconds to wait before shifting the color theme. (defaults to 30min, use zero or null to disable color theme shift interval)"
+          "default": 30,
+          "markdownDescription": "Number of minutes to wait before shifting the color theme. Use `0` or `null` to disable the color theme shift interval."
         },
-        "shifty.shiftInterval.shiftFontFamilyIntervalMs": {
+        "shifty.shiftInterval.shiftFontFamilyIntervalMin": {
           "type": [
-            "number",
+            "integer",
             "null"
           ],
-          "default": 1800000,
-          "description": "Number of milliseconds to wait before shifting the font family. (defaults to 30min, use zero or null to disable font family shift interval)"
+          "default": 30,
+          "markdownDescription": "Number of minutes to wait before shifting the font family. Use `0` or `null` to disable the font family shift interval."
         },
         "shifty.startup.shiftColorThemeOnStartup": {
           "type": "boolean",

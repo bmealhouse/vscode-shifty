@@ -1,4 +1,4 @@
-# 📍Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces
+# 📍 Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces
 
 ### To experience shifty in it's full glory please follow our [Codeface installation](#codeface-installation) docs.
 
@@ -101,8 +101,8 @@ Anything shifty can do is exposed via commands. Open the VS Code command palette
 | `shifty.fontFamilies.ignoreCodefaceFontFamilies`   | Controls whether Codeface font families are ignored.                                                                                           |
 | `shifty.fontFamilies.ignoreFontFamilies`           | List of font families you've ignored.                                                                                                          |
 | `shifty.fontFamilies.includeFontFamilies`          | List of font families to include. Useful for including fonts you've purchased.                                                                 |
-| `shifty.shiftInterval.shiftColorThemeIntervalMs`   | Number of milliseconds to wait before shifting the color theme. (defaults to 30min, use zero or null to disable color theme shift interval)    |
-| `shifty.shiftInterval.shiftFontFamilyIntervalMs`   | Number of milliseconds to wait before shifting the font family. (defaults to 30min, use zero or null to disable font family shift interval)    |
+| `shifty.shiftInterval.shiftColorThemeIntervalMin`  | Number of minutes to wait before shifting the color theme. Use `0` or `null` to disable the color theme shift interval. (default: `30`)        |
+| `shifty.shiftInterval.shiftFontFamilyIntervalMin`  | Number of minutes to wait before shifting the font family. Use `0` or `null` to disable the font family shift interval. (default: `30`)        |
 | `shifty.startup.shiftColorThemeOnStartup`          | Controls whether the color theme shifts on VS Code startup. (default: `false`)                                                                 |
 | `shifty.startup.shiftFontFamilyOnStartup`          | Controls whether the font family shifts on VS Code startup. (default: `false`)                                                                 |
 

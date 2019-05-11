@@ -37,8 +37,8 @@ suite('shift-interval.test.js', () => {
   })
 
   test('should not start shift intervals when set to 0ms', async () => {
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 0)
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 0)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', 0)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', 0)
     await vscode.commands.executeCommand('shifty.startShiftInterval')
 
     const {
@@ -52,8 +52,8 @@ suite('shift-interval.test.js', () => {
   })
 
   test('should not start shift intervals when set to null', async () => {
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', null)
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', null)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', null)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', null)
     await vscode.commands.executeCommand('shifty.startShiftInterval')
 
     const {
@@ -71,7 +71,7 @@ suite('shift-interval.test.js', () => {
     assert.ok(hasShiftIntervalStarted())
 
     const shiftIntervalIds = _getShiftIntervalIds()
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 1337)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', 10)
     assert.ok(hasShiftIntervalStarted())
     assert.notDeepStrictEqual(_getShiftIntervalIds(), shiftIntervalIds)
 
@@ -81,7 +81,7 @@ suite('shift-interval.test.js', () => {
   test('should do nothing when the shift interval has not been started and the config changes', async () => {
     assert.ok(!hasShiftIntervalStarted())
 
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 1337)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', 10)
 
     const {
       shiftColorThemeIntervalId,
@@ -100,7 +100,7 @@ suite('shift-interval.test.js', () => {
     await setConfig('shifty.colorThemes.ignoreColorThemes', [
       DEFAULT_COLOR_THEME,
     ])
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 25)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', 0.0004) // 24ms
     await wait(100) // need to wait at least 100ms for this test to work
     await vscode.commands.executeCommand('shifty.stopShiftInterval')
 
@@ -114,7 +114,7 @@ suite('shift-interval.test.js', () => {
     await setConfig('shifty.fontFamilies.ignoreFontFamilies', [
       DEFAULT_FONT_FAMILY,
     ])
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 25)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', 0.0004) // 24ms
     await wait(100) // need to wait at least 100ms for this test to work
     await vscode.commands.executeCommand('shifty.stopShiftInterval')
 

@@ -40,8 +40,8 @@ suite('status-bar.test.js', () => {
   })
 
   test('should display the color theme shift interval status when running the "shifty.showStatus" command', async () => {
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 1337)
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 0)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', 10)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', null)
     await vscode.commands.executeCommand('shifty.startShiftInterval')
 
     await vscode.commands.executeCommand('shifty.showStatus')
@@ -55,8 +55,8 @@ suite('status-bar.test.js', () => {
   })
 
   test('should display the font family shift interval status when running the "shifty.showStatus" command', async () => {
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 0)
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 1337)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', null)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', 10)
     await vscode.commands.executeCommand('shifty.startShiftInterval')
 
     await vscode.commands.executeCommand('shifty.showStatus')
@@ -70,8 +70,8 @@ suite('status-bar.test.js', () => {
   })
 
   test('should display the color theme and font family shift interval status when running the "shifty.showStatus" command', async () => {
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 1337)
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 1337)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', 10)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', 10)
     await vscode.commands.executeCommand('shifty.startShiftInterval')
 
     await vscode.commands.executeCommand('shifty.showStatus')
@@ -85,8 +85,8 @@ suite('status-bar.test.js', () => {
   })
 
   test('should display separate color theme and font family shift interval status when running the "shifty.showStatus" command', async () => {
-    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMs', 1337)
-    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMs', 7331)
+    await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', 10)
+    await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', 20)
     await vscode.commands.executeCommand('shifty.startShiftInterval')
 
     await vscode.commands.executeCommand('shifty.showStatus')

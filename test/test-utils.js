@@ -49,8 +49,8 @@ async function setupTest() {
   await setDefault('shifty.fontFamilies.ignoreCodefaceFontFamilies', false)
   await setDefault('shifty.fontFamilies.ignoreFontFamilies', [])
   await setDefault('shifty.fontFamilies.includeFontFamilies', [])
-  await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMs', 1800000)
-  await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMs', 1800000)
+  await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMin', 30)
+  await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMin', 30)
   await setDefault('shifty.startup.shiftColorThemeOnStartup', false)
   await setDefault('shifty.startup.shiftFontFamilyOnStartup', false)
 }
@@ -81,8 +81,8 @@ async function teardownTest() {
   await restoreOriginal('shifty.fontFamilies.ignoreCodefaceFontFamilies')
   await restoreOriginal('shifty.fontFamilies.ignoreFontFamilies')
   await restoreOriginal('shifty.fontFamilies.includeFontFamilies')
-  await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMs')
-  await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMs')
+  await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMin')
+  await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMin')
   await restoreOriginal('shifty.startup.shiftColorThemeOnStartup')
   await restoreOriginal('shifty.startup.shiftFontFamilyOnStartup')
   originalConfig = {}

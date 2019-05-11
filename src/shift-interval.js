@@ -46,15 +46,15 @@ function activateShiftInterval(context) {
 
 async function startShiftInterval() {
   const {
-    shiftColorThemeIntervalMs,
-    shiftFontFamilyIntervalMs,
+    shiftColorThemeIntervalMin,
+    shiftFontFamilyIntervalMin,
   } = vscode.workspace.getConfiguration('shifty.shiftInterval')
 
   const startTime = Date.now()
   const shouldSyncStartTime =
-    shiftColorThemeIntervalMs === shiftFontFamilyIntervalMs
+    shiftColorThemeIntervalMin === shiftFontFamilyIntervalMin
 
-  if (shiftColorThemeIntervalId === null && shiftColorThemeIntervalMs > 0) {
+  if (shiftColorThemeIntervalId === null && shiftColorThemeIntervalMin > 0) {
     shiftColorThemeIntervalStartTime = startTime
     shiftColorThemeIntervalId = setInterval(async () => {
       const nextStartTime = Date.now()
@@ -64,10 +64,10 @@ async function startShiftInterval() {
       if (shouldSyncStartTime) {
         shiftFontFamilyIntervalStartTime = nextStartTime
       }
-    }, shiftColorThemeIntervalMs)
+    }, shiftColorThemeIntervalMin * 60 * 1000)
   }
 
-  if (shiftFontFamilyIntervalId === null && shiftFontFamilyIntervalMs > 0) {
+  if (shiftFontFamilyIntervalId === null && shiftFontFamilyIntervalMin > 0) {
     shiftFontFamilyIntervalStartTime = startTime
     shiftFontFamilyIntervalId = setInterval(async () => {
       const nextStartTime = Date.now()
@@ -77,7 +77,7 @@ async function startShiftInterval() {
       if (shouldSyncStartTime) {
         shiftColorThemeIntervalStartTime = nextStartTime
       }
-    }, shiftFontFamilyIntervalMs)
+    }, shiftFontFamilyIntervalMin * 60 * 1000)
   }
 }
 

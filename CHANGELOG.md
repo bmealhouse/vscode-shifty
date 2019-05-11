@@ -16,7 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Write to settings synchronously
-- Rename default `shifty.shiftMode` from `all` -> `default`
+- Change shift interval settings from milliseconds to minutes
+  - `shifty.shiftInterval.shiftColorThemeIntervalMs` -> `shifty.shiftInterval.shiftColorThemeIntervalMin`
+  - `shifty.shiftInterval.shiftFontFamilyIntervalMs` -> `shifty.shiftInterval.shiftFontFamilyIntervalMin`
+- Rename default `shifty.shiftMode` value from `all` -> `default`
 - `shifty.colorThemes.ignoreHighContrastColorThemes` defaults to `false`
 - `shifty.colorThemes.ignoreLightColorThemes` defaults to `false`
 - Cleanup settings documentation
