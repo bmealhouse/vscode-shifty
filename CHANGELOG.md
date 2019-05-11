@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Write to settings synchronously
 - Rename default `shifty.shiftMode` from `all` -> `default`
 
+### Removed
+
+- Remove "Using shifty" wrapper in README
+
 ## [0.6.0] - 2019-05-09
 
 ### Added

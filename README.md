@@ -10,13 +10,12 @@
   - [Mac, Linux](#mac-linux)
   - [Windows](#windows)
 - [Features](#features)
-- [Using shifty](#using-shifty)
-  - [Shift mode](#shift-mode)
-    - [default](#default)
-    - [discovery](#discovery)
-    - [favorites](#favorites)
-  - [Commands](#commands)
-  - [Settings](#settings)
+- [Shift mode](#shift-mode)
+  - [default](#default)
+  - [discovery](#discovery)
+  - [favorites](#favorites)
+- [Commands](#commands)
+- [Settings](#settings)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -43,7 +42,7 @@ cd vscode-shifty-font-families
 
 ## Features
 
-- Highly configurable
+- Highly configurable (see [settings](#settings))
 - Shift color theme & font family on 30min interval
 - Shift interval can be used as a pomodoro timer
 - Shift color theme & font family on VS Code startup
@@ -52,25 +51,23 @@ cd vscode-shifty-font-families
 
 ![shifty status](/images/shifty-status.png)
 
-## Using shifty
-
-### Shift mode
+## Shift mode
 
 Shifty supports three different shift modes when cycling through color themes & font families. I recommend starting with **discovery** mode until all color themes & font families have been favorited or ignored and then switch over to **favorites** mode.
 
-#### default
+### default
 
 Cycles through all color themes & font families that have not been ignored.
 
-#### discovery
+### discovery
 
 Cycles through color themes & font families that have not been favorited or ignored. When all color themes or font families have been favorited or ignored, shifty will fallback to using **favorites** mode.
 
-#### favorites
+### favorites
 
 Cycles through favorite color themes & font families.
 
-### Commands
+## Commands
 
 Anything shifty can do is exposed via commands. Open the VS Code command palette (`⇧⌘P`) and type `shifty` to see the list of commands availabe to you.
 
@@ -89,7 +86,7 @@ Anything shifty can do is exposed via commands. Open the VS Code command palette
 | `shifty.stopShiftInterval`  | Stop shift interval                |
 | `shifty.showStatus`         | Show status                        |
 
-### Settings
+## Settings
 
 | Name                                               | Description                                                                                                                                 |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
