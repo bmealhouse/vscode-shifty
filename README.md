@@ -91,11 +91,11 @@ Anything shifty can do is exposed via commands. Open the VS Code command palette
 | Name                                               | Description                                                                                                                                 |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `shifty.shiftMode`                                 | Controls how shifty cycles through color themes & font families.                                                                            |
-| `shifty.colorThemes.favoriteColorThemes`           | Favorite color themes.                                                                                                                      |
-| `shifty.colorThemes.ignoreColorThemes`             | Color themes to ignore.                                                                                                                     |
-| `shifty.colorThemes.ignoreDarkColorThemes`         | Determines if dark color themes should be ignored.                                                                                          |
-| `shifty.colorThemes.ignoreHighContrastColorThemes` | Determines if high contrast color themes should be ignored.                                                                                 |
-| `shifty.colorThemes.ignoreLightColorThemes`        | Determines if light color themes should be ignored.                                                                                         |
+| `shifty.colorThemes.favoriteColorThemes`           | List of color themes you've favorited.                                                                                                      |
+| `shifty.colorThemes.ignoreColorThemes`             | List of color themes you've ignored.                                                                                                        |
+| `shifty.colorThemes.ignoreDarkColorThemes`         | Controls whether dark color themes are ignored. (default: `false`)                                                                          |
+| `shifty.colorThemes.ignoreHighContrastColorThemes` | Controls whether high contrast color themes are ignored. (default: `false`)                                                                 |
+| `shifty.colorThemes.ignoreLightColorThemes`        | Controls whether light color themes are ignored. (default: `false`)                                                                         |
 | `shifty.fontFamilies.fallbackFontFamily`           | Fallback font family. This is useful when a font is not supported inside the integrated terminal.                                           |
 | `shifty.fontFamilies.favoriteFontFamilies`         | Favorite font families.                                                                                                                     |
 | `shifty.fontFamilies.ignoreCodefaceFontFamilies`   | Determines if codeface font families should be ignored.                                                                                     |

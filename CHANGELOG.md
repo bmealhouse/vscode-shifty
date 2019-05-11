@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Write to settings synchronously
 - Rename default `shifty.shiftMode` from `all` -> `default`
+- `shifty.colorThemes.ignoreHighContrastColorThemes` defaults to `false`
+- `shifty.colorThemes.ignoreLightColorThemes` defaults to `false`
 
 ### Removed
 

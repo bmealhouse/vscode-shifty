@@ -59,27 +59,27 @@
         "shifty.colorThemes.favoriteColorThemes": {
           "type": "array",
           "default": [],
-          "description": "Favorite color themes."
+          "description": "List color themes you've favorited."
         },
         "shifty.colorThemes.ignoreColorThemes": {
           "type": "array",
           "default": [],
-          "description": "Color themes to ignore."
+          "description": "List of color themes you've ignored."
         },
         "shifty.colorThemes.ignoreDarkColorThemes": {
           "type": "boolean",
           "default": false,
-          "description": "Determines if dark color themes should be ignored."
+          "description": "Controls whether dark color themes are ignored."
         },
         "shifty.colorThemes.ignoreHighContrastColorThemes": {
           "type": "boolean",
-          "default": true,
-          "description": "Determines if high contrast color themes should be ignored."
+          "default": false,
+          "description": "Controls whether high contrast color themes are ignored."
         },
         "shifty.colorThemes.ignoreLightColorThemes": {
           "type": "boolean",
-          "default": true,
-          "description": "Determines if light color themes should be ignored."
+          "default": false,
+          "description": "Controls whether light color themes are ignored."
         },
         "shifty.fontFamilies.fallbackFontFamily": {
           "type": [
