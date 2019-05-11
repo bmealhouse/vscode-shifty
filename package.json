@@ -128,12 +128,12 @@
         "shifty.startup.shiftColorThemeOnStartup": {
           "type": "boolean",
           "default": false,
-          "description": "Determines if the color theme shifts when VS Code starts up."
+          "description": "Controls whether the color theme shifts on VS Code startup."
         },
         "shifty.startup.shiftFontFamilyOnStartup": {
           "type": "boolean",
           "default": false,
-          "description": "Determines if the font family shifts when VS Code starts up."
+          "description": "Controls whether the font family shifts on VS Code startup."
         }
       }
     },

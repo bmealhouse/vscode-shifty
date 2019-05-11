@@ -1,4 +1,4 @@
-# 📍 Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces
+# 📍Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces
 
 ### To experience shifty in it's full glory please follow our [Codeface installation](#codeface-installation) docs.
 
@@ -103,8 +103,8 @@ Anything shifty can do is exposed via commands. Open the VS Code command palette
 | `shifty.fontFamilies.includeFontFamilies`          | Includes font families.                                                                                                                     |
 | `shifty.shiftInterval.shiftColorThemeIntervalMs`   | Number of milliseconds to wait before shifting the color theme. (defaults to 30min, use zero or null to disable color theme shift interval) |
 | `shifty.shiftInterval.shiftFontFamilyIntervalMs`   | Number of milliseconds to wait before shifting the font family. (defaults to 30min, use zero or null to disable font family shift interval) |
-| `shifty.startup.shiftColorThemeOnStartup`          | Determines if the color theme shifts when VS Code starts up.                                                                                |
-| `shifty.startup.shiftFontFamilyOnStartup`          | Determines if the font family shifts when VS Code starts up.                                                                                |
+| `shifty.startup.shiftColorThemeOnStartup`          | Controls whether the color theme shifts on VS Code startup. (default: `false`)                                                              |
+| `shifty.startup.shiftFontFamilyOnStartup`          | Controls whether the font family shifts on VS Code startup. (default: `false`)                                                              |
 
 ## Contributing
 
