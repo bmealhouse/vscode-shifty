@@ -87,27 +87,27 @@
             "null"
           ],
           "default": "monospace",
-          "description": "Fallback font family. This is useful when a font is not supported inside the integrated terminal."
+          "markdownDescription": "Controls which font family will be used as the fallback. Supports comma delimited values (e.g. `\"SF Mono\", monospace`)."
         },
         "shifty.fontFamilies.favoriteFontFamilies": {
           "type": "array",
           "default": [],
-          "description": "Favorite font families."
+          "description": "List of font families you've favorited."
         },
         "shifty.fontFamilies.ignoreCodefaceFontFamilies": {
           "type": "boolean",
           "default": false,
-          "description": "Determines if codeface font families should be ignored."
+          "description": "Controls whether Codeface font families are ignored."
         },
         "shifty.fontFamilies.ignoreFontFamilies": {
           "type": "array",
           "default": [],
-          "description": "Font families to ignore."
+          "description": "List of font families you've ignored."
         },
         "shifty.fontFamilies.includeFontFamilies": {
           "type": "array",
           "default": [],
-          "description": "Includes font families."
+          "description": "List of font families to include. Useful for including fonts you've purchased."
         },
         "shifty.shiftInterval.shiftColorThemeIntervalMs": {
           "type": [

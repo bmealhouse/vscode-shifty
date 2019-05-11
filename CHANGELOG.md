@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add codeface dependency notice to README
 - Add features section to README
-- Add shift mode documenation to README
+- Add shift mode documentation to README
 
 ### Changed
 
@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename default `shifty.shiftMode` from `all` -> `default`
 - `shifty.colorThemes.ignoreHighContrastColorThemes` defaults to `false`
 - `shifty.colorThemes.ignoreLightColorThemes` defaults to `false`
+- Cleanup settings documentation
 
 ### Removed
 
