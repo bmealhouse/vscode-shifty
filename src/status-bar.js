@@ -35,7 +35,8 @@ function activateStatusBar(context) {
         [actionTextMap.FAVORITE_COLOR_THEME]: favoriteColorTheme,
         [actionTextMap.FAVORITE_FONT_FAMILY]: favoriteFontFamily,
         [actionTextMap.FAVORITE_BOTH]: async () => {
-          return Promise.all([favoriteColorTheme(), favoriteFontFamily()])
+          await favoriteFontFamily()
+          await favoriteColorTheme()
         },
       }
 

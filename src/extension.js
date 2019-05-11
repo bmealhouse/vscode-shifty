@@ -27,19 +27,22 @@ async function activate(context) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftBoth', async () => {
-      return Promise.all([shiftColorTheme(), shiftFontFamily()])
+      await shiftFontFamily()
+      await shiftColorTheme()
     }),
   )
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.favoriteBoth', async () => {
-      return Promise.all([favoriteColorTheme(), favoriteFontFamily()])
+      await favoriteFontFamily()
+      await favoriteColorTheme()
     }),
   )
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.ignoreBoth', async () => {
-      return Promise.all([ignoreColorTheme(), ignoreFontFamily()])
+      await ignoreFontFamily()
+      await ignoreColorTheme()
     }),
   )
 }
