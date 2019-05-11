@@ -1,27 +1,26 @@
-# ⚠️ Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces ⚠️
+# 📍 Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces
 
 ### To experience shifty in it's full glory please follow our [Codeface installation](#codeface-installation) docs.
 
-![shifty banner](/images/shifty-banner.png?raw=true 'shifty banner')
+![shifty banner](/images/shifty-banner.png)
 
 ## Table of contents
 
 - [Codeface installation](#codeface-installation)
   - [Mac, Linux](#mac-linux)
   - [Windows](#windows)
+- [Features](#features)
 - [Using shifty](#using-shifty)
   - [Commands](#commands)
   - [Settings](#settings)
 - [Contributing](#contributing)
 - [License](#license)
 
-<!-- - [Features](#features) -->
-
 ## Codeface installation
 
-Shifty depends on [Codeface](https://github.com/chrissimpkins/codeface) typefaces. The easiest way to get started is to use our install script, however, you can also download the `.zip` or `.tar.xz` directly from Codeface and install the fonts on your system manually.
+The easiest way to get started is to use our install script, however, you can also download the `.zip` or `.tar.xz` directly from Codeface and install the fonts on your system manually.
 
-> After installing Codeface font families, **restart VS Code** to have them take affect
+> After installing Codeface font families, **restart VS Code** to have them take affect.
 
 ### Mac, Linux
 
@@ -38,21 +37,22 @@ cd vscode-shifty-font-families
 ./install.ps1
 ```
 
-<!-- ## Features
+## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Highly configurable
+- Shift color theme & font family on 30min interval
+- Shift interval can be used as a pomodoro timer
+- Shift color theme & font family on VS Code startup
+- Favorite/ignore color themes & font families
+- Shifty status bar displays remaining time of shift interval
 
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow. -->
+![shifty status](/images/shifty-status.png)
 
 ## Using shifty
 
 ### Commands
 
-Open the VS Code command palette (`⇧⌘P`) and type `shifty`.
+Anything shifty can do is exposed via commands. Open the VS Code command palette (`⇧⌘P`) and type `shifty` to see the list of commands availabe to you.
 
 | Name                        | Description                        |
 | --------------------------- | ---------------------------------- |

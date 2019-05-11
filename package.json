@@ -1,7 +1,7 @@
 {
   "name": "shifty",
   "displayName": "shifty",
-  "description": "Keeps your day interesting by randomly shifting your color theme & font family",
+  "description": "Shifts your color theme & font family every 30min",
   "version": "0.6.0",
   "license": "MIT",
   "repository": {
@@ -25,7 +25,7 @@
     "random",
     "theme",
     "font",
-    "syntax"
+    "pomodoro"
   ],
   "icon": "images/shifty-logo.png",
   "galleryBanner": {
