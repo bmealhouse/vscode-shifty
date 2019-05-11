@@ -38,7 +38,7 @@ async function setupTest() {
   originalFontFamily = getFontFamily()
   await setFontFamily(DEFAULT_FONT_FAMILY)
 
-  await setDefault('shifty.shiftMode', 'all')
+  await setDefault('shifty.shiftMode', 'default')
   await setDefault('shifty.colorThemes.favoriteColorThemes', [])
   await setDefault('shifty.colorThemes.ignoreColorThemes', [])
   await setDefault('shifty.colorThemes.ignoreDarkColorThemes', false)
