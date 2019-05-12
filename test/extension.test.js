@@ -27,22 +27,22 @@ suite('extension.test.js', () => {
   test('should favorite the color theme and font family when running the "shifty.favoriteBoth" command', async () => {
     await vscode.commands.executeCommand('shifty.favoriteBoth')
     assert.ok(
-      getConfig('shifty.colorThemes.favoriteColorThemes').includes(
-        DEFAULT_COLOR_THEME,
-      ),
-    )
-    assert.ok(
-      vscode.window.showInformationMessage.firstCall.lastArg ===
-        `Added "${DEFAULT_COLOR_THEME}" to favorites`,
-    )
-    assert.ok(
       getConfig('shifty.fontFamilies.favoriteFontFamilies').includes(
         DEFAULT_FONT_FAMILY,
       ),
     )
+    assert.strictEqual(
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Added "${DEFAULT_FONT_FAMILY}" to favorites`,
+    )
     assert.ok(
-      vscode.window.showInformationMessage.secondCall.lastArg ===
-        `Added "${DEFAULT_FONT_FAMILY}" to favorites`,
+      getConfig('shifty.colorThemes.favoriteColorThemes').includes(
+        DEFAULT_COLOR_THEME,
+      ),
+    )
+    assert.strictEqual(
+      vscode.window.showInformationMessage.secondCall.lastArg,
+      `Added "${DEFAULT_COLOR_THEME}" to favorites`,
     )
   })
 
