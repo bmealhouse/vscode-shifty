@@ -2,7 +2,7 @@
   "name": "shifty",
   "displayName": "shifty",
   "description": "Shifts your color theme & font family every 30min",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "license": "MIT",
   "repository": {
     "type": "git",
