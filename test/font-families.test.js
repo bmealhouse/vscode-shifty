@@ -108,6 +108,10 @@ suite('font-families.test.js', () => {
         DEFAULT_FONT_FAMILY,
       ),
     )
+    assert.strictEqual(
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Ignored "${DEFAULT_FONT_FAMILY}"`,
+    )
     assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY)
   })
 

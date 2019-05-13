@@ -106,6 +106,7 @@ async function ignoreFontFamily() {
     true,
   )
 
+  vscode.window.showInformationMessage(`Ignored "${fontFamily}"`)
   await shiftFontFamily()
 }
 

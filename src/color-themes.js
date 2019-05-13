@@ -110,6 +110,7 @@ async function ignoreColorTheme() {
     true,
   )
 
+  vscode.window.showInformationMessage(`Ignored "${colorTheme}"`)
   await shiftColorTheme()
 }
 

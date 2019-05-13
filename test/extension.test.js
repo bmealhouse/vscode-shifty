@@ -49,14 +49,22 @@ suite('extension.test.js', () => {
   test('should ignore the color theme and font family when running the "shifty.ignoreBoth" command', async () => {
     await vscode.commands.executeCommand('shifty.ignoreBoth')
     assert.ok(
+      getConfig('shifty.fontFamilies.ignoreFontFamilies').includes(
+        DEFAULT_FONT_FAMILY,
+      ),
+    )
+    assert.strictEqual(
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Ignored "${DEFAULT_FONT_FAMILY}"`,
+    )
+    assert.ok(
       getConfig('shifty.colorThemes.ignoreColorThemes').includes(
         DEFAULT_COLOR_THEME,
       ),
     )
-    assert.ok(
-      getConfig('shifty.fontFamilies.ignoreFontFamilies').includes(
-        DEFAULT_FONT_FAMILY,
-      ),
+    assert.strictEqual(
+      vscode.window.showInformationMessage.secondCall.lastArg,
+      `Ignored "${DEFAULT_COLOR_THEME}"`,
     )
   })
 })

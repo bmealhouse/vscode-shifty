@@ -64,6 +64,10 @@ suite('color-themes.test.js', () => {
         DEFAULT_COLOR_THEME,
       ),
     )
+    assert.strictEqual(
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Ignored "${DEFAULT_COLOR_THEME}"`,
+    )
     assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME)
   })
 

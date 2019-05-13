@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add codeface dependency notice to README
 - Add features section to README
 - Add shift mode documentation to README
+- Display notifications when ignoring color theme or font family
 
 ### Changed
 
