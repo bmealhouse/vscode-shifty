@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.2] - 2019-05-13
+
+### Added
+
+- Add shift interval docs to README
+
+### Changed
+
+- Replace tables in README with a mobile friendly format
+
 ## [0.7.1] - 2019-05-12
 
 ### Added
