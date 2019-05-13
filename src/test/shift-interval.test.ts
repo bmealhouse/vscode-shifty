@@ -9,7 +9,7 @@ import {
 } from '../shift-interval';
 import {setupTest, teardownTest, setConfig, wait} from './test-utils';
 
-suite('shift-interval.test.ts', () => {
+suite.skip('shift-interval.test.ts', () => {
   setup(async () => {
     await setupTest();
   });

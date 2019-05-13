@@ -5,7 +5,7 @@ import {DEFAULT_COLOR_THEME} from '../color-themes';
 import {DEFAULT_FONT_FAMILY} from '../font-families';
 import {setupTest, teardownTest, setConfig} from './test-utils';
 
-suite('status-bar.test.ts', () => {
+suite.skip('status-bar.test.ts', () => {
   setup(async () => {
     await setupTest();
   });

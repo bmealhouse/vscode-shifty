@@ -2,7 +2,7 @@
   "name": "shifty",
   "displayName": "shifty",
   "description": "Shifts your color theme & font family every 30min",
-  "version": "0.7.5",
+  "version": "0.7.6-local-0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -109,21 +109,13 @@
           "default": [],
           "description": "List of font families to include. Useful for including fonts you've purchased."
         },
-        "shifty.shiftInterval.shiftColorThemeIntervalMin": {
+        "shifty.shiftIntervalDelayMin": {
           "type": [
             "integer",
             "null"
           ],
           "default": 30,
-          "markdownDescription": "Number of minutes to wait before shifting the color theme. Use `0` or `null` to disable the color theme shift interval."
-        },
-        "shifty.shiftInterval.shiftFontFamilyIntervalMin": {
-          "type": [
-            "integer",
-            "null"
-          ],
-          "default": 30,
-          "markdownDescription": "Number of minutes to wait before shifting the font family. Use `0` or `null` to disable the font family shift interval."
+          "markdownDescription": "Number of minutes to wait before shifting the color theme & font family. Use `0` or `null` to disable the shift interval."
         },
         "shifty.startup.shiftColorThemeOnStartup": {
           "type": "boolean",
@@ -184,13 +176,13 @@
         "category": "shifty"
       },
       {
-        "command": "shifty.startShiftInterval",
-        "title": "Start shift interval",
+        "command": "shifty.playShiftInterval",
+        "title": "Play shift interval",
         "category": "shifty"
       },
       {
-        "command": "shifty.stopShiftInterval",
-        "title": "Stop shift interval",
+        "command": "shifty.pauseShiftInterval",
+        "title": "Pause shift interval",
         "category": "shifty"
       },
       {
@@ -203,6 +195,7 @@
   "scripts": {
     "compile": "tsc -p ./",
     "format": "prettier \"**/*.{js,ts}\" --write",
+    "package": "yarn compile && vsce package",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "yarn compile && node ./node_modules/vscode/bin/test",
     "vscode:prepublish": "yarn compile"
@@ -280,5 +273,9 @@
     "vsce": "1.61.0",
     "vscode": "1.1.34",
     "xo": "0.24.0"
+  },
+  "dependencies": {
+    "node-ipc": "9.1.1",
+    "shortid": "2.2.14"
   }
 }
