@@ -31,18 +31,14 @@ suite('extension.test.js', () => {
         DEFAULT_FONT_FAMILY,
       ),
     )
-    assert.strictEqual(
-      vscode.window.showInformationMessage.firstCall.lastArg,
-      `Added "${DEFAULT_FONT_FAMILY}" to favorites`,
-    )
     assert.ok(
       getConfig('shifty.colorThemes.favoriteColorThemes').includes(
         DEFAULT_COLOR_THEME,
       ),
     )
     assert.strictEqual(
-      vscode.window.showInformationMessage.secondCall.lastArg,
-      `Added "${DEFAULT_COLOR_THEME}" to favorites`,
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Added "${DEFAULT_COLOR_THEME}" and "${DEFAULT_FONT_FAMILY}" to favorites`,
     )
   })
 
@@ -53,18 +49,14 @@ suite('extension.test.js', () => {
         DEFAULT_FONT_FAMILY,
       ),
     )
-    assert.strictEqual(
-      vscode.window.showInformationMessage.firstCall.lastArg,
-      `Ignored "${DEFAULT_FONT_FAMILY}"`,
-    )
     assert.ok(
       getConfig('shifty.colorThemes.ignoreColorThemes').includes(
         DEFAULT_COLOR_THEME,
       ),
     )
     assert.strictEqual(
-      vscode.window.showInformationMessage.secondCall.lastArg,
-      `Ignored "${DEFAULT_COLOR_THEME}"`,
+      vscode.window.showInformationMessage.firstCall.lastArg,
+      `Ignored "${DEFAULT_COLOR_THEME}" and "${DEFAULT_FONT_FAMILY}"`,
     )
   })
 })

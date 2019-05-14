@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.4] - 2019-05-14
+
+### Changed
+
+- Display notifications from commands
+- Execute commands from notification actions
+
 ## [0.7.3] - 2019-05-13
 
 ### Changed

@@ -64,11 +64,11 @@ suite('color-themes.test.js', () => {
         DEFAULT_COLOR_THEME,
       ),
     )
+    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME)
     assert.strictEqual(
       vscode.window.showInformationMessage.firstCall.lastArg,
       `Ignored "${DEFAULT_COLOR_THEME}"`,
     )
-    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME)
   })
 
   test('should ignore the current color theme and remove the color theme from favorites when running the "shifty.ignoreColorTheme" command', async () => {

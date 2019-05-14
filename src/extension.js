@@ -34,15 +34,21 @@ async function activate(context) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.favoriteBoth', async () => {
-      await favoriteFontFamily()
-      await favoriteColorTheme()
+      const fontFamily = await favoriteFontFamily()
+      const colorTheme = await favoriteColorTheme()
+      vscode.window.showInformationMessage(
+        `Added "${colorTheme}" and "${fontFamily}" to favorites`,
+      )
     }),
   )
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.ignoreBoth', async () => {
-      await ignoreFontFamily()
-      await ignoreColorTheme()
+      const fontFamily = await ignoreFontFamily()
+      const colorTheme = await ignoreColorTheme()
+      vscode.window.showInformationMessage(
+        `Ignored "${colorTheme}" and "${fontFamily}"`,
+      )
     }),
   )
 }

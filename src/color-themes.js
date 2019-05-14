@@ -36,17 +36,17 @@ async function activateColorThemes(context) {
   )
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'shifty.favoriteColorTheme',
-      favoriteColorTheme,
-    ),
+    vscode.commands.registerCommand('shifty.favoriteColorTheme', async () => {
+      const colorTheme = await favoriteColorTheme()
+      vscode.window.showInformationMessage(`Added "${colorTheme}" to favorites`)
+    }),
   )
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'shifty.ignoreColorTheme',
-      ignoreColorTheme,
-    ),
+    vscode.commands.registerCommand('shifty.ignoreColorTheme', async () => {
+      const colorTheme = await ignoreColorTheme()
+      vscode.window.showInformationMessage(`Ignored "${colorTheme}"`)
+    }),
   )
 
   context.subscriptions.push(
@@ -92,7 +92,7 @@ async function favoriteColorTheme() {
     true,
   )
 
-  vscode.window.showInformationMessage(`Added "${colorTheme}" to favorites`)
+  return colorTheme
 }
 
 async function ignoreColorTheme() {
@@ -110,8 +110,8 @@ async function ignoreColorTheme() {
     true,
   )
 
-  vscode.window.showInformationMessage(`Ignored "${colorTheme}"`)
   await shiftColorTheme()
+  return colorTheme
 }
 
 function getColorTheme() {

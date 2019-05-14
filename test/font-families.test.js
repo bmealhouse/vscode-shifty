@@ -108,11 +108,11 @@ suite('font-families.test.js', () => {
         DEFAULT_FONT_FAMILY,
       ),
     )
+    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY)
     assert.strictEqual(
       vscode.window.showInformationMessage.firstCall.lastArg,
       `Ignored "${DEFAULT_FONT_FAMILY}"`,
     )
-    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY)
   })
 
   test('should ignore the current font family and remove the font family from favorites when running the "shifty.ignoreFontFamily" command', async () => {

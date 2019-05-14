@@ -1,10 +1,7 @@
 const vscode = require('vscode')
-const {getColorTheme, favoriteColorTheme} = require('./color-themes')
-const {getFontFamily, favoriteFontFamily} = require('./font-families')
-const {
-  startShiftInterval,
-  getRemainingTimeForShiftIntervals,
-} = require('./shift-interval')
+const {getColorTheme} = require('./color-themes')
+const {getFontFamily} = require('./font-families')
+const {getRemainingTimeForShiftIntervals} = require('./shift-interval')
 
 module.exports = {
   activateStatusBar,
@@ -30,14 +27,11 @@ function activateStatusBar(context) {
         FAVORITE_BOTH: 'Favorite both',
       }
 
-      const actionFuncMap = {
-        [actionTextMap.START_SHIFT_INTERVAL]: startShiftInterval,
-        [actionTextMap.FAVORITE_COLOR_THEME]: favoriteColorTheme,
-        [actionTextMap.FAVORITE_FONT_FAMILY]: favoriteFontFamily,
-        [actionTextMap.FAVORITE_BOTH]: async () => {
-          await favoriteFontFamily()
-          await favoriteColorTheme()
-        },
+      const actionCommandMap = {
+        [actionTextMap.START_SHIFT_INTERVAL]: 'shifty.startShiftInterval',
+        [actionTextMap.FAVORITE_COLOR_THEME]: 'shifty.favoriteColorTheme',
+        [actionTextMap.FAVORITE_FONT_FAMILY]: 'shifty.favoriteFontFamily',
+        [actionTextMap.FAVORITE_BOTH]: 'shifty.favoriteBoth',
       }
 
       const messages = [
@@ -77,8 +71,8 @@ function activateStatusBar(context) {
 
       messages.forEach(message => {
         vscode.window.showInformationMessage(...message).then(action => {
-          if (actionFuncMap[action]) {
-            actionFuncMap[action]()
+          if (actionCommandMap[action]) {
+            vscode.commands.executeCommand(actionCommandMap[action])
           }
         })
       })

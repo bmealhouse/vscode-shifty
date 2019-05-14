@@ -39,17 +39,17 @@ async function activateFontFamilies(context) {
   )
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'shifty.favoriteFontFamily',
-      favoriteFontFamily,
-    ),
+    vscode.commands.registerCommand('shifty.favoriteFontFamily', async () => {
+      const fontFamily = await favoriteFontFamily()
+      vscode.window.showInformationMessage(`Added "${fontFamily}" to favorites`)
+    }),
   )
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'shifty.ignoreFontFamily',
-      ignoreFontFamily,
-    ),
+    vscode.commands.registerCommand('shifty.ignoreFontFamily', async () => {
+      const fontFamily = await ignoreFontFamily()
+      vscode.window.showInformationMessage(`Ignored "${fontFamily}"`)
+    }),
   )
 
   context.subscriptions.push(
@@ -88,7 +88,7 @@ async function favoriteFontFamily() {
     true,
   )
 
-  vscode.window.showInformationMessage(`Added "${fontFamily}" to favorites`)
+  return fontFamily
 }
 
 async function ignoreFontFamily() {
@@ -106,8 +106,8 @@ async function ignoreFontFamily() {
     true,
   )
 
-  vscode.window.showInformationMessage(`Ignored "${fontFamily}"`)
   await shiftFontFamily()
+  return fontFamily
 }
 
 function getFontFamily() {
