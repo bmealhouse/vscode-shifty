@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.5] - 2019-05-14
+
+### Changed
+
+- Cleanup CHANGELOG formatting
+
 ## [0.7.4] - 2019-05-14
 
 ### Changed
@@ -70,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Fix colors in shifty banner & logo
 - Rename commands for consistency
   - `shifty.shiftAll` -> `shifty.shiftBoth`
   - `shifty.favoriteCurrentColorTheme` -> `shifty.favoriteColorTheme`
@@ -83,12 +90,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - _"shifty: Ignore current color theme"_ -> _"shifty: Ignore color theme"_
   - _"shifty: Ignore current font family"_ -> _"shifty: Ignore font family"_
   - _"shifty: Show current status"_ -> _"shifty: Show status"_
-
-## [0.5.5] - 2019-05-06
-
-### Changed
-
-- Fix colors in shifty banner & logo
 
 ## [0.5.4] - 2019-05-06
 
@@ -104,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.2] - 2019-05-04
 
-## Fixed
+### Fixed
 
 - Improve font stability across all platforms
 
