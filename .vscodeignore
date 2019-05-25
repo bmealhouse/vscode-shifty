@@ -1,6 +1,10 @@
 .editorconfig
 .gitignore
 .vscode
-.vscode-test
 node_modules
-test/**
+
+# extension
+.vscode-test
+src/**
+package-json.lock
+tsconfig.json

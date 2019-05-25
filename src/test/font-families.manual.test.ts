@@ -1,33 +1,29 @@
-const {
-  getFontFamily,
-  setFontFamily,
-  allFontFamilies,
-} = require('../src/font-families')
-const {wait} = require('./test-utils')
+import {getFontFamily, setFontFamily, allFontFamilies} from '../font-families';
+import {wait} from './test-utils';
 
 test.skip('manually test font families on different platforms', function(done) {
-  this.timeout(0)
+  this.timeout(0);
 
-  const originalFontFamily = getFontFamily()
+  const originalFontFamily = getFontFamily();
 
-  function getNextFontFamily(index = 0) {
-    const nextFontFamily = allFontFamilies[index]
+  function getNextFontFamily(index = 0): void {
+    const nextFontFamily = allFontFamilies[index];
 
     if (!nextFontFamily) {
-      setFontFamily(originalFontFamily).then(done)
-      return
+      setFontFamily(originalFontFamily).then(done);
+      return;
     }
 
     setFontFamily(nextFontFamily.id).then(() => {
-      console.log(`${index}. ${nextFontFamily.id}`)
+      console.log(`${index}. ${nextFontFamily.id}`);
       wait(7500).then(() => {
-        getNextFontFamily(index + 1)
-      })
-    })
+        getNextFontFamily(index + 1);
+      });
+    });
   }
 
-  getNextFontFamily()
-})
+  getNextFontFamily();
+});
 
 // .mac {
 //   --monaco-monospace-font:Monaco,Menlo,Inconsolata,"Courier New",monospace
