@@ -46,7 +46,6 @@ cd vscode-shifty-font-families
 - Highly configurable (see [settings](#settings))
 - Shift color theme & font family on 30min interval
 - Shift interval can be used as a pomodoro timer
-- Shift color theme & font family on VS Code startup
 - Favorite/ignore color themes & font families
 - Shifty status bar displays remaining time of shift interval
 
@@ -140,14 +139,6 @@ Number of minutes to wait before shifting the color theme. Use `0` or `null` to 
 **`shifty.shiftInterval.shiftFontFamilyIntervalMin`**<br/>
 Number of minutes to wait before shifting the font family. Use `0` or `null` to disable the font family shift interval.<br/>
 **default: `30`**
-
-**`shifty.startup.shiftColorThemeOnStartup`**<br/>
-Controls whether the color theme shifts on VS Code startup.<br/>
-**default: `false`**
-
-**`shifty.startup.shiftFontFamilyOnStartup`**<br/>
-Controls whether the font family shifts on VS Code startup.<br/>
-**default: `false`**
 
 ## Contributing
 

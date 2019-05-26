@@ -37,8 +37,6 @@ export async function setupTest(): Promise<void> {
   await setDefault('shifty.fontFamilies.includeFontFamilies', []);
   await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMin', 30);
   await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMin', 30);
-  await setDefault('shifty.startup.shiftColorThemeOnStartup', false);
-  await setDefault('shifty.startup.shiftFontFamilyOnStartup', false);
 }
 
 export async function teardownTest(): Promise<void> {
@@ -66,8 +64,6 @@ export async function teardownTest(): Promise<void> {
   await restoreOriginal('shifty.fontFamilies.includeFontFamilies');
   await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMin');
   await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMin');
-  await restoreOriginal('shifty.startup.shiftColorThemeOnStartup');
-  await restoreOriginal('shifty.startup.shiftFontFamilyOnStartup');
   originalConfig = {};
 }
 

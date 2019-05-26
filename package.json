@@ -116,16 +116,6 @@
           ],
           "default": 30,
           "markdownDescription": "Number of minutes to wait before shifting the color theme & font family. Use `0` or `null` to disable the shift interval."
-        },
-        "shifty.startup.shiftColorThemeOnStartup": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether the color theme shifts on VS Code startup."
-        },
-        "shifty.startup.shiftFontFamilyOnStartup": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether the font family shifts on VS Code startup."
         }
       }
     },

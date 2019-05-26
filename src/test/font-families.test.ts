@@ -6,7 +6,6 @@ import {
   _getFontFamiliesCache,
   FontFamilyPlatform,
   FontFamilyType,
-  shiftFontFamilyOnStartup,
   getFontFamily,
   setFontFamily,
   allFontFamilies,
@@ -56,17 +55,6 @@ suite('font-families.test.ts', () => {
     const fontFamilyWithSpace = allFontFamilies.find(ff => /\s/.test(ff.id));
     await setFontFamily(fontFamilyWithSpace!.id);
     assert.strictEqual(getFontFamily(), fontFamilyWithSpace!.id);
-  });
-
-  test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {
-    await shiftFontFamilyOnStartup();
-    assert.strictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
-  });
-
-  test('should shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is enabled', async () => {
-    await setConfig('shifty.startup.shiftFontFamilyOnStartup', true);
-    await shiftFontFamilyOnStartup();
-    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
   });
 
   test('should register font family commands when VS Code starts up', async () => {

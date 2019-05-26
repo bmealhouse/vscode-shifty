@@ -26,7 +26,6 @@ export async function activateColorThemes(
   context: vscode.ExtensionContext,
 ): Promise<void> {
   primeColorThemesCache();
-  await shiftColorThemeOnStartup();
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftColorTheme', shiftColorTheme),
@@ -72,13 +71,6 @@ export async function shiftColorTheme(): Promise<void> {
   const colorThemes = getAvailableColorThemes();
   const {id} = getRandomItem(colorThemes);
   await setColorTheme(id);
-}
-
-export async function shiftColorThemeOnStartup(): Promise<void> {
-  const config = vscode.workspace.getConfiguration('shifty.startup');
-  if (config.shiftColorThemeOnStartup) {
-    await shiftColorTheme();
-  }
 }
 
 export async function favoriteColorTheme(): Promise<string> {

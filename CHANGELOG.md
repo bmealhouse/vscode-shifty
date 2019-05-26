@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix logo alignment
 
+### Removed
+
+- Remove shift on startup settings
+  - `shifty.startup.shiftColorThemeOnStartup`
+  - `shifty.startup.shiftFontFamilyOnStartup`
+
 ## [0.7.5] - 2019-05-14
 
 ### Changed

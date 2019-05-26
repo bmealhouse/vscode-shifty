@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import * as sinon from 'sinon';
 import {
   _getColorThemesCache,
-  shiftColorThemeOnStartup,
   getColorTheme,
   getAvailableColorThemes,
   ColorThemeStyle,
@@ -18,17 +17,6 @@ suite('color-themes.test.ts', () => {
 
   teardown(async () => {
     await teardownTest();
-  });
-
-  test('should not shift the color theme when VS Code starts up if "shifty.startup.shiftColorThemeOnStartup" is disabled', async () => {
-    await shiftColorThemeOnStartup();
-    assert.strictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
-  });
-
-  test('should shift the color theme when VS Code starts up if "shifty.startup.shiftColorThemeOnStartup" is enabled', async () => {
-    await setConfig('shifty.startup.shiftColorThemeOnStartup', true);
-    await shiftColorThemeOnStartup();
-    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
   });
 
   test('should register color theme commands when VS Code starts up', async () => {

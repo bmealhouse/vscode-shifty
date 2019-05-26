@@ -42,7 +42,6 @@ export async function activateFontFamilies(
   context: vscode.ExtensionContext,
 ): Promise<void> {
   primeFontFamiliesCache();
-  await shiftFontFamilyOnStartup();
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftFontFamily', shiftFontFamily),
@@ -81,13 +80,6 @@ export async function shiftFontFamily(): Promise<void> {
   const fontFamilies = getAvailableFontFamilies();
   const {id} = getRandomItem(fontFamilies);
   await setFontFamily(id);
-}
-
-export async function shiftFontFamilyOnStartup(): Promise<void> {
-  const config = vscode.workspace.getConfiguration('shifty.startup');
-  if (config.shiftFontFamilyOnStartup) {
-    await shiftFontFamily();
-  }
 }
 
 export async function favoriteFontFamily(): Promise<string> {
