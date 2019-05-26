@@ -27,8 +27,8 @@ suite('extension.test.ts', () => {
 
   test('should favorite the color theme and font family when running the "shifty.favoriteBoth" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.favoriteBoth');
+
     assert.ok(
       getConfig('shifty.fontFamilies.favoriteFontFamilies').includes(
         DEFAULT_FONT_FAMILY.id,
@@ -51,8 +51,8 @@ suite('extension.test.ts', () => {
 
   test('should ignore the color theme and font family when running the "shifty.ignoreBoth" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.ignoreBoth');
+
     assert.ok(
       getConfig('shifty.fontFamilies.ignoreFontFamilies').includes(
         DEFAULT_FONT_FAMILY.id,

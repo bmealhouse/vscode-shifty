@@ -6,7 +6,7 @@ import {
   _getShiftIntervalIds,
   hasShiftIntervalStarted,
   getRemainingTimeForShiftIntervals,
-} from '../shift-interval';
+} from '../shift-interval.v0.x';
 import {setupTest, teardownTest, setConfig, wait} from './test-utils';
 
 suite.skip('shift-interval.test.ts', () => {

@@ -1,17 +1,18 @@
-const vscode = require('vscode')
-const {getColorTheme} = require('./color-themes')
-const {getFontFamily} = require('./font-families')
-const {getRemainingTimeForShiftIntervals} = require('./shift-interval')
+/* eslint-disable */
+const vscode = require('vscode');
+const {getColorTheme} = require('./color-themes');
+const {getFontFamily} = require('./font-families');
+const {getRemainingTimeForShiftIntervals} = require('./shift-interval.v0.x');
 
 module.exports = {
   activateStatusBar,
   updateStatusBarText,
-}
+};
 
-let statusBar = null
-const STATUS_BAR_COMMAND_ID = 'shifty.showStatus'
-const STATUS_BAR_DISPLAY_TEXT = 'shifty'
-const STATUS_BAR_PRIORITY = 0
+let statusBar = null;
+const STATUS_BAR_COMMAND_ID = 'shifty.showStatus';
+const STATUS_BAR_DISPLAY_TEXT = 'shifty';
+const STATUS_BAR_PRIORITY = 0;
 
 function activateStatusBar(context) {
   context.subscriptions.push(
@@ -19,21 +20,21 @@ function activateStatusBar(context) {
       const {
         shiftColorThemeRemainingTime,
         shiftFontFamilyRemainingTime,
-      } = getRemainingTimeForShiftIntervals()
+      } = getRemainingTimeForShiftIntervals();
 
       const actionTextMap = {
         START_SHIFT_INTERVAL: 'Start shift interval',
         FAVORITE_COLOR_THEME: 'Favorite color theme',
         FAVORITE_FONT_FAMILY: 'Favorite font family',
         FAVORITE_BOTH: 'Favorite both',
-      }
+      };
 
       const actionCommandMap = {
         [actionTextMap.START_SHIFT_INTERVAL]: 'shifty.startShiftInterval',
         [actionTextMap.FAVORITE_COLOR_THEME]: 'shifty.favoriteColorTheme',
         [actionTextMap.FAVORITE_FONT_FAMILY]: 'shifty.favoriteFontFamily',
         [actionTextMap.FAVORITE_BOTH]: 'shifty.favoriteBoth',
-      }
+      };
 
       const messages = [
         !shiftColorThemeRemainingTime &&
@@ -68,29 +69,29 @@ function activateStatusBar(context) {
           actionTextMap.FAVORITE_FONT_FAMILY,
           actionTextMap.FAVORITE_BOTH,
         ],
-      ].filter(Boolean)
+      ].filter(Boolean);
 
       messages.forEach(message => {
         vscode.window.showInformationMessage(...message).then(action => {
           if (actionCommandMap[action]) {
-            vscode.commands.executeCommand(actionCommandMap[action])
+            vscode.commands.executeCommand(actionCommandMap[action]);
           }
-        })
-      })
+        });
+      });
     }),
-  )
+  );
 
   statusBar = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     STATUS_BAR_PRIORITY,
-  )
-  statusBar.command = STATUS_BAR_COMMAND_ID
-  statusBar.text = STATUS_BAR_DISPLAY_TEXT
-  context.subscriptions.push(statusBar)
+  );
+  statusBar.command = STATUS_BAR_COMMAND_ID;
+  statusBar.text = STATUS_BAR_DISPLAY_TEXT;
+  context.subscriptions.push(statusBar);
 
-  statusBar.show()
+  statusBar.show();
 }
 
 function updateStatusBarText(text) {
-  statusBar.text = `${STATUS_BAR_DISPLAY_TEXT} ${text}`
+  statusBar.text = `${STATUS_BAR_DISPLAY_TEXT} ${text}`;
 }

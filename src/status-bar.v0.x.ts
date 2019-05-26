@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import {getColorTheme} from './color-themes';
 import {getFontFamily} from './font-families';
-import {getRemainingTimeForShiftIntervals} from './shift-interval';
+import {getRemainingTimeForShiftIntervals} from './shift-interval.v0.x';
 
 let statusBar = null;
 const STATUS_BAR_COMMAND_ID = 'shifty.showStatus';

@@ -29,7 +29,7 @@ suite('font-families.test.ts', () => {
     await teardownTest();
   });
 
-  test('should include the fallback font family', async () => {
+  test.only('should include the fallback font family when shifty sets "editor.fontFamily"', async () => {
     assert.strictEqual(
       getConfig('editor.fontFamily'),
       `"${DEFAULT_FONT_FAMILY.id}", monospace`,
@@ -71,8 +71,8 @@ suite('font-families.test.ts', () => {
 
   test('should favorite the current font family when running the "shifty.favoriteFontFamily" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.favoriteFontFamily');
+
     assert.ok(
       getConfig('shifty.fontFamilies.favoriteFontFamilies').includes(
         DEFAULT_FONT_FAMILY.id,
@@ -88,18 +88,18 @@ suite('font-families.test.ts', () => {
 
   test('should ignore the current font family and shift the font family when running the "shifty.ignoreFontFamily" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.ignoreFontFamily');
+
     assert.ok(
       getConfig('shifty.fontFamilies.ignoreFontFamilies').includes(
         DEFAULT_FONT_FAMILY.id,
       ),
     );
-    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
     assert.strictEqual(
       spy.firstCall.lastArg,
       `Ignored "${DEFAULT_FONT_FAMILY.id}"`,
     );
+    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
 
     spy.restore();
   });
@@ -126,6 +126,7 @@ suite('font-families.test.ts', () => {
     assert.strictEqual(favoriteFontFamilies.length, favorites.length - 1);
   });
 
+  // TODO: left off here
   test('should prime the font families cache after the "shifty.fontFamilies" config changes', async () => {
     const originalFontFamiliesCache = _getFontFamiliesCache();
     await setConfig('shifty.fontFamilies.ignoreCodefaceFontFamilies', true);

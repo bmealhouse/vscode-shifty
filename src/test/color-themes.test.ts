@@ -33,8 +33,8 @@ suite('color-themes.test.ts', () => {
 
   test('should favorite the current color theme when running the "shifty.favoriteColorTheme" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.favoriteColorTheme');
+
     assert.ok(
       getConfig('shifty.colorThemes.favoriteColorThemes').includes(
         DEFAULT_COLOR_THEME.id,
@@ -50,18 +50,18 @@ suite('color-themes.test.ts', () => {
 
   test('should ignore the current color theme and shift the color theme when running the "shifty.ignoreColorTheme" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.ignoreColorTheme');
+
     assert.ok(
       getConfig('shifty.colorThemes.ignoreColorThemes').includes(
         DEFAULT_COLOR_THEME.id,
       ),
     );
-    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
     assert.strictEqual(
       spy.firstCall.lastArg,
       `Ignored "${DEFAULT_COLOR_THEME.id}"`,
     );
+    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
 
     spy.restore();
   });
@@ -85,6 +85,7 @@ suite('color-themes.test.ts', () => {
     assert.strictEqual(favoriteColorThemes.length, favorites.length - 1);
   });
 
+  // TODO: left off here
   test('should prime the color themes cache after the "shifty.colorThemes" config changes', async () => {
     const originalColorThemesCache = _getColorThemesCache();
     await setConfig('shifty.colorThemes.ignoreLightColorThemes', true);

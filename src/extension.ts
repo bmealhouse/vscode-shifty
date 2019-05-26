@@ -11,16 +11,14 @@ import {
   favoriteFontFamily,
   ignoreFontFamily,
 } from './font-families';
-import {activateShiftInterval, stopShiftInterval} from './shift-interval';
-import {activateStatusBar} from './status-bar';
 
 export async function activate(
   context: vscode.ExtensionContext,
 ): Promise<void> {
   await activateColorThemes(context);
   await activateFontFamilies(context);
-  activateShiftInterval(context);
-  activateStatusBar(context);
+  // activateShiftInterval(context);
+  // activateStatusBar(context);
 
   context.subscriptions.push(
     vscode.commands.registerCommand('shifty.shiftBoth', async () => {
@@ -51,5 +49,5 @@ export async function activate(
 }
 
 export function deactivate(): void {
-  stopShiftInterval();
+  // stopShiftInterval();
 }

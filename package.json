@@ -227,6 +227,7 @@
       ]
     },
     "rules": {
+      "unicorn/no-abusive-eslint-disable": "off",
       "capitalized-comments": "off",
       "no-unused-vars": [
         "error",

@@ -141,7 +141,11 @@ export async function setFontFamily(fontFamily: string): Promise<void> {
 
   return vscode.workspace
     .getConfiguration('editor')
-    .update('fontFamily', fontFamilyWithFallback, true);
+    .update(
+      'fontFamily',
+      fontFamilyWithFallback,
+      vscode.ConfigurationTarget.Global,
+    );
 }
 
 export function getAvailableFontFamilies(): FontFamily[] {
