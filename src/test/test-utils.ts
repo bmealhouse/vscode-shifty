@@ -14,16 +14,10 @@ import {
 export const DEFAULT_PLATFORM = FontFamilyPlatform.MAC_OS;
 
 let originalConfig: any = {};
-let originalColorTheme: string | null = null;
-let originalFontFamily: string | null = null;
+let originalColorTheme = '';
+let originalFontFamily = '';
 
 export async function setupTest(): Promise<void> {
-  originalColorTheme = getColorTheme();
-  await setColorTheme(DEFAULT_COLOR_THEME.id);
-
-  originalFontFamily = getFontFamily();
-  await setFontFamily(DEFAULT_FONT_FAMILY.id);
-
   await setDefault('shifty.shiftMode', 'default');
   await setDefault('shifty.colorThemes.favoriteColorThemes', []);
   await setDefault('shifty.colorThemes.ignoreColorThemes', []);
@@ -35,22 +29,27 @@ export async function setupTest(): Promise<void> {
   await setDefault('shifty.fontFamilies.ignoreCodefaceFontFamilies', false);
   await setDefault('shifty.fontFamilies.ignoreFontFamilies', []);
   await setDefault('shifty.fontFamilies.includeFontFamilies', []);
-  await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMin', 30);
-  await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMin', 30);
+  // await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMin', 30);
+  // await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMin', 30);
+
+  originalColorTheme = getColorTheme();
+  await setColorTheme(DEFAULT_COLOR_THEME.id);
+
+  originalFontFamily = getFontFamily();
+  await setFontFamily(DEFAULT_FONT_FAMILY.id);
 }
 
 export async function teardownTest(): Promise<void> {
   if (originalColorTheme) {
     await setColorTheme(originalColorTheme);
-    originalColorTheme = null;
+    originalColorTheme = '';
   }
 
   if (originalFontFamily) {
     await setFontFamily(originalFontFamily);
-    originalFontFamily = null;
+    originalFontFamily = '';
   }
 
-  // restore original config
   await restoreOriginal('shifty.shiftMode');
   await restoreOriginal('shifty.colorThemes.favoriteColorThemes');
   await restoreOriginal('shifty.colorThemes.ignoreColorThemes');
@@ -62,35 +61,31 @@ export async function teardownTest(): Promise<void> {
   await restoreOriginal('shifty.fontFamilies.ignoreCodefaceFontFamilies');
   await restoreOriginal('shifty.fontFamilies.ignoreFontFamilies');
   await restoreOriginal('shifty.fontFamilies.includeFontFamilies');
-  await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMin');
-  await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMin');
+  // await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMin');
+  // await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMin');
   originalConfig = {};
 }
 
 async function setDefault(keyPath: string, defaultValue: any): Promise<void> {
-  const currentValue = await getConfig(keyPath);
-  originalConfig[keyPath] = currentValue;
+  const currentValue = getConfig(keyPath);
 
   if (Array.isArray(defaultValue)) {
-    if (currentValue.length === 0) return;
+    if (currentValue.length === 0) {
+      return;
+    }
   } else if (currentValue === defaultValue) {
     return;
   }
 
+  originalConfig[keyPath] = currentValue;
   await setConfig(keyPath, defaultValue);
 }
 
 async function restoreOriginal(keyPath: any): Promise<void> {
-  const currentValue = getConfig(keyPath);
-  const originalValue = originalConfig[keyPath];
-
-  if (Array.isArray(currentValue)) {
-    if (currentValue.length === 0 && originalValue.length === 0) return;
-  } else if (currentValue === originalValue) {
-    return;
+  if (Object.keys(originalConfig).includes(keyPath)) {
+    const originalValue = originalConfig[keyPath];
+    await setConfig(keyPath, originalValue);
   }
-
-  await setConfig(keyPath, originalValue);
 }
 
 export function getConfig(keyPath: string): any {
@@ -106,7 +101,7 @@ export async function setConfig(keyPath: string, value: any): Promise<void> {
   const config = vscode.workspace.getConfiguration(
     sections.reverse().join('.'),
   );
-  return config.update(key, value, true);
+  return config.update(key, value, vscode.ConfigurationTarget.Global);
 }
 
 export function wait(ms: number): Promise<{}> {
