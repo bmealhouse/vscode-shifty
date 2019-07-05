@@ -29,7 +29,7 @@ suite('font-families.test.ts', () => {
     await teardownTest();
   });
 
-  test.only('should include the fallback font family when shifty sets "editor.fontFamily"', async () => {
+  test('should include the fallback font family when shifty sets "editor.fontFamily"', async () => {
     assert.strictEqual(
       getConfig('editor.fontFamily'),
       `"${DEFAULT_FONT_FAMILY.id}", monospace`,
@@ -126,7 +126,6 @@ suite('font-families.test.ts', () => {
     assert.strictEqual(favoriteFontFamilies.length, favorites.length - 1);
   });
 
-  // TODO: left off here
   test('should prime the font families cache after the "shifty.fontFamilies" config changes', async () => {
     const originalFontFamiliesCache = _getFontFamiliesCache();
     await setConfig('shifty.fontFamilies.ignoreCodefaceFontFamilies', true);

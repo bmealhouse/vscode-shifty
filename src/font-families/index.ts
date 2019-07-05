@@ -1,5 +1,6 @@
 import * as os from 'os';
 import * as vscode from 'vscode';
+import commandMap from '../command-map';
 import {getRandomItem} from '../utils';
 import {codefaceFontFamilies} from './codeface-font-families';
 import {systemFontFamilies} from './system-font-families';
@@ -38,26 +39,30 @@ export function _getFontFamiliesCache(): FontFamily[] | null {
   return fontFamiliesCache;
 }
 
-export async function activateFontFamilies(
-  context: vscode.ExtensionContext,
-): Promise<void> {
+export function activateFontFamilies(context: vscode.ExtensionContext): void {
   primeFontFamiliesCache();
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.shiftFontFamily', shiftFontFamily),
+    vscode.commands.registerCommand(
+      commandMap.SHIFT_FONT_FAMILY,
+      shiftFontFamily,
+    ),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.favoriteFontFamily', async () => {
-      const fontFamily = await favoriteFontFamily();
-      vscode.window.showInformationMessage(
-        `Added "${fontFamily}" to favorites`,
-      );
-    }),
+    vscode.commands.registerCommand(
+      commandMap.FAVORITE_FONT_FAMILY,
+      async () => {
+        const fontFamily = await favoriteFontFamily();
+        vscode.window.showInformationMessage(
+          `Added "${fontFamily}" to favorites`,
+        );
+      },
+    ),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.ignoreFontFamily', async () => {
+    vscode.commands.registerCommand(commandMap.IGNORE_FONT_FAMILY, async () => {
       const fontFamily = await ignoreFontFamily();
       vscode.window.showInformationMessage(`Ignored "${fontFamily}"`);
     }),

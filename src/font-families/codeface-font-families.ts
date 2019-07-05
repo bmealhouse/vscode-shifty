@@ -601,7 +601,7 @@ export const codefaceFontFamilies: FontFamily[] = [
     type: FontFamilyType.CODEFACE,
   },
   {
-    id: 'ProFontFontFamilyPlatform.WINDOWS',
+    id: 'ProFontWindows',
     supportedPlatforms: [
       FontFamilyPlatform.LINUX,
       FontFamilyPlatform.MAC_OS,

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import waitForExpect from 'wait-for-expect';
 import {
   getColorTheme,
   setColorTheme,
@@ -29,8 +30,12 @@ export async function setupTest(): Promise<void> {
   await setDefault('shifty.fontFamilies.ignoreCodefaceFontFamilies', false);
   await setDefault('shifty.fontFamilies.ignoreFontFamilies', []);
   await setDefault('shifty.fontFamilies.includeFontFamilies', []);
-  // await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMin', 30);
-  // await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMin', 30);
+  await setDefault(
+    'shifty.shiftInterval.automaticallyStartShiftInterval',
+    true,
+  );
+  await setDefault('shifty.shiftInterval.shiftColorThemeIntervalMin', 30);
+  await setDefault('shifty.shiftInterval.shiftFontFamilyIntervalMin', 30);
 
   originalColorTheme = getColorTheme();
   await setColorTheme(DEFAULT_COLOR_THEME.id);
@@ -61,8 +66,9 @@ export async function teardownTest(): Promise<void> {
   await restoreOriginal('shifty.fontFamilies.ignoreCodefaceFontFamilies');
   await restoreOriginal('shifty.fontFamilies.ignoreFontFamilies');
   await restoreOriginal('shifty.fontFamilies.includeFontFamilies');
-  // await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMin');
-  // await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMin');
+  await restoreOriginal('shifty.shiftInterval.automaticallyStartShiftInterval');
+  await restoreOriginal('shifty.shiftInterval.shiftColorThemeIntervalMin');
+  await restoreOriginal('shifty.shiftInterval.shiftFontFamilyIntervalMin');
   originalConfig = {};
 }
 
@@ -104,6 +110,15 @@ export async function setConfig(keyPath: string, value: any): Promise<void> {
   return config.update(key, value, vscode.ConfigurationTarget.Global);
 }
 
-export function wait(ms: number): Promise<{}> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+export async function sleep(ms: number): Promise<{}> {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
+export async function wait(
+  callback = () => {},
+  {timeout = 4500, interval = 50} = {},
+): Promise<{}> {
+  return waitForExpect(callback, timeout, interval);
 }

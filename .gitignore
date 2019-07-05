@@ -5,4 +5,4 @@ node_modules
 # extension
 .vscode-test
 *.vsix
-out
+dist
