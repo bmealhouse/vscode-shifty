@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2019-07-11
+
+### Fixed
+
+- Fix security vulnerabilities discovered by GitHub
+- Fix "Linux Libertine Mono" font
+
 ## [1.0.0] - 2019-07-11
 
 ### Added

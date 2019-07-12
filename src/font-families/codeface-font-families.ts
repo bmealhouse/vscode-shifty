@@ -374,7 +374,7 @@ export const codefaceFontFamilies: FontFamily[] = [
     type: FontFamilyType.CODEFACE,
   },
   {
-    id: 'FontFamilyPlatform.LINUX Libertine Mono',
+    id: 'Linux Libertine Mono',
     supportedPlatforms: [
       FontFamilyPlatform.LINUX,
       FontFamilyPlatform.MAC_OS,
