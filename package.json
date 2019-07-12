@@ -35,7 +35,7 @@
   "activationEvents": [
     "*"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
       "type": "object",
@@ -109,6 +109,11 @@
           "default": [],
           "description": "List of font families to include. Useful for including fonts you've purchased."
         },
+        "shifty.shiftInterval.automaticallyStartShiftInterval": {
+          "type": "boolean",
+          "default": true,
+          "description": "Controls whether the shift interval will start automatically."
+        },
         "shifty.shiftInterval.shiftColorThemeIntervalMin": {
           "type": [
             "integer",
@@ -124,16 +129,6 @@
           ],
           "default": 30,
           "markdownDescription": "Number of minutes to wait before shifting the font family. Use `0` or `null` to disable the font family shift interval."
-        },
-        "shifty.startup.shiftColorThemeOnStartup": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether the color theme shifts on VS Code startup."
-        },
-        "shifty.startup.shiftFontFamilyOnStartup": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether the font family shifts on VS Code startup."
         }
       }
     },
@@ -189,8 +184,8 @@
         "category": "shifty"
       },
       {
-        "command": "shifty.stopShiftInterval",
-        "title": "Stop shift interval",
+        "command": "shifty.pauseShiftInterval",
+        "title": "Pause shift interval",
         "category": "shifty"
       },
       {
@@ -199,13 +194,6 @@
         "category": "shifty"
       }
     ]
-  },
-  "scripts": {
-    "compile": "tsc -p ./",
-    "format": "prettier \"**/*.{js,ts}\" --write",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "yarn compile && node ./node_modules/vscode/bin/test",
-    "vscode:prepublish": "yarn compile"
   },
   "husky": {
     "hooks": {
@@ -244,6 +232,7 @@
       ]
     },
     "rules": {
+      "unicorn/no-abusive-eslint-disable": "off",
       "capitalized-comments": "off",
       "no-unused-vars": [
         "error",
@@ -264,21 +253,44 @@
       ]
     }
   },
+  "dependencies": {
+    "node-ipc": "9.1.1",
+    "shortid": "2.2.14"
+  },
   "devDependencies": {
-    "@types/mocha": "5.2.6",
-    "@types/node": "12.0.2",
-    "@types/sinon": "7.0.11",
-    "@typescript-eslint/eslint-plugin": "1.9.0",
-    "babel-eslint": "10.0.1",
-    "eslint": "5.16.0",
-    "eslint-config-xo-typescript": "0.12.0",
+    "@types/mocha": "5.2.7",
+    "@types/node": "12.6.2",
+    "@types/node-ipc": "9.1.1",
+    "@types/shortid": "0.0.29",
+    "@types/sinon": "7.0.13",
+    "@typescript-eslint/eslint-plugin": "1.11.0",
+    "@typescript-eslint/parser": "1.11.0",
+    "babel-eslint": "10.0.2",
+    "eslint": "6.0.1",
+    "eslint-config-xo-typescript": "0.15.0",
     "eslint-plugin-filenames": "1.3.2",
-    "husky": "2.3.0",
-    "lint-staged": "8.1.7",
+    "husky": "3.0.0",
+    "lint-staged": "9.2.0",
+    "patch-package": "6.1.2",
+    "rimraf": "2.6.3",
     "sinon": "7.3.2",
-    "typescript": "3.4.5",
-    "vsce": "1.61.0",
-    "vscode": "1.1.34",
+    "ts-loader": "6.0.4",
+    "typescript": "3.5.3",
+    "vsce": "1.65.0",
+    "vscode": "1.1.35",
+    "wait-for-expect": "1.2.0",
+    "webpack": "4.35.3",
+    "webpack-cli": "3.3.5",
     "xo": "0.24.0"
+  },
+  "scripts": {
+    "compile": "rimraf ./dist && tsc -p ./ --outDir ./dist",
+    "format": "prettier \"**/*.{js,ts}\" --write",
+    "package": "rimraf ./dist && yarn wp:prod && vsce package",
+    "postinstall": "patch-package && node ./node_modules/vscode/bin/install",
+    "test": "yarn compile && node ./node_modules/vscode/bin/test",
+    "vscode:prepublish": "rimraf ./dist && yarn wp:prod",
+    "wp": "webpack --mode none",
+    "wp:prod": "webpack --mode production"
   }
 }

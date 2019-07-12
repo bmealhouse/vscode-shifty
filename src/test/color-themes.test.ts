@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import * as sinon from 'sinon';
 import {
   _getColorThemesCache,
-  shiftColorThemeOnStartup,
   getColorTheme,
   getAvailableColorThemes,
   ColorThemeStyle,
@@ -20,17 +19,6 @@ suite('color-themes.test.ts', () => {
     await teardownTest();
   });
 
-  test('should not shift the color theme when VS Code starts up if "shifty.startup.shiftColorThemeOnStartup" is disabled', async () => {
-    await shiftColorThemeOnStartup();
-    assert.strictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
-  });
-
-  test('should shift the color theme when VS Code starts up if "shifty.startup.shiftColorThemeOnStartup" is enabled', async () => {
-    await setConfig('shifty.startup.shiftColorThemeOnStartup', true);
-    await shiftColorThemeOnStartup();
-    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
-  });
-
   test('should register color theme commands when VS Code starts up', async () => {
     const commands = await vscode.commands.getCommands();
     assert.ok(commands.includes('shifty.shiftColorTheme'));
@@ -45,8 +33,8 @@ suite('color-themes.test.ts', () => {
 
   test('should favorite the current color theme when running the "shifty.favoriteColorTheme" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.favoriteColorTheme');
+
     assert.ok(
       getConfig('shifty.colorThemes.favoriteColorThemes').includes(
         DEFAULT_COLOR_THEME.id,
@@ -62,18 +50,18 @@ suite('color-themes.test.ts', () => {
 
   test('should ignore the current color theme and shift the color theme when running the "shifty.ignoreColorTheme" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.ignoreColorTheme');
+
     assert.ok(
       getConfig('shifty.colorThemes.ignoreColorThemes').includes(
         DEFAULT_COLOR_THEME.id,
       ),
     );
-    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
     assert.strictEqual(
       spy.firstCall.lastArg,
       `Ignored "${DEFAULT_COLOR_THEME.id}"`,
     );
+    assert.notStrictEqual(getColorTheme(), DEFAULT_COLOR_THEME.id);
 
     spy.restore();
   });
@@ -103,7 +91,8 @@ suite('color-themes.test.ts', () => {
     assert.notDeepStrictEqual(_getColorThemesCache(), originalColorThemesCache);
   });
 
-  test('should return all color themes when no color themes are ignored', () => {
+  // FIXME: skip this test for now until --disable-extensions works again with extension host
+  test.skip('should return all color themes when no color themes are ignored', () => {
     const TOTAL_DEFAULT_VSCODE_THEMES = 14;
     assert.strictEqual(
       getAvailableColorThemes().length,

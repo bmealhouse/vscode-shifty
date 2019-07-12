@@ -1,4 +1,7 @@
 import * as vscode from 'vscode';
+import commandMap from './command-map';
+import {activateStatusBar} from './status-bar';
+import {activateShiftInterval, deactivateShiftInterval} from './shift-interval';
 import {
   activateColorThemes,
   shiftColorTheme,
@@ -11,26 +14,22 @@ import {
   favoriteFontFamily,
   ignoreFontFamily,
 } from './font-families';
-import {activateShiftInterval, stopShiftInterval} from './shift-interval';
-import {activateStatusBar} from './status-bar';
 
-export async function activate(
-  context: vscode.ExtensionContext,
-): Promise<void> {
-  await activateColorThemes(context);
-  await activateFontFamilies(context);
-  activateShiftInterval(context);
+export function activate(context: vscode.ExtensionContext): void {
   activateStatusBar(context);
+  activateShiftInterval(context);
+  activateColorThemes(context);
+  activateFontFamilies(context);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.shiftBoth', async () => {
+    vscode.commands.registerCommand(commandMap.SHIFT_BOTH, async () => {
       await shiftFontFamily();
       await shiftColorTheme();
     }),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.favoriteBoth', async () => {
+    vscode.commands.registerCommand(commandMap.FAVORITE_BOTH, async () => {
       const fontFamily = await favoriteFontFamily();
       const colorTheme = await favoriteColorTheme();
       vscode.window.showInformationMessage(
@@ -40,7 +39,7 @@ export async function activate(
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.ignoreBoth', async () => {
+    vscode.commands.registerCommand(commandMap.IGNORE_BOTH, async () => {
       const fontFamily = await ignoreFontFamily();
       const colorTheme = await ignoreColorTheme();
       vscode.window.showInformationMessage(
@@ -50,6 +49,6 @@ export async function activate(
   );
 }
 
-export function deactivate(): void {
-  stopShiftInterval();
+export async function deactivate(): Promise<void> {
+  await deactivateShiftInterval();
 }

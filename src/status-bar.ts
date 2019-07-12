@@ -1,100 +1,63 @@
 import * as vscode from 'vscode';
+import commandMap from './command-map';
 import {getColorTheme} from './color-themes';
 import {getFontFamily} from './font-families';
-import {getRemainingTimeForShiftIntervals} from './shift-interval';
 
-let statusBar = null;
-const STATUS_BAR_COMMAND_ID = 'shifty.showStatus';
-const STATUS_BAR_DISPLAY_TEXT = 'shifty';
+const STATUS_BAR_DISPLAY_TEXT = '$(color-mode) shifty';
 const STATUS_BAR_PRIORITY = 0;
+
+let statusBar: vscode.StatusBarItem;
 
 export function activateStatusBar(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand(STATUS_BAR_COMMAND_ID, () => {
-      const {
-        shiftColorThemeRemainingTime,
-        shiftFontFamilyRemainingTime,
-      } = getRemainingTimeForShiftIntervals();
-
+    vscode.commands.registerCommand(commandMap.SHOW_STATUS, () => {
       const actionTextMap = {
-        START_SHIFT_INTERVAL: 'Start shift interval',
-        FAVORITE_COLOR_THEME: 'Favorite color theme',
-        FAVORITE_FONT_FAMILY: 'Favorite font family',
-        FAVORITE_BOTH: 'Favorite both',
+        FAVORITE: 'Favorite',
+        IGNORE: 'Ignore',
+        SHIFT: 'Shift',
       };
 
-      const actionCommandMap = {
-        [actionTextMap.START_SHIFT_INTERVAL]: 'shifty.startShiftInterval',
-        [actionTextMap.FAVORITE_COLOR_THEME]: 'shifty.favoriteColorTheme',
-        [actionTextMap.FAVORITE_FONT_FAMILY]: 'shifty.favoriteFontFamily',
-        [actionTextMap.FAVORITE_BOTH]: 'shifty.favoriteBoth',
-      };
-
-      interface Message {
-        message: string;
-        items?: string[];
-      }
-
-      const messages: Message[] = [];
-
-      if (!shiftColorThemeRemainingTime && !shiftFontFamilyRemainingTime) {
-        messages.push({
-          message: 'Shift interval has not been started',
-          items: [actionTextMap.START_SHIFT_INTERVAL],
-        });
-      }
-
-      if (shiftColorThemeRemainingTime && !shiftFontFamilyRemainingTime) {
-        messages.push({
-          message: `${shiftColorThemeRemainingTime} until color theme will shift`,
-        });
-      }
-
-      if (!shiftColorThemeRemainingTime && shiftFontFamilyRemainingTime) {
-        messages.push({
-          message: `${shiftFontFamilyRemainingTime} until font family will shift`,
-        });
-      }
-
-      if (
-        shiftColorThemeRemainingTime &&
-        shiftFontFamilyRemainingTime &&
-        shiftColorThemeRemainingTime === shiftFontFamilyRemainingTime
-      ) {
-        messages.push({
-          message: `${shiftColorThemeRemainingTime} until color theme & font family will shift`,
-        });
-      }
-
-      if (
-        shiftColorThemeRemainingTime &&
-        shiftFontFamilyRemainingTime &&
-        shiftColorThemeRemainingTime !== shiftFontFamilyRemainingTime
-      ) {
-        messages.push({
-          message: `${shiftColorThemeRemainingTime} until color theme will shift`,
-        });
-        messages.push({
-          message: `${shiftFontFamilyRemainingTime} until font family will shift`,
-        });
-      }
-
-      messages.push({
-        message: `Using "${getColorTheme()}" with "${getFontFamily()}" font family`,
-        items: [
-          actionTextMap.FAVORITE_COLOR_THEME,
-          actionTextMap.FAVORITE_FONT_FAMILY,
-          actionTextMap.FAVORITE_BOTH,
-        ],
-      });
-
-      messages.forEach(({message, items = []}) => {
-        vscode.window.showInformationMessage(message, ...items).then(action => {
-          if (action && actionCommandMap[action]) {
-            vscode.commands.executeCommand(actionCommandMap[action]);
+      vscode.window
+        .showInformationMessage(
+          `Using "${getFontFamily()}" font family`,
+          actionTextMap.FAVORITE,
+          actionTextMap.IGNORE,
+          actionTextMap.SHIFT,
+        )
+        .then(action => {
+          if (action) {
+            vscode.commands.executeCommand(
+              /* eslint-disable no-use-extend-native/no-use-extend-native */
+              {
+                [actionTextMap.FAVORITE]: commandMap.FAVORITE_FONT_FAMILY,
+                [actionTextMap.IGNORE]: commandMap.IGNORE_FONT_FAMILY,
+                [actionTextMap.SHIFT]: commandMap.SHIFT_FONT_FAMILY,
+              }[action],
+              /* eslint-enable no-use-extend-native/no-use-extend-native */
+            );
           }
         });
-      });
+
+      vscode.window
+        .showInformationMessage(
+          `Using "${getColorTheme()}" color theme`,
+          actionTextMap.FAVORITE,
+          actionTextMap.IGNORE,
+          actionTextMap.SHIFT,
+        )
+        .then(action => {
+          if (action) {
+            vscode.commands.executeCommand(
+              /* eslint-disable no-use-extend-native/no-use-extend-native */
+              {
+                [actionTextMap.FAVORITE]: commandMap.FAVORITE_COLOR_THEME,
+                [actionTextMap.IGNORE]: commandMap.IGNORE_COLOR_THEME,
+                [actionTextMap.SHIFT]: commandMap.SHIFT_COLOR_THEME,
+              }[action],
+              /* eslint-enable no-use-extend-native/no-use-extend-native */
+            );
+          }
+        });
     }),
   );
 
@@ -102,9 +65,14 @@ export function activateStatusBar(context: vscode.ExtensionContext): void {
     vscode.StatusBarAlignment.Right,
     STATUS_BAR_PRIORITY,
   );
-  statusBar.command = STATUS_BAR_COMMAND_ID;
+
+  statusBar.command = commandMap.SHOW_STATUS;
   statusBar.text = STATUS_BAR_DISPLAY_TEXT;
   context.subscriptions.push(statusBar);
 
   statusBar.show();
+}
+
+export function updateStatusBarText(text: string): void {
+  statusBar.text = `${STATUS_BAR_DISPLAY_TEXT}: ${text}`;
 }

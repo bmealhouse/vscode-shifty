@@ -46,18 +46,14 @@ cd vscode-shifty-font-families
 - Highly configurable (see [settings](#settings))
 - Shift color theme & font family on 30min interval
 - Shift interval can be used as a pomodoro timer
-- Shift color theme & font family on VS Code startup
 - Favorite/ignore color themes & font families
 - Shifty status bar displays remaining time of shift interval
 
-![shifty status](/images/shifty-status.png)
+![shifty status](/images/shifty-status.gif)
 
 ## Shift interval
 
-This is the bread & butter of shifty. Unfortunately, the shift interval cannot be started automatically for you. There are two ways you can start the shift interval manually:
-
-1. Click the `shifty` status bar item, and then click the `Start shift interval` action
-1. Open the command palette (`⇧⌘P`) and type `shifty start`
+This is the bread & butter of shifty. By default, the shift interval will be started for you automatically. You can pause the shift interval by opening the command palette (`⇧⌘P`) and typing `shifty pause`.
 
 ## Shift mode
 
@@ -89,7 +85,7 @@ Anything shifty can do is exposed via commands. Open the VS Code command palette
 - Ignore font family
 - Ignore color theme & font family
 - Start shift interval
-- Stop shift interval
+- Pause shift interval
 - Show status
 
 ## Settings
@@ -133,6 +129,10 @@ List of font families you've ignored.
 **`shifty.fontFamilies.includeFontFamilies`**<br/>
 List of font families to include. Useful for including fonts you've purchased.
 
+**`shifty.shiftInterval.automaticallyStartShiftInterval`**<br/>
+Controls whether the shift interval will start automatically.<br/>
+**default: `true`**
+
 **`shifty.shiftInterval.shiftColorThemeIntervalMin`**<br/>
 Number of minutes to wait before shifting the color theme. Use `0` or `null` to disable the color theme shift interval.<br/>
 **default: `30`**
@@ -140,14 +140,6 @@ Number of minutes to wait before shifting the color theme. Use `0` or `null` to 
 **`shifty.shiftInterval.shiftFontFamilyIntervalMin`**<br/>
 Number of minutes to wait before shifting the font family. Use `0` or `null` to disable the font family shift interval.<br/>
 **default: `30`**
-
-**`shifty.startup.shiftColorThemeOnStartup`**<br/>
-Controls whether the color theme shifts on VS Code startup.<br/>
-**default: `false`**
-
-**`shifty.startup.shiftFontFamilyOnStartup`**<br/>
-Controls whether the font family shifts on VS Code startup.<br/>
-**default: `false`**
 
 ## Contributing
 

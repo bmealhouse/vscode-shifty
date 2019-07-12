@@ -6,7 +6,6 @@ import {
   _getFontFamiliesCache,
   FontFamilyPlatform,
   FontFamilyType,
-  shiftFontFamilyOnStartup,
   getFontFamily,
   setFontFamily,
   allFontFamilies,
@@ -30,7 +29,7 @@ suite('font-families.test.ts', () => {
     await teardownTest();
   });
 
-  test('should include the fallback font family', async () => {
+  test('should include the fallback font family when shifty sets "editor.fontFamily"', async () => {
     assert.strictEqual(
       getConfig('editor.fontFamily'),
       `"${DEFAULT_FONT_FAMILY.id}", monospace`,
@@ -58,17 +57,6 @@ suite('font-families.test.ts', () => {
     assert.strictEqual(getFontFamily(), fontFamilyWithSpace!.id);
   });
 
-  test('should not shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is disabled', async () => {
-    await shiftFontFamilyOnStartup();
-    assert.strictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
-  });
-
-  test('should shift the font family when VS Code starts up if "shifty.startup.shiftFontFamilyOnStartup" is enabled', async () => {
-    await setConfig('shifty.startup.shiftFontFamilyOnStartup', true);
-    await shiftFontFamilyOnStartup();
-    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
-  });
-
   test('should register font family commands when VS Code starts up', async () => {
     const commands = await vscode.commands.getCommands();
     assert.ok(commands.includes('shifty.shiftFontFamily'));
@@ -83,8 +71,8 @@ suite('font-families.test.ts', () => {
 
   test('should favorite the current font family when running the "shifty.favoriteFontFamily" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.favoriteFontFamily');
+
     assert.ok(
       getConfig('shifty.fontFamilies.favoriteFontFamilies').includes(
         DEFAULT_FONT_FAMILY.id,
@@ -100,18 +88,18 @@ suite('font-families.test.ts', () => {
 
   test('should ignore the current font family and shift the font family when running the "shifty.ignoreFontFamily" command', async () => {
     const spy = sinon.spy(vscode.window, 'showInformationMessage');
-
     await vscode.commands.executeCommand('shifty.ignoreFontFamily');
+
     assert.ok(
       getConfig('shifty.fontFamilies.ignoreFontFamilies').includes(
         DEFAULT_FONT_FAMILY.id,
       ),
     );
-    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
     assert.strictEqual(
       spy.firstCall.lastArg,
       `Ignored "${DEFAULT_FONT_FAMILY.id}"`,
     );
+    assert.notStrictEqual(getFontFamily(), DEFAULT_FONT_FAMILY.id);
 
     spy.restore();
   });

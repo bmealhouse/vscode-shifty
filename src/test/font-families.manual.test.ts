@@ -1,5 +1,5 @@
 import {getFontFamily, setFontFamily, allFontFamilies} from '../font-families';
-import {wait} from './test-utils';
+import {sleep} from './test-utils';
 
 test.skip('manually test font families on different platforms', function(done) {
   this.timeout(0);
@@ -16,7 +16,7 @@ test.skip('manually test font families on different platforms', function(done) {
 
     setFontFamily(nextFontFamily.id).then(() => {
       console.log(`${index}. ${nextFontFamily.id}`);
-      wait(7500).then(() => {
+      sleep(7500).then(() => {
         getNextFontFamily(index + 1);
       });
     });

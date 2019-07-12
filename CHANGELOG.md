@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Communication between VS Code instances
+- Automatically start shift interval at VS Code startup
+- Add `shifty.shiftInterval.automaticallyStartShiftInterval` setting
+- Add `shifty.pauseShiftInterval` command
+- Package extenstion using webpack
+
 ### Changed
 
 - Convert codebase to TypeScript
@@ -14,6 +22,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix logo alignment
+- Fix outstanding issues (#1, #2, #3, #4)
+- Fix "ProFontWindows" font
+
+### Removed
+
+- Remove shifty startup settings
+  - `shifty.startup.shiftColorThemeOnStartup`
+  - `shifty.startup.shiftFontFamilyOnStartup`
+- Remove `shifty.stopShiftInterval` command
 
 ## [0.7.5] - 2019-05-14
 

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import commandMap from './command-map';
 import {getRandomItem} from './utils';
 
 export const enum ColorThemeStyle {
@@ -22,27 +23,30 @@ export function _getColorThemesCache(): ColorTheme[] | null {
   return colorThemesCache;
 }
 
-export async function activateColorThemes(
-  context: vscode.ExtensionContext,
-): Promise<void> {
+export function activateColorThemes(context: vscode.ExtensionContext): void {
   primeColorThemesCache();
-  await shiftColorThemeOnStartup();
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.shiftColorTheme', shiftColorTheme),
+    vscode.commands.registerCommand(
+      commandMap.SHIFT_COLOR_THEME,
+      shiftColorTheme,
+    ),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.favoriteColorTheme', async () => {
-      const colorTheme = await favoriteColorTheme();
-      vscode.window.showInformationMessage(
-        `Added "${colorTheme}" to favorites`,
-      );
-    }),
+    vscode.commands.registerCommand(
+      commandMap.FAVORITE_COLOR_THEME,
+      async () => {
+        const colorTheme = await favoriteColorTheme();
+        vscode.window.showInformationMessage(
+          `Added "${colorTheme}" to favorites`,
+        );
+      },
+    ),
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('shifty.ignoreColorTheme', async () => {
+    vscode.commands.registerCommand(commandMap.IGNORE_COLOR_THEME, async () => {
       const colorTheme = await ignoreColorTheme();
       vscode.window.showInformationMessage(`Ignored "${colorTheme}"`);
     }),
@@ -72,13 +76,6 @@ export async function shiftColorTheme(): Promise<void> {
   const colorThemes = getAvailableColorThemes();
   const {id} = getRandomItem(colorThemes);
   await setColorTheme(id);
-}
-
-export async function shiftColorThemeOnStartup(): Promise<void> {
-  const config = vscode.workspace.getConfiguration('shifty.startup');
-  if (config.shiftColorThemeOnStartup) {
-    await shiftColorTheme();
-  }
 }
 
 export async function favoriteColorTheme(): Promise<string> {

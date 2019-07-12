@@ -13,12 +13,16 @@
 /* eslint-disable filenames/match-exported */
 import * as testRunner from 'vscode/lib/testrunner';
 
+// Ensure mocha runs using the "test" node environment
+process.env.NODE_ENV = 'test';
+
 // You can directly control Mocha options by configuring the test runner below
 // See https://github.com/mochajs/mocha/wiki/Using-mocha-programmatically#set-options
 // for more info
 testRunner.configure({
   ui: 'tdd', // the TDD UI is being used in extension.test.ts (suite, test, etc.)
   useColors: true, // colored output from test results
+  timeout: 60000,
 });
 
 module.exports = testRunner;
