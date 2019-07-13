@@ -149,7 +149,7 @@ function primeColorThemesCache(): void {
   } = vscode.workspace.getConfiguration('shifty');
 
   if (shiftMode === 'favorites') {
-    colorThemesCache = favoriteColorThemes;
+    colorThemesCache = favoriteColorThemes.map((ct: string) => ({id: ct}));
     return;
   }
 
@@ -186,7 +186,7 @@ function primeColorThemesCache(): void {
     );
 
   if (colorThemesCache.length === 0) {
-    colorThemesCache = favoriteColorThemes;
+    colorThemesCache = favoriteColorThemes.map((ct: string) => ({id: ct}));
   }
 
   if (colorThemesCache!.length === 0) {

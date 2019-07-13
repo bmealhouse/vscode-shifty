@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix ignore/favorite font filtering with `""`
+- Use full object representation for favorite color themes and font families
 
 ### Removed
 

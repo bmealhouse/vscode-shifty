@@ -176,7 +176,9 @@ function primeFontFamiliesCache(): void {
   } = vscode.workspace.getConfiguration('shifty');
 
   if (shiftMode === 'favorites') {
-    fontFamiliesCache = favoriteFontFamilies;
+    fontFamiliesCache = favoriteFontFamilies.map((fontFamily: string) =>
+      allFontFamilies.find(ff => ff.id === fontFamily),
+    );
     return;
   }
 
@@ -205,7 +207,9 @@ function primeFontFamiliesCache(): void {
   ];
 
   if (fontFamiliesCache.length === 0) {
-    fontFamiliesCache = favoriteFontFamilies;
+    fontFamiliesCache = favoriteFontFamilies.map((fontFamily: string) =>
+      allFontFamilies.find(ff => ff.id === fontFamily),
+    );
   }
 
   if (fontFamiliesCache!.length === 0) {
