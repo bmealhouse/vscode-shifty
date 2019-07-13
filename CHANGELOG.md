@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Use silent mode for shift interval client
+
+### Removed
+
+- Remove calls to `console.log` that were hanging around
+
 ## [1.0.1] - 2019-07-11
 
 ### Fixed

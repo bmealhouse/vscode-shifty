@@ -18,8 +18,6 @@ export async function connect({
   lastFontFamilyShiftTime,
   lastPauseTime,
 } = defaultConnectionOptions): Promise<ClientConnection> {
-  const isTest = process.env.NODE_ENV === 'test';
-
   return new Promise(resolve => {
     let messagesReceived = 0;
     let isBackupSocketServer = false;
@@ -32,8 +30,8 @@ export async function connect({
 
     const ipc = new IPC();
     ipc.config.id = shortid.generate();
-    ipc.config.silent = isTest;
-    ipc.config.retry = isTest ? 0 : 500;
+    ipc.config.silent = true;
+    ipc.config.retry = process.env.NODE_ENV === 'test' ? 0 : 500;
     ipc.config.maxRetries = 5;
 
     // 2. Connect to node-ipc server.
@@ -140,7 +138,6 @@ export async function connect({
           lastPauseTime: 0,
         });
 
-        console.log('created server connection');
         setConnection(connection);
       });
 

@@ -31,6 +31,5 @@ export async function deactivateShiftInterval(): Promise<void> {
 export function setConnection(
   nextConnection: ClientConnection | ServerConnection,
 ): void {
-  console.log('set connection');
   connection = nextConnection;
 }
