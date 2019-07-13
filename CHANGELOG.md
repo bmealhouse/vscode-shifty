@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use silent mode for shift interval client
 
+### Fixed
+
+- Fix ignore/favorite font filtering with `""`
+
 ### Removed
 
 - Remove calls to `console.log` that were hanging around

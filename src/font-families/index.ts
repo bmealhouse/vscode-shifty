@@ -184,9 +184,10 @@ function primeFontFamiliesCache(): void {
     ...allFontFamilies.filter(
       ff =>
         !(
-          ignoreFontFamilies.includes(ff.id) ||
+          ignoreFontFamilies.includes(ff.id.replace(/"/g, '')) ||
           (ignoreCodefaceFontFamilies && ff.type === FontFamilyType.CODEFACE) ||
-          (shiftMode === 'discovery' && favoriteFontFamilies.includes(ff.id)) ||
+          (shiftMode === 'discovery' &&
+            favoriteFontFamilies.includes(ff.id.replace(/"/g, ''))) ||
           !ff.supportedPlatforms.includes(os.type() as FontFamilyPlatform)
         ),
     ),
