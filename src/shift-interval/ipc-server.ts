@@ -122,7 +122,6 @@ export async function start({
               );
             }
 
-
             const shiftColorThemeIntervalEnabled =
               shiftColorThemeIntervalMin > 0;
 
@@ -223,6 +222,7 @@ export async function start({
       resolve(connection);
     });
 
+    let hasDebuggedFontFamilyStatus = false;
     function calculateRemainingTime(now: number): string {
       const {
         shiftColorThemeIntervalMin,
@@ -263,7 +263,26 @@ export async function start({
         if (shiftFontFamilyRemainingSeconds < shiftColorThemeRemainingSeconds) {
           min = Math.max(0, Math.floor(shiftFontFamilyRemainingSeconds / 60));
           sec = Math.max(0, shiftFontFamilyRemainingSeconds % 60);
-          return `${pad0(min)}:${pad0(sec)} (font family)`;
+          let calculationResult = `${pad0(min)}:${pad0(sec)} (font family)`;
+
+          if (
+            !hasDebuggedFontFamilyStatus &&
+            process.env.SHIFTY_DEBUG === 'true'
+          ) {
+            console.log({
+              now,
+              shiftColorThemeIntervalMs,
+              shiftFontFamilyIntervalMs,
+              lastColorThemeShiftTime,
+              lastFontFamilyShiftTime,
+              shiftColorThemeRemainingSeconds,
+              shiftFontFamilyRemainingSeconds,
+              calculationResult,
+            });
+            hasDebuggedFontFamilyStatus = true;
+          }
+
+          return calculationResult;
         }
       }
 
