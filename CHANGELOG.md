@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2019-07-14
+
+### Added
+
+- Favoites mode respects the following settings:
+  - `shift.colorThemes.ignoreDarkColorThemes`
+  - `shift.colorThemes.ignoreHighContrastColorThemes`
+  - `shift.colorThemes.ignoreLightColorThemes`
+
 ### Changed
 
 - All font families now includes user specific fonts

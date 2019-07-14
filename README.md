@@ -69,7 +69,7 @@ Cycles through color themes & font families that have not been favorited or igno
 
 ### favorites
 
-Cycles through favorite color themes & font families.
+Cycles through favorite color themes & font families. Respects `ignoreDarkColorThemes`, `ignoreHighContrastColorThemes`, and `ignoreLightColorThemes` settings to allow dark, high contrast, and light color theme favorites to be used independently.
 
 ## Commands
 

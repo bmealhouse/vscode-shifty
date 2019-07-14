@@ -148,20 +148,11 @@ function primeColorThemesCache(): void {
     },
   } = vscode.workspace.getConfiguration('shifty');
 
-  if (shiftMode === 'favorites') {
-    colorThemesCache = favoriteColorThemes.map((ct: string) => ({id: ct}));
-    return;
-  }
-
-  colorThemesCache = vscode.extensions.all
-    .reduce((colorThemes: ColorTheme[], extension) => {
+  const allColorThemes = vscode.extensions.all.reduce(
+    (colorThemes: ColorTheme[], extension) => {
       const {
         packageJSON: {contributes: {themes = []} = {}},
       } = extension;
-
-      // if (!themes) {
-      //   return colorThemes;
-      // }
 
       return [
         ...colorThemes,
@@ -172,21 +163,51 @@ function primeColorThemesCache(): void {
           }),
         ),
       ];
-    }, [])
-    .filter(
-      ct =>
-        !(
-          ignoreColorThemes.includes(ct.id) ||
-          (ignoreHighContrastColorThemes &&
-            ct.style === ColorThemeStyle.HIGH_CONTRAST) ||
-          (ignoreLightColorThemes && ct.style === ColorThemeStyle.LIGHT) ||
-          (ignoreDarkColorThemes && ct.style === ColorThemeStyle.DARK) ||
-          (shiftMode === 'discovery' && favoriteColorThemes.includes(ct.id))
-        ),
-    );
+    },
+    [],
+  );
+
+  if (shiftMode === 'favorites') {
+    colorThemesCache = favoriteColorThemes
+      .map((id: string) => allColorThemes.find(ct => ct.id === id))
+      .filter(Boolean)
+      .filter(
+        (ct: ColorTheme) =>
+          !(
+            (ignoreHighContrastColorThemes &&
+              ct.style === ColorThemeStyle.HIGH_CONTRAST) ||
+            (ignoreLightColorThemes && ct.style === ColorThemeStyle.LIGHT) ||
+            (ignoreDarkColorThemes && ct.style === ColorThemeStyle.DARK)
+          ),
+      );
+    return;
+  }
+
+  colorThemesCache = allColorThemes.filter(
+    ct =>
+      !(
+        ignoreColorThemes.includes(ct.id) ||
+        (ignoreHighContrastColorThemes &&
+          ct.style === ColorThemeStyle.HIGH_CONTRAST) ||
+        (ignoreLightColorThemes && ct.style === ColorThemeStyle.LIGHT) ||
+        (ignoreDarkColorThemes && ct.style === ColorThemeStyle.DARK) ||
+        (shiftMode === 'discovery' && favoriteColorThemes.includes(ct.id))
+      ),
+  );
 
   if (colorThemesCache.length === 0) {
-    colorThemesCache = favoriteColorThemes.map((ct: string) => ({id: ct}));
+    colorThemesCache = favoriteColorThemes
+      .map((id: string) => allColorThemes.find(ct => ct.id === id))
+      .filter(Boolean)
+      .filter(
+        (ct: ColorTheme) =>
+          !(
+            (ignoreHighContrastColorThemes &&
+              ct.style === ColorThemeStyle.HIGH_CONTRAST) ||
+            (ignoreLightColorThemes && ct.style === ColorThemeStyle.LIGHT) ||
+            (ignoreDarkColorThemes && ct.style === ColorThemeStyle.DARK)
+          ),
+      );
   }
 
   if (colorThemesCache!.length === 0) {

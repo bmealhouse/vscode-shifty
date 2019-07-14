@@ -119,6 +119,17 @@ suite('color-themes.test.ts', () => {
     );
   });
 
+  test('should return no dark color themes when ignored and in "favorites" mode', async () => {
+    await setConfig('shifty.shiftMode', 'favorites');
+    const favorites = ['Abyss', 'Solarized Light', 'Default High Contrast'];
+    await setConfig('shifty.colorThemes.favoriteColorThemes', favorites);
+    await setConfig('shifty.colorThemes.ignoreDarkColorThemes', true);
+
+    assert.ok(
+      getAvailableColorThemes().every(ct => ct.style !== ColorThemeStyle.DARK),
+    );
+  });
+
   test('should return no light color themes when ignored', async () => {
     await setConfig('shifty.colorThemes.ignoreLightColorThemes', true);
     assert.ok(
@@ -126,8 +137,32 @@ suite('color-themes.test.ts', () => {
     );
   });
 
+  test('should return no light color themes when ignored and in "favorites" mode', async () => {
+    await setConfig('shifty.shiftMode', 'favorites');
+    const favorites = ['Abyss', 'Solarized Light', 'Default High Contrast'];
+    await setConfig('shifty.colorThemes.favoriteColorThemes', favorites);
+    await setConfig('shifty.colorThemes.ignoreLightColorThemes', true);
+
+    assert.ok(
+      getAvailableColorThemes().every(ct => ct.style !== ColorThemeStyle.LIGHT),
+    );
+  });
+
   test('should return no high contrast color themes when ignored', async () => {
     await setConfig('shifty.colorThemes.ignoreHighContrastColorThemes', true);
+    assert.ok(
+      getAvailableColorThemes().every(
+        ct => ct.style !== ColorThemeStyle.HIGH_CONTRAST,
+      ),
+    );
+  });
+
+  test('should return no hight contrast color themes when ignored and in "favorites" mode', async () => {
+    await setConfig('shifty.shiftMode', 'favorites');
+    const favorites = ['Abyss', 'Solarized Light', 'Default High Contrast'];
+    await setConfig('shifty.colorThemes.favoriteColorThemes', favorites);
+    await setConfig('shifty.colorThemes.ignoreHighContrastColorThemes', true);
+
     assert.ok(
       getAvailableColorThemes().every(
         ct => ct.style !== ColorThemeStyle.HIGH_CONTRAST,
@@ -146,7 +181,10 @@ suite('color-themes.test.ts', () => {
     const favorites = ['Abyss', 'Monokai Dimmed', 'Solarized Dark'];
     await setConfig('shifty.colorThemes.favoriteColorThemes', favorites);
     await setConfig('shifty.shiftMode', 'favorites');
-    assert.deepStrictEqual(getAvailableColorThemes(), favorites);
+    assert.deepStrictEqual(
+      getAvailableColorThemes().map(ct => ct.id),
+      favorites,
+    );
   });
 
   test('should return color themes without favorites when shiftMode is set to "discovery"', async () => {
@@ -167,7 +205,10 @@ suite('color-themes.test.ts', () => {
       DEFAULT_COLOR_THEME.id,
     ]);
 
-    assert.deepStrictEqual(getAvailableColorThemes(), favorites);
+    assert.deepStrictEqual(
+      getAvailableColorThemes().map(ct => ct.id),
+      favorites,
+    );
   });
 
   test('should return the default VS Code color theme when shiftMode is set to "discovery" and all color themes have been ignored', async () => {
