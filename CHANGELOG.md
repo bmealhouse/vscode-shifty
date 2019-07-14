@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- All font families now includes user specific fonts
+
+### Fixed
+
+- Fix font family tests
+
 ## [1.0.2] - 2019-07-13
 
 ### Changed

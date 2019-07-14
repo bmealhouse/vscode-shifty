@@ -15,9 +15,9 @@ export const enum FontFamilyPlatform {
 }
 
 export const enum FontFamilyType {
-  CODEFACE,
-  SYSTEM,
-  USER,
+  CODEFACE = 'CODEFACE',
+  SYSTEM = 'SYSTEM',
+  USER = 'USER',
 }
 
 export interface FontFamily {
@@ -31,8 +31,6 @@ export const DEFAULT_FONT_FAMILY = {
   supportedPlatforms: [FontFamilyPlatform.MAC_OS, FontFamilyPlatform.WINDOWS],
   type: FontFamilyType.SYSTEM,
 };
-
-export const allFontFamilies = [...codefaceFontFamilies, ...systemFontFamilies];
 
 let fontFamiliesCache: FontFamily[] | null = null;
 export function _getFontFamiliesCache(): FontFamily[] | null {
@@ -162,37 +160,14 @@ export function getAvailableFontFamilies(): FontFamily[] {
   return fontFamiliesCache!.filter(ff => ff.id !== fontFamily);
 }
 
-function primeFontFamiliesCache(): void {
-  if (fontFamiliesCache !== null) return;
+export function getAllFontFamilies(): FontFamily[] {
+  const {includeFontFamilies} = vscode.workspace.getConfiguration(
+    'shifty.fontFamilies',
+  );
 
-  const {
-    shiftMode,
-    fontFamilies: {
-      favoriteFontFamilies,
-      ignoreCodefaceFontFamilies,
-      ignoreFontFamilies,
-      includeFontFamilies,
-    },
-  } = vscode.workspace.getConfiguration('shifty');
-
-  if (shiftMode === 'favorites') {
-    fontFamiliesCache = favoriteFontFamilies.map((fontFamily: string) =>
-      allFontFamilies.find(ff => ff.id === fontFamily),
-    );
-    return;
-  }
-
-  fontFamiliesCache = [
-    ...allFontFamilies.filter(
-      ff =>
-        !(
-          ignoreFontFamilies.includes(ff.id.replace(/"/g, '')) ||
-          (ignoreCodefaceFontFamilies && ff.type === FontFamilyType.CODEFACE) ||
-          (shiftMode === 'discovery' &&
-            favoriteFontFamilies.includes(ff.id.replace(/"/g, ''))) ||
-          !ff.supportedPlatforms.includes(os.type() as FontFamilyPlatform)
-        ),
-    ),
+  return [
+    ...codefaceFontFamilies,
+    ...systemFontFamilies,
     ...includeFontFamilies.map(
       (ff: string): FontFamily => ({
         id: ff,
@@ -205,14 +180,45 @@ function primeFontFamiliesCache(): void {
       }),
     ),
   ];
+}
+
+function primeFontFamiliesCache(): void {
+  if (fontFamiliesCache !== null) return;
+
+  const {
+    shiftMode,
+    fontFamilies: {
+      favoriteFontFamilies,
+      ignoreCodefaceFontFamilies,
+      ignoreFontFamilies,
+    },
+  } = vscode.workspace.getConfiguration('shifty');
+
+  if (shiftMode === 'favorites') {
+    fontFamiliesCache = favoriteFontFamilies.map(getFontFamilyById);
+    return;
+  }
+
+  fontFamiliesCache = getAllFontFamilies().filter(
+    ff =>
+      !(
+        ignoreFontFamilies.includes(ff.id.replace(/"/g, '')) ||
+        (ignoreCodefaceFontFamilies && ff.type === FontFamilyType.CODEFACE) ||
+        (shiftMode === 'discovery' &&
+          favoriteFontFamilies.includes(ff.id.replace(/"/g, ''))) ||
+        !ff.supportedPlatforms.includes(os.type() as FontFamilyPlatform)
+      ),
+  );
 
   if (fontFamiliesCache.length === 0) {
-    fontFamiliesCache = favoriteFontFamilies.map((fontFamily: string) =>
-      allFontFamilies.find(ff => ff.id === fontFamily),
-    );
+    fontFamiliesCache = favoriteFontFamilies.map(getFontFamilyById);
   }
 
   if (fontFamiliesCache!.length === 0) {
     fontFamiliesCache = [DEFAULT_FONT_FAMILY];
   }
+}
+
+function getFontFamilyById(id: string) {
+  return getAllFontFamilies().find(ff => ff.id === id);
 }

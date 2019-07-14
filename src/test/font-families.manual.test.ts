@@ -1,10 +1,15 @@
-import {getFontFamily, setFontFamily, allFontFamilies} from '../font-families';
+import {
+  getFontFamily,
+  setFontFamily,
+  getAllFontFamilies,
+} from '../font-families';
 import {sleep} from './test-utils';
 
 test.skip('manually test font families on different platforms', function(done) {
   this.timeout(0);
 
   const originalFontFamily = getFontFamily();
+  const allFontFamilies = getAllFontFamilies();
 
   function getNextFontFamily(index = 0): void {
     const nextFontFamily = allFontFamilies[index];

@@ -8,8 +8,8 @@ import {
   FontFamilyType,
   getFontFamily,
   setFontFamily,
-  allFontFamilies,
   getAvailableFontFamilies,
+  getAllFontFamilies,
   DEFAULT_FONT_FAMILY,
 } from '../font-families';
 import {
@@ -43,7 +43,9 @@ suite('font-families.test.ts', () => {
   });
 
   test('should wrap font families with quotes when they include spaces', async () => {
-    const fontFamilyWithSpace = allFontFamilies.find(ff => /\s/.test(ff.id));
+    const fontFamilyWithSpace = getAllFontFamilies().find(ff =>
+      /\s/.test(ff.id),
+    );
     await setFontFamily(fontFamilyWithSpace!.id);
     assert.strictEqual(
       getConfig('editor.fontFamily'),
@@ -52,7 +54,9 @@ suite('font-families.test.ts', () => {
   });
 
   test('should return the current font family without quotes', async () => {
-    const fontFamilyWithSpace = allFontFamilies.find(ff => /\s/.test(ff.id));
+    const fontFamilyWithSpace = getAllFontFamilies().find(ff =>
+      /\s/.test(ff.id),
+    );
     await setFontFamily(fontFamilyWithSpace!.id);
     assert.strictEqual(getFontFamily(), fontFamilyWithSpace!.id);
   });
@@ -138,7 +142,7 @@ suite('font-families.test.ts', () => {
   test('should return all font families when no font families are ignored', () => {
     assert.strictEqual(
       getAvailableFontFamilies().length,
-      allFontFamilies.filter(ff =>
+      getAllFontFamilies().filter(ff =>
         ff.supportedPlatforms.includes(DEFAULT_PLATFORM),
       ).length - 1,
     );
@@ -231,7 +235,10 @@ suite('font-families.test.ts', () => {
     const favorites = ['Monaco', 'monofur', 'SF Mono'];
     await setConfig('shifty.fontFamilies.favoriteFontFamilies', favorites);
     await setConfig('shifty.shiftMode', 'favorites');
-    assert.deepStrictEqual(getAvailableFontFamilies(), favorites);
+    assert.deepStrictEqual(
+      getAvailableFontFamilies().map(ff => ff.id),
+      favorites,
+    );
   });
 
   test('should return font families without favorites when shiftMode is set to "discovery"', async () => {
@@ -248,11 +255,14 @@ suite('font-families.test.ts', () => {
 
     // ignore the rest of the available font families
     await setConfig('shifty.fontFamilies.ignoreFontFamilies', [
-      ...getAvailableFontFamilies().map(ff => ff.id),
+      ...getAvailableFontFamilies().map(ff => ff.id.replace(/"/g, '')), // FIXME: having to replace quotes in tests is really hacky
       DEFAULT_FONT_FAMILY.id,
     ]);
 
-    assert.deepStrictEqual(getAvailableFontFamilies(), favorites);
+    assert.deepStrictEqual(
+      getAvailableFontFamilies().map(ff => ff.id),
+      favorites,
+    );
   });
 
   test('should return the default font family when shiftMode is set to "discovery" and all font families have been ignored', async () => {
@@ -260,7 +270,7 @@ suite('font-families.test.ts', () => {
 
     // ignore all font families
     await setConfig('shifty.fontFamilies.ignoreFontFamilies', [
-      ...getAvailableFontFamilies().map(ff => ff.id),
+      ...getAvailableFontFamilies().map(ff => ff.id.replace(/"/g, '')),
       DEFAULT_FONT_FAMILY.id,
     ]);
 
