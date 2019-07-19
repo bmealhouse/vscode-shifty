@@ -1,4 +1,4 @@
-import {FontFamily, FontFamilyPlatform, FontFamilyType} from '.';
+import {FontFamily, FontFamilyPlatform, FontFamilyType} from '.'
 
 export const systemFontFamilies: FontFamily[] = [
   {
@@ -37,4 +37,4 @@ export const systemFontFamilies: FontFamily[] = [
     supportedPlatforms: [FontFamilyPlatform.MAC_OS],
     type: FontFamilyType.SYSTEM,
   },
-];
+]

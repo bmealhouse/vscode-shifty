@@ -1,142 +1,146 @@
-import * as vscode from 'vscode';
-import commandMap from './command-map';
-import {getRandomItem} from './utils';
-
-export const enum ColorThemeStyle {
-  DARK = 'vs-dark',
-  LIGHT = 'vs',
-  HIGH_CONTRAST = 'hc-black',
-}
+import * as vscode from 'vscode'
+import commandMap from './command-map'
+import {getRandomItem, localeCompare, unique} from './utils'
 
 interface ColorTheme {
-  id: string;
-  style: ColorThemeStyle;
+  id: string
+  type: ColorThemeType
 }
 
-export const DEFAULT_COLOR_THEME = {
-  id: 'Default Dark+',
-  style: ColorThemeStyle.DARK,
-};
+export const enum ColorThemeType {
+  DARK = 'vs-dark',
+  HIGH_CONTRAST = 'hc-black',
+  LIGHT = 'vs',
+}
 
-let colorThemesCache: ColorTheme[] | null = null;
-export function _getColorThemesCache(): ColorTheme[] | null {
-  return colorThemesCache;
+export const DEFAULT_COLOR_THEME: ColorTheme = {
+  id: 'Default Dark+',
+  type: ColorThemeType.DARK,
+}
+
+let colorThemesCache: ColorTheme[]
+export function getRawColorThemesCache(): ColorTheme[] {
+  return colorThemesCache
 }
 
 export function activateColorThemes(context: vscode.ExtensionContext): void {
-  primeColorThemesCache();
+  primeColorThemesCache()
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       commandMap.SHIFT_COLOR_THEME,
       shiftColorTheme,
+      // FEATURE REQUEST: Reset shift interval
     ),
-  );
+  )
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       commandMap.FAVORITE_COLOR_THEME,
       async () => {
-        const colorTheme = await favoriteColorTheme();
+        const colorTheme = await favoriteColorTheme()
         vscode.window.showInformationMessage(
           `Added "${colorTheme}" to favorites`,
-        );
+        )
       },
     ),
-  );
+  )
+
+  // FEATURE REQUEST: Unfavorite color theme
 
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.IGNORE_COLOR_THEME, async () => {
-      const colorTheme = await ignoreColorTheme();
-      vscode.window.showInformationMessage(`Ignored "${colorTheme}"`);
+      const colorTheme = await ignoreColorTheme()
+      vscode.window.showInformationMessage(`Ignored "${colorTheme}"`)
     }),
-  );
+  )
 
   context.subscriptions.push(
-    vscode.workspace.onDidChangeConfiguration(event => {
-      if (
-        event.affectsConfiguration('shifty.colorThemes') ||
-        event.affectsConfiguration('shifty.shiftMode')
-      ) {
-        colorThemesCache = null;
-        primeColorThemesCache();
-      }
-    }),
-  );
+    vscode.workspace.onDidChangeConfiguration(handleDidChangeConfiguration),
+  )
 
   context.subscriptions.push(
     vscode.extensions.onDidChange(() => {
-      colorThemesCache = null;
-      primeColorThemesCache();
+      primeColorThemesCache()
     }),
-  );
+  )
+}
+
+export function handleDidChangeConfiguration(
+  event: vscode.ConfigurationChangeEvent,
+): void {
+  if (
+    event.affectsConfiguration('shifty.colorThemes') ||
+    event.affectsConfiguration('shifty.shiftMode')
+  ) {
+    primeColorThemesCache()
+  }
 }
 
 export async function shiftColorTheme(): Promise<void> {
-  const colorThemes = getAvailableColorThemes();
-  const {id} = getRandomItem(colorThemes);
-  await setColorTheme(id);
+  const availableColorThemes = getAvailableColorThemes()
+  const nextColorTheme = getRandomItem(availableColorThemes)
+  await setColorTheme(nextColorTheme.id)
 }
 
 export async function favoriteColorTheme(): Promise<string> {
-  const colorTheme = getColorTheme();
+  const colorTheme = getColorTheme()
 
-  const config = vscode.workspace.getConfiguration('shifty.colorThemes');
+  const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+  const favoriteColorThemes = config.get<string[]>('favoriteColorThemes', [])
+
   await config.update(
     'favoriteColorThemes',
-    [
-      ...new Set([...(config.favoriteColorThemes as string[]), colorTheme]),
-    ].sort((a, b) => a.localeCompare(b)),
-    true,
-  );
+    unique([...favoriteColorThemes, colorTheme]).sort(localeCompare),
+    vscode.ConfigurationTarget.Global,
+  )
 
-  return colorTheme;
+  return colorTheme
 }
 
 export async function ignoreColorTheme(): Promise<string> {
-  const colorTheme = getColorTheme();
+  const colorTheme = getColorTheme()
 
-  const config = vscode.workspace.getConfiguration('shifty.colorThemes');
+  const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+  const ignoreColorThemes = config.get<string[]>('ignoreColorThemes', [])
+  const favoriteColorThemes = config.get<string[]>('favoriteColorThemes', [])
+
   await config.update(
     'ignoreColorThemes',
-    [...new Set([...(config.ignoreColorThemes as string[]), colorTheme])].sort(
-      (a, b) => a.localeCompare(b),
-    ),
-    true,
-  );
+    unique([...ignoreColorThemes, colorTheme]).sort(localeCompare),
+    vscode.ConfigurationTarget.Global,
+  )
+
   await config.update(
     'favoriteColorThemes',
-    (config.favoriteColorThemes as string[])
-      .filter(ct => ct !== colorTheme)
-      .sort((a, b) => a.localeCompare(b)),
-    true,
-  );
+    favoriteColorThemes.filter(ct => ct !== colorTheme).sort(localeCompare),
+    vscode.ConfigurationTarget.Global,
+  )
 
-  await shiftColorTheme();
-  return colorTheme;
+  await shiftColorTheme()
+  return colorTheme
 }
 
 export function getColorTheme(): string {
-  return vscode.workspace.getConfiguration('workbench').colorTheme;
+  return vscode.workspace.getConfiguration('workbench').colorTheme
 }
 
 export async function setColorTheme(colorTheme: string): Promise<void> {
-  const workbench = vscode.workspace.getConfiguration('workbench');
-  return workbench.update('colorTheme', colorTheme, true);
+  const workbench = vscode.workspace.getConfiguration('workbench')
+
+  return workbench.update(
+    'colorTheme',
+    colorTheme,
+    vscode.ConfigurationTarget.Global,
+  )
 }
 
 export function getAvailableColorThemes(): ColorTheme[] {
-  if (colorThemesCache === null) {
-    primeColorThemesCache();
-  }
-
-  const colorTheme = getColorTheme();
-  return colorThemesCache!.filter(ct => ct.id !== colorTheme);
+  const colorTheme = getColorTheme()
+  return colorThemesCache.filter(ct => ct.id !== colorTheme)
 }
 
 function primeColorThemesCache(): void {
-  if (colorThemesCache !== null) return;
-
   const {
     shiftMode,
     colorThemes: {
@@ -146,26 +150,26 @@ function primeColorThemesCache(): void {
       ignoreHighContrastColorThemes,
       ignoreLightColorThemes,
     },
-  } = vscode.workspace.getConfiguration('shifty');
+  } = vscode.workspace.getConfiguration('shifty')
 
   const allColorThemes = vscode.extensions.all.reduce(
     (colorThemes: ColorTheme[], extension) => {
       const {
         packageJSON: {contributes: {themes = []} = {}},
-      } = extension;
+      } = extension
 
       return [
         ...colorThemes,
         ...themes.map(
           (theme: any): ColorTheme => ({
             id: theme.id || theme.label,
-            style: theme.uiTheme as ColorThemeStyle,
+            type: theme.uiTheme as ColorThemeType,
           }),
         ),
-      ];
+      ]
     },
     [],
-  );
+  )
 
   if (shiftMode === 'favorites') {
     colorThemesCache = favoriteColorThemes
@@ -175,12 +179,12 @@ function primeColorThemesCache(): void {
         (ct: ColorTheme) =>
           !(
             (ignoreHighContrastColorThemes &&
-              ct.style === ColorThemeStyle.HIGH_CONTRAST) ||
-            (ignoreLightColorThemes && ct.style === ColorThemeStyle.LIGHT) ||
-            (ignoreDarkColorThemes && ct.style === ColorThemeStyle.DARK)
+              ct.type === ColorThemeType.HIGH_CONTRAST) ||
+            (ignoreLightColorThemes && ct.type === ColorThemeType.LIGHT) ||
+            (ignoreDarkColorThemes && ct.type === ColorThemeType.DARK)
           ),
-      );
-    return;
+      )
+    return
   }
 
   colorThemesCache = allColorThemes.filter(
@@ -188,12 +192,12 @@ function primeColorThemesCache(): void {
       !(
         ignoreColorThemes.includes(ct.id) ||
         (ignoreHighContrastColorThemes &&
-          ct.style === ColorThemeStyle.HIGH_CONTRAST) ||
-        (ignoreLightColorThemes && ct.style === ColorThemeStyle.LIGHT) ||
-        (ignoreDarkColorThemes && ct.style === ColorThemeStyle.DARK) ||
+          ct.type === ColorThemeType.HIGH_CONTRAST) ||
+        (ignoreLightColorThemes && ct.type === ColorThemeType.LIGHT) ||
+        (ignoreDarkColorThemes && ct.type === ColorThemeType.DARK) ||
         (shiftMode === 'discovery' && favoriteColorThemes.includes(ct.id))
       ),
-  );
+  )
 
   if (colorThemesCache.length === 0) {
     colorThemesCache = favoriteColorThemes
@@ -203,14 +207,14 @@ function primeColorThemesCache(): void {
         (ct: ColorTheme) =>
           !(
             (ignoreHighContrastColorThemes &&
-              ct.style === ColorThemeStyle.HIGH_CONTRAST) ||
-            (ignoreLightColorThemes && ct.style === ColorThemeStyle.LIGHT) ||
-            (ignoreDarkColorThemes && ct.style === ColorThemeStyle.DARK)
+              ct.type === ColorThemeType.HIGH_CONTRAST) ||
+            (ignoreLightColorThemes && ct.type === ColorThemeType.LIGHT) ||
+            (ignoreDarkColorThemes && ct.type === ColorThemeType.DARK)
           ),
-      );
+      )
   }
 
   if (colorThemesCache!.length === 0) {
-    colorThemesCache = [DEFAULT_COLOR_THEME];
+    colorThemesCache = [DEFAULT_COLOR_THEME]
   }
 }

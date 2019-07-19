@@ -87,6 +87,7 @@ Anything shifty can do is exposed via commands. Open the VS Code command palette
 - Start shift interval
 - Pause shift interval
 - Show status
+- Enable debugging
 
 ## Settings
 

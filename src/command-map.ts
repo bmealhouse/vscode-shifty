@@ -11,4 +11,5 @@ export default {
   START_SHIFT_INTERVAL: 'shifty.startShiftInterval',
   PAUSE_SHIFT_INTERVAL: 'shifty.pauseShiftInterval',
   SHOW_STATUS: 'shifty.showStatus',
-};
+  ENABLE_DEBUGGING: 'shifty.enableDebugging',
+}

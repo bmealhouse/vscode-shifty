@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2020-01-02
+
+### Added
+
+- Add `shifty.enableDebugging` command
+
+### Changed
+
+- Use `jest` for testing
+- Mock VS Code configuration APIs for testing
+
 ## [1.2.4] - 2019-08-09
 
 ### Fixed

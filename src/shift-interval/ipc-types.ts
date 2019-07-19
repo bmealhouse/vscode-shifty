@@ -1,9 +1,9 @@
 export declare interface ConnectionOptions {
-  serverId: string;
-  serverPath: string;
-  lastColorThemeShiftTime: number;
-  lastFontFamilyShiftTime: number;
-  lastPauseTime: number;
+  serverId: string
+  serverPath: string
+  lastColorThemeShiftTime: number
+  lastFontFamilyShiftTime: number
+  lastPauseTime: number
 }
 
 export const defaultConnectionOptions: ConnectionOptions = {
@@ -12,26 +12,26 @@ export const defaultConnectionOptions: ConnectionOptions = {
   lastColorThemeShiftTime: 0,
   lastFontFamilyShiftTime: 0,
   lastPauseTime: 0,
-};
+}
 
 export declare interface ClientConnection {
-  id: string;
-  statusMessagesReceived: number;
-  lastUpdateStatusMessageReceived: UpdateStatusMessage;
-  close: () => Promise<void>;
-  pauseShiftInterval: () => Promise<void>;
-  startShiftInterval: () => Promise<void>;
+  id: string
+  statusMessagesReceived: number
+  lastUpdateStatusMessageReceived: UpdateStatusMessage
+  close: () => Promise<void>
+  pauseShiftInterval: () => Promise<void>
+  startShiftInterval: () => Promise<void>
 }
 
 export declare interface ServerConnection {
-  backupSocketServerId: string;
+  backupSocketServerId: string
   connectedSockets: Array<{
-    id: string;
-    socket: any;
-  }>;
-  close: () => void;
-  pauseShiftInterval: () => void;
-  startShiftInterval: () => void;
+    id: string
+    socket: any
+  }>
+  close: () => void
+  pauseShiftInterval: () => void
+  startShiftInterval: () => void
 }
 
 export const enum MessageTypes {
@@ -48,8 +48,8 @@ export const enum MessageTypes {
 }
 
 export declare interface UpdateStatusMessage {
-  lastColorThemeShiftTime: number;
-  lastFontFamilyShiftTime: number;
-  lastPauseTime: number;
-  text: string;
+  lastColorThemeShiftTime: number
+  lastFontFamilyShiftTime: number
+  lastPauseTime: number
+  text: string
 }

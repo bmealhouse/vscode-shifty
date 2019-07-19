@@ -1,4 +1,4 @@
-import {FontFamily, FontFamilyPlatform, FontFamilyType} from '.';
+import {FontFamily, FontFamilyPlatform, FontFamilyType} from '.'
 
 export const codefaceFontFamilies: FontFamily[] = [
   {
@@ -787,4 +787,4 @@ export const codefaceFontFamilies: FontFamily[] = [
     supportedPlatforms: [FontFamilyPlatform.WINDOWS],
     type: FontFamilyType.CODEFACE,
   },
-];
+]
