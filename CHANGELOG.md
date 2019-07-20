@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2019-07-19
+
+### Added
+
+- Display "(paused)" in status bar when shift interval is paused
+
 ## [1.1.1] - 2019-07-14
 
 ### Added

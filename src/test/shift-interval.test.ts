@@ -314,6 +314,28 @@ suite('shift-interval.test.ts', () => {
     await client.close();
   });
 
+  test('should display remaining time "##:## (paused)" when the shift interval is paused', async () => {
+    const server = await ipcServer.start(connectionOptions);
+    const client = await ipcClient.connect(connectionOptions);
+
+    await sleep(25);
+
+    server.pauseShiftInterval();
+    await sleep(25);
+
+    assert.ok(
+      /^\d{2}:\d{2} \(paused\)$/.exec(
+        client.lastUpdateStatusMessageReceived.text,
+      ),
+      `The regular expression evaluated to a falsy for "${
+        client.lastUpdateStatusMessageReceived.text
+      }"`,
+    );
+
+    await client.close();
+    server.close();
+  });
+
   test('should display remaining time "##:##" when the font family shift interval has been disabled', async () => {
     await setConfig('shifty.shiftInterval.shiftColorThemeIntervalMin', 10);
     await setConfig('shifty.shiftInterval.shiftFontFamilyIntervalMin', null);

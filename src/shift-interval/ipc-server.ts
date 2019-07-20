@@ -257,13 +257,17 @@ export async function start({
 
       if (shiftColorThemeIntervalEnabled && shiftFontFamilyIntervalEnabled) {
         if (shiftColorThemeRemainingSeconds < shiftFontFamilyRemainingSeconds) {
-          return `${pad0(min)}:${pad0(sec)} (color theme)`;
+          return `${pad0(min)}:${pad0(sec)} (${
+            lastPauseTime > 0 ? 'paused' : 'color theme'
+          })`;
         }
 
         if (shiftFontFamilyRemainingSeconds < shiftColorThemeRemainingSeconds) {
           min = Math.max(0, Math.floor(shiftFontFamilyRemainingSeconds / 60));
           sec = Math.max(0, shiftFontFamilyRemainingSeconds % 60);
-          let calculationResult = `${pad0(min)}:${pad0(sec)} (font family)`;
+          let calculationResult = `${pad0(min)}:${pad0(sec)} (${
+            lastPauseTime > 0 ? 'paused' : 'font family'
+          })`;
 
           if (
             !hasDebuggedFontFamilyStatus &&
@@ -286,7 +290,7 @@ export async function start({
         }
       }
 
-      return `${pad0(min)}:${pad0(sec)}`;
+      return `${pad0(min)}:${pad0(sec)}${lastPauseTime > 0 ? ' (paused)' : ''}`;
     }
 
     ipc.server.start();
