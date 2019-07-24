@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2019-07-24
+
+### Fixed
+
+- Add additional debugging information to shift interval server
+
 ## [1.2.0] - 2019-07-19
 
 ### Added

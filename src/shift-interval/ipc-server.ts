@@ -83,6 +83,18 @@ export async function start({
         lastFontFamilyShiftTime = lastFontFamilyShiftTime || now;
 
         if (lastPauseTime > 0) {
+          if (process.env.SHIFTY_DEBUG === 'true') {
+            console.log(
+              'SHIFTY_DEBUG: unpause shift interval (before)',
+              JSON.stringify({
+                lastPauseTime,
+                now,
+                lastColorThemeShiftTime,
+                lastFontFamilyShiftTime,
+              }),
+            );
+          }
+
           if (lastColorThemeShiftTime > 0) {
             lastColorThemeShiftTime =
               now - (lastPauseTime - lastColorThemeShiftTime);
@@ -94,6 +106,22 @@ export async function start({
           }
 
           lastPauseTime = 0;
+
+          if (process.env.SHIFTY_DEBUG === 'true') {
+            console.log(
+              'SHIFTY_DEBUG: unpause shift interval (after)',
+              JSON.stringify(
+                {
+                  lastPauseTime,
+                  now,
+                  lastColorThemeShiftTime,
+                  lastFontFamilyShiftTime,
+                },
+                null,
+                2,
+              ),
+            );
+          }
         }
 
         intervalId = setInterval(
@@ -135,6 +163,22 @@ export async function start({
               shiftFontFamilyIntervalMin * 60 * 1000;
 
             if (!shiftInProgress) {
+              if (process.env.SHIFTY_DEBUG === 'true') {
+                console.log(
+                  'SHIFTY_DEBUG: shifting color theme & font family (before)',
+                  JSON.stringify(
+                    {
+                      now,
+                      shiftInProgress,
+                      lastColorThemeShiftTime,
+                      lastFontFamilyShiftTime,
+                    },
+                    null,
+                    2,
+                  ),
+                );
+              }
+
               if (
                 shiftColorThemeIntervalEnabled &&
                 lastColorThemeShiftTime + shiftColorThemeIntervalMs - now <= 0
@@ -154,6 +198,22 @@ export async function start({
               }
 
               shiftInProgress = false;
+
+              if (process.env.SHIFTY_DEBUG === 'true') {
+                console.log(
+                  'SHIFTY_DEBUG: shifting color theme & font family (after)',
+                  JSON.stringify(
+                    {
+                      now,
+                      shiftInProgress,
+                      lastColorThemeShiftTime,
+                      lastFontFamilyShiftTime,
+                    },
+                    null,
+                    2,
+                  ),
+                );
+              }
             }
           },
           process.env.NODE_ENV === 'test' ? 0 : 1000,
@@ -222,7 +282,6 @@ export async function start({
       resolve(connection);
     });
 
-    let hasDebuggedFontFamilyStatus = false;
     function calculateRemainingTime(now: number): string {
       const {
         shiftColorThemeIntervalMin,
@@ -255,42 +314,54 @@ export async function start({
       let sec = Math.max(0, shiftColorThemeRemainingSeconds % 60);
       const pad0 = (number: number): string => String(number).padStart(2, '0');
 
+      let calculationResult: string;
+
       if (shiftColorThemeIntervalEnabled && shiftFontFamilyIntervalEnabled) {
         if (shiftColorThemeRemainingSeconds < shiftFontFamilyRemainingSeconds) {
-          return `${pad0(min)}:${pad0(sec)} (${
+          calculationResult = `${pad0(min)}:${pad0(sec)} (${
             lastPauseTime > 0 ? 'paused' : 'color theme'
           })`;
-        }
-
-        if (shiftFontFamilyRemainingSeconds < shiftColorThemeRemainingSeconds) {
+          // return `${pad0(min)}:${pad0(sec)} (${
+          //   lastPauseTime > 0 ? 'paused' : 'color theme'
+          // })`;
+        } else if (
+          shiftFontFamilyRemainingSeconds < shiftColorThemeRemainingSeconds
+        ) {
           min = Math.max(0, Math.floor(shiftFontFamilyRemainingSeconds / 60));
           sec = Math.max(0, shiftFontFamilyRemainingSeconds % 60);
-          let calculationResult = `${pad0(min)}:${pad0(sec)} (${
+          calculationResult = `${pad0(min)}:${pad0(sec)} (${
             lastPauseTime > 0 ? 'paused' : 'font family'
           })`;
+        }
+      }
 
-          if (
-            !hasDebuggedFontFamilyStatus &&
-            process.env.SHIFTY_DEBUG === 'true'
-          ) {
-            console.log({
+      calculationResult = `${pad0(min)}:${pad0(sec)}${
+        lastPauseTime > 0 ? ' (paused)' : ''
+      }`;
+
+      if (
+        process.env.SHIFTY_DEBUG === 'true' &&
+        shiftColorThemeIntervalMin === shiftFontFamilyIntervalMin &&
+        lastColorThemeShiftTime !== lastFontFamilyShiftTime
+      ) {
+        console.log(
+          'SHIFTY_DEBUG: last shift time values have diverged',
+          JSON.stringify(
+            {
               now,
-              shiftColorThemeIntervalMs,
-              shiftFontFamilyIntervalMs,
               lastColorThemeShiftTime,
               lastFontFamilyShiftTime,
               shiftColorThemeRemainingSeconds,
               shiftFontFamilyRemainingSeconds,
               calculationResult,
-            });
-            hasDebuggedFontFamilyStatus = true;
-          }
-
-          return calculationResult;
-        }
+            },
+            null,
+            2,
+          ),
+        );
       }
 
-      return `${pad0(min)}:${pad0(sec)}${lastPauseTime > 0 ? ' (paused)' : ''}`;
+      return calculationResult;
     }
 
     ipc.server.start();
