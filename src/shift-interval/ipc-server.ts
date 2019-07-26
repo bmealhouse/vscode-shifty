@@ -69,14 +69,7 @@ export async function start({
       });
 
       let intervalId: NodeJS.Timeout;
-      const startShiftInterval = async (): Promise<void> => {
-        if (
-          lastPauseTime === 0 &&
-          (lastColorThemeShiftTime > 0 || lastFontFamilyShiftTime > 0)
-        ) {
-          return;
-        }
-
+      const internalStartShiftInterval = async (): Promise<void> => {
         const now = Date.now();
 
         lastColorThemeShiftTime = lastColorThemeShiftTime || now;
@@ -221,15 +214,11 @@ export async function start({
       };
 
       ipc.server.on(MessageTypes.START_INTERVAL, (_, socket) => {
-        startShiftInterval();
+        internalStartShiftInterval();
         ipc.server.emit(socket, MessageTypes.START_INTERVAL_COMPLETE);
       });
 
-      const pauseShiftInterval = (): void => {
-        if (lastPauseTime > 0) {
-          return;
-        }
-
+      const internalPauseShiftInterval = (): void => {
         clearInterval(intervalId);
         lastPauseTime = Date.now();
 
@@ -249,7 +238,7 @@ export async function start({
       };
 
       ipc.server.on(MessageTypes.PAUSE_INTERVAL, (_, socket) => {
-        pauseShiftInterval();
+        internalPauseShiftInterval();
         ipc.server.emit(socket, MessageTypes.PAUSE_INTERVAL_COMPLETE);
       });
 
@@ -260,7 +249,7 @@ export async function start({
         } = vscode.workspace.getConfiguration('shifty.shiftInterval');
 
         if (shiftColorThemeIntervalMin > 0 || shiftFontFamilyIntervalMin > 0) {
-          startShiftInterval();
+          internalStartShiftInterval();
         }
       }
 
@@ -275,8 +264,21 @@ export async function start({
           clearInterval(intervalId);
           ipc.server.stop();
         },
-        pauseShiftInterval,
-        startShiftInterval,
+        pauseShiftInterval() {
+          if (lastPauseTime > 0) {
+            return;
+          }
+          internalPauseShiftInterval();
+        },
+        startShiftInterval() {
+          if (
+            lastPauseTime === 0 &&
+            (lastColorThemeShiftTime > 0 || lastFontFamilyShiftTime > 0)
+          ) {
+            return;
+          }
+          internalStartShiftInterval();
+        },
       };
 
       resolve(connection);

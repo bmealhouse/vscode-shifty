@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2019-07-26
+
+### Fixed
+
+- Decreased the time it takes to start the shift interval initially
+- Fix rollover to backup socket server when intial socket server is closed
+
 ## [1.2.1] - 2019-07-24
 
 ### Fixed

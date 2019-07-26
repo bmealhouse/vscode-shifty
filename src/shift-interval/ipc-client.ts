@@ -32,7 +32,7 @@ export async function connect({
     ipc.config.id = shortid.generate();
     ipc.config.silent = true;
     ipc.config.retry = process.env.NODE_ENV === 'test' ? 0 : 500;
-    ipc.config.maxRetries = 5;
+    ipc.config.maxRetries = 0;
 
     // 2. Connect to node-ipc server.
     ipc.connectTo(serverId, serverPath, () => {
@@ -48,10 +48,13 @@ export async function connect({
       socket.on(MessageTypes.REGISTER_BACKUP_SERVER_SOCKET, () => {
         isBackupSocketServer = true;
         ipc.config.stopRetrying = true;
+        ipc.config.maxRetries = 0;
       });
 
       // 6. Client socket registration complete.
       socket.on(MessageTypes.REGISTER_SOCKET_COMPLETE, () => {
+        ipc.config.maxRetries = isBackupSocketServer ? 0 : 10;
+
         const connection: ClientConnection = {
           id: ipc.config.id,
           get statusMessagesReceived() {
