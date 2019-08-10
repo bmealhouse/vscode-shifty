@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2019-08-09
+
 ### Changed
 
 - Update project description
 
-## [1.2.1] - 2019-07-26
+### Fixed
+
+- Fix `shifty.fontFamilies.fallbackFontFamily` setting type & description
+
+## [1.2.2] - 2019-07-26
 
 ### Fixed
 

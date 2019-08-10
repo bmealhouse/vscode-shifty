@@ -82,12 +82,9 @@
           "description": "Controls whether light color themes are ignored."
         },
         "shifty.fontFamilies.fallbackFontFamily": {
-          "type": [
-            "string",
-            "null"
-          ],
+          "type": "string",
           "default": "monospace",
-          "markdownDescription": "Controls which font family will be used as the fallback. Supports comma delimited values (e.g. `\"SF Mono\", monospace`)."
+          "description": "Controls which font family will be used as the fallback. Supports comma delimited values (e.g. `\"SF Mono\", monospace`)."
         },
         "shifty.fontFamilies.favoriteFontFamilies": {
           "type": "array",
