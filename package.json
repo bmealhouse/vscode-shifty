@@ -84,7 +84,7 @@
         "shifty.fontFamilies.fallbackFontFamily": {
           "type": "string",
           "default": "monospace",
-          "description": "Controls which font family will be used as the fallback. Supports comma delimited values (e.g. `\"SF Mono\", monospace`)."
+          "markdownDescription": "Controls which font family will be used as the fallback. Supports comma delimited values (e.g. `\"SF Mono\", monospace`)."
         },
         "shifty.fontFamilies.favoriteFontFamilies": {
           "type": "array",
