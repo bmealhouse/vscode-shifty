@@ -19,4 +19,6 @@ test(`shifts the color theme and font family when running the "${commandMap.SHIF
 
   const [,secondCall] = spy.mock.calls
   expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
+
+  spy.mockRestore()
 })

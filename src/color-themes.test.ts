@@ -25,6 +25,8 @@ test(`shifts the color theme when running the "${commandMap.SHIFT_COLOR_THEME}" 
 
   const [,secondCall] = spy.mock.calls
   expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
+
+  spy.mockRestore()
 })
 
 // prettier-ignore
@@ -67,8 +69,9 @@ test(`unfavorites the current color theme when running the "${commandMap.TOGGLE_
 })
 
 // prettier-ignore
-test(`ignores the current color theme and shifts the color theme when running the "${commandMap.IGNORE_COLOR_THEME}" command`, async () => {
-  const spy = jest.spyOn(vscode.window, 'showInformationMessage')
+test(`ignores the current color theme, shifts the color theme, and resets the shift interval when running the "${commandMap.IGNORE_COLOR_THEME}" command`, async () => {
+  const showInformationMessaageSpy = jest.spyOn(vscode.window, 'showInformationMessage')
+  const executeCommandSpy = jest.spyOn(vscode.commands, 'executeCommand')
   await vscode.commands.executeCommand(commandMap.IGNORE_COLOR_THEME)
 
   const {ignoreColorThemes} = vscode.workspace.getConfiguration(
@@ -76,14 +79,18 @@ test(`ignores the current color theme and shifts the color theme when running th
   )
   expect(ignoreColorThemes).toContain(DEFAULT_COLOR_THEME.id)
 
-  const [firstCall] = spy.mock.calls
+  const [firstCall] = showInformationMessaageSpy.mock.calls
   expect(formatSnapshot(firstCall)).toMatchInlineSnapshot(
     `"['Ignored \\"Default Dark+\\"']"`,
   )
 
   expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME.id)
 
-  spy.mockRestore()
+  const [, secondCall] =executeCommandSpy.mock.calls
+  expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
+
+  showInformationMessaageSpy.mockRestore()
+  executeCommandSpy.mockRestore()
 })
 
 // prettier-ignore

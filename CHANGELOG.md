@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2020-01-11
+
+### Fixed
+
+- Reset the shift interval when the user ignores a color theme or font family
+- Restore spies at the end of tests
+
 ## [2.0.0] - 2020-01-11
 
 ### Added

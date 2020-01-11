@@ -67,8 +67,11 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.IGNORE_FONT_FAMILY, async () => {
-      const fontFamily = await ignoreFontFamily()
+      const fontFamily = getFontFamily()
+      await ignoreFontFamily(fontFamily)
       vscode.window.showInformationMessage(`Ignored "${fontFamily}"`)
+
+      vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL)
     }),
   )
 
@@ -126,9 +129,7 @@ export async function unfavoriteFontFamily(fontFamily: string): Promise<void> {
   )
 }
 
-export async function ignoreFontFamily(): Promise<string> {
-  const fontFamily = getFontFamily()
-
+export async function ignoreFontFamily(fontFamily: string): Promise<void> {
   const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
   const favoriteFontFamilies = config.get<string[]>('favoriteFontFamilies', [])
   const ignoreFontFamilies = config.get<string[]>('ignoreFontFamilies', [])
@@ -146,7 +147,6 @@ export async function ignoreFontFamily(): Promise<string> {
   )
 
   await shiftFontFamily()
-  return fontFamily
 }
 
 export function getFontFamily(): string {

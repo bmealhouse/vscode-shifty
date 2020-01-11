@@ -74,6 +74,8 @@ test(`shifts the font family when running the "${commandMap.SHIFT_FONT_FAMILY}" 
 
   const [,secondCall] = spy.mock.calls
   expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
+
+  spy.mockRestore()
 })
 
 // prettier-ignore
@@ -116,8 +118,9 @@ test(`unfavorites the current font family when running the "${commandMap.TOGGLE_
 })
 
 // prettier-ignore
-test(`ignores the current font family and shift the font family when running the "${commandMap.IGNORE_FONT_FAMILY}" command`, async () => {
-  const spy = jest.spyOn(vscode.window, 'showInformationMessage')
+test(`ignores the current font family, shifts the font family, and resets the shift interval when running the "${commandMap.IGNORE_FONT_FAMILY}" command`, async () => {
+  const showInformationMessageSpy = jest.spyOn(vscode.window, 'showInformationMessage')
+  const executeCommandSpy = jest.spyOn(vscode.commands, 'executeCommand')
   await vscode.commands.executeCommand(commandMap.IGNORE_FONT_FAMILY)
 
   const {ignoreFontFamilies} = vscode.workspace.getConfiguration(
@@ -125,14 +128,18 @@ test(`ignores the current font family and shift the font family when running the
   )
   expect(ignoreFontFamilies).toContain(DEFAULT_FONT_FAMILY.id)
 
-  const [firstCall] = spy.mock.calls
+  const [firstCall] = showInformationMessageSpy.mock.calls
   expect(formatSnapshot(firstCall)).toMatchInlineSnapshot(
     `"['Ignored \\"Courier New\\"']"`,
   )
 
   expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id)
 
-  spy.mockRestore()
+  const [, secondCall] = executeCommandSpy.mock.calls
+  expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
+
+  showInformationMessageSpy.mockRestore()
+  executeCommandSpy.mockRestore()
 })
 
 // prettier-ignore

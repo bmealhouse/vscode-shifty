@@ -56,8 +56,11 @@ export function activateColorThemes(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.IGNORE_COLOR_THEME, async () => {
-      const colorTheme = await ignoreColorTheme()
+      const colorTheme = getColorTheme()
+      await ignoreColorTheme(colorTheme)
       vscode.window.showInformationMessage(`Ignored "${colorTheme}"`)
+
+      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL)
     }),
   )
 
@@ -121,9 +124,7 @@ export async function unfavoriteColorTheme(colorTheme: string): Promise<void> {
   )
 }
 
-export async function ignoreColorTheme(): Promise<string> {
-  const colorTheme = getColorTheme()
-
+export async function ignoreColorTheme(colorTheme: string): Promise<void> {
   const config = vscode.workspace.getConfiguration('shifty.colorThemes')
   const ignoreColorThemes = config.get<string[]>('ignoreColorThemes', [])
   const favoriteColorThemes = config.get<string[]>('favoriteColorThemes', [])
@@ -141,7 +142,6 @@ export async function ignoreColorTheme(): Promise<string> {
   )
 
   await shiftColorTheme()
-  return colorTheme
 }
 
 export function getColorTheme(): string {
