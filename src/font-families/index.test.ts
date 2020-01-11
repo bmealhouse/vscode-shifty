@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import {updateConfig, formatSnapshot} from '../test/test-utils'
+import commandMap from '../command-map'
 import {
   DEFAULT_FONT_FAMILY,
   FontFamilyPlatform,
@@ -59,19 +60,21 @@ test('returns the current font family without quotes', async () => {
 
 test('registers font family commands when VS Code starts up', async () => {
   const commands = await vscode.commands.getCommands()
-  expect(commands).toContain('shifty.shiftFontFamily')
-  expect(commands).toContain('shifty.favoriteFontFamily')
-  expect(commands).toContain('shifty.ignoreFontFamily')
+  expect(commands).toContain(commandMap.SHIFT_FONT_FAMILY)
+  expect(commands).toContain(commandMap.TOGGLE_FAVORITE_FONT_FAMILY)
+  expect(commands).toContain(commandMap.IGNORE_FONT_FAMILY)
 })
 
-test('shifts the font family when running the "shifty.shiftFontFamily" command', async () => {
-  await vscode.commands.executeCommand('shifty.shiftFontFamily')
+// prettier-ignore
+test(`shifts the font family when running the "${commandMap.SHIFT_FONT_FAMILY}" command`, async () => {
+  await vscode.commands.executeCommand(commandMap.SHIFT_FONT_FAMILY)
   expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id)
 })
 
-test('favorites the current font family when running the "shifty.favoriteFontFamily" command', async () => {
+// prettier-ignore
+test(`favorites the current font family when running the "${commandMap.TOGGLE_FAVORITE_FONT_FAMILY}" command`, async () => {
   const spy = jest.spyOn(vscode.window, 'showInformationMessage')
-  await vscode.commands.executeCommand('shifty.favoriteFontFamily')
+  await vscode.commands.executeCommand(commandMap.TOGGLE_FAVORITE_FONT_FAMILY)
 
   const {favoriteFontFamilies} = vscode.workspace.getConfiguration(
     'shifty.fontFamilies',
@@ -86,9 +89,31 @@ test('favorites the current font family when running the "shifty.favoriteFontFam
   spy.mockRestore()
 })
 
-test('ignores the current font family and shift the font family when running the "shifty.ignoreFontFamily" command', async () => {
+// prettier-ignore
+test(`unfavorites the current font family when running the "${commandMap.TOGGLE_FAVORITE_FONT_FAMILY}" command`, async () => {
+  const favorites = [DEFAULT_FONT_FAMILY.id, 'SF Mono']
+  await updateConfig('shifty.fontFamilies.favoriteFontFamilies', favorites)
+
   const spy = jest.spyOn(vscode.window, 'showInformationMessage')
-  await vscode.commands.executeCommand('shifty.ignoreFontFamily')
+  await vscode.commands.executeCommand(commandMap.TOGGLE_FAVORITE_FONT_FAMILY)
+
+  const {
+    favoriteFontFamilies,
+  } = vscode.workspace.getConfiguration('shifty.fontFamilies')
+  expect(favoriteFontFamilies).not.toContain(DEFAULT_FONT_FAMILY.id)
+
+  const [firstCall] = spy.mock.calls
+  expect(formatSnapshot(firstCall)).toMatchInlineSnapshot(
+    `"['Removed \\"Courier New\\" from favorites']"`,
+  )
+
+  spy.mockRestore()
+})
+
+// prettier-ignore
+test(`ignores the current font family and shift the font family when running the "${commandMap.IGNORE_FONT_FAMILY}" command`, async () => {
+  const spy = jest.spyOn(vscode.window, 'showInformationMessage')
+  await vscode.commands.executeCommand(commandMap.IGNORE_FONT_FAMILY)
 
   const {ignoreFontFamilies} = vscode.workspace.getConfiguration(
     'shifty.fontFamilies',
@@ -105,10 +130,11 @@ test('ignores the current font family and shift the font family when running the
   spy.mockRestore()
 })
 
-test('ignores the current font family and remove the font family from favorites when running the "shifty.ignoreFontFamily" command', async () => {
+// prettier-ignore
+test(`ignores the current font family and remove the font family from favorites when running the "${commandMap.IGNORE_FONT_FAMILY}" command`, async () => {
   const favorites = [DEFAULT_FONT_FAMILY.id, 'SF Mono']
   await updateConfig('shifty.fontFamilies.favoriteFontFamilies', favorites)
-  await vscode.commands.executeCommand('shifty.ignoreFontFamily')
+  await vscode.commands.executeCommand(commandMap.IGNORE_FONT_FAMILY)
 
   const {
     favoriteFontFamilies,

@@ -47,12 +47,21 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      commandMap.FAVORITE_FONT_FAMILY,
+      commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
       async () => {
-        const fontFamily = await favoriteFontFamily()
-        vscode.window.showInformationMessage(
-          `Added "${fontFamily}" to favorites`,
-        )
+        const fontFamily = getFontFamily()
+
+        if (hasFavoritedFontFamily(fontFamily)) {
+          await unfavoriteFontFamily(fontFamily)
+          vscode.window.showInformationMessage(
+            `Removed "${fontFamily}" from favorites`,
+          )
+        } else {
+          await favoriteFontFamily(fontFamily)
+          vscode.window.showInformationMessage(
+            `Added "${fontFamily}" to favorites`,
+          )
+        }
       },
     ),
   )
@@ -86,9 +95,15 @@ export async function shiftFontFamily(): Promise<void> {
   await setFontFamily(nextFontFamily.id)
 }
 
-export async function favoriteFontFamily(): Promise<string> {
-  const fontFamily = getFontFamily()
+export function hasFavoritedFontFamily(fontFamily: string): boolean {
+  const favoriteFontFamilies = vscode.workspace
+    .getConfiguration('shifty.fontFamilies')
+    .get<string[]>('favoriteFontFamilies', [])
 
+  return favoriteFontFamilies.includes(fontFamily)
+}
+
+export async function favoriteFontFamily(fontFamily: string): Promise<void> {
   const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
   const favoriteFontFamilies = config.get<string[]>('favoriteFontFamilies', [])
 
@@ -97,8 +112,19 @@ export async function favoriteFontFamily(): Promise<string> {
     unique([...favoriteFontFamilies, fontFamily]).sort(localeCompare),
     vscode.ConfigurationTarget.Global,
   )
+}
 
-  return fontFamily
+export async function unfavoriteFontFamily(fontFamily: string): Promise<void> {
+  const config = vscode.workspace.getConfiguration('shifty.fontFamilies')
+  const favoriteFontFamilies = config.get<string[]>('favoriteFontFamilies', [])
+
+  await config.update(
+    'favoriteFontFamilies',
+    unique(favoriteFontFamilies.filter(ff => ff !== fontFamily)).sort(
+      localeCompare,
+    ),
+    vscode.ConfigurationTarget.Global,
+  )
 }
 
 export async function ignoreFontFamily(): Promise<string> {

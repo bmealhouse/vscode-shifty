@@ -1,4 +1,4 @@
-const path = require('path'); // eslint-disable-line
+const path = require('path')
 
 module.exports = {
   target: 'node',
@@ -29,4 +29,4 @@ module.exports = {
       },
     ],
   },
-};
+}

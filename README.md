@@ -75,15 +75,13 @@ Cycles through favorite color themes & font families. Respects `ignoreDarkColorT
 
 Anything shifty can do is exposed via commands. Open the VS Code command palette (`⇧⌘P`) and type `shifty` to see the list of commands availabe to you.
 
+- Shift
 - Shift color theme
 - Shift font family
-- Shift color theme & font family
-- Favorite color theme
-- Favorite font family
-- Favorite color theme & font family
+- Toggle favorite color theme
+- Toggle favorite font family
 - Ignore color theme
 - Ignore font family
-- Ignore color theme & font family
 - Start shift interval
 - Pause shift interval
 - Show status

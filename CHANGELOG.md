@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Rename commands
+  - `shifty.shiftBoth` -> `shifty.shift`
+  - `shifty.favoriteColorTheme` -> `shifty.toggleFavoriteColorTheme`
+  - `shifty.favoriteFontFamily` -> `shifty.toggleFavoriteFontFamily`
+
+### Removed
+
+- Remove `shifty.favoriteBoth` command
+- Remove `shifty.ignoreBoth` command
+
 ## [1.3.0] - 2020-01-02
 
 ### Added

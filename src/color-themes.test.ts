@@ -7,22 +7,25 @@ import {
   getAvailableColorThemes,
 } from './color-themes'
 import {updateConfig, formatSnapshot} from './test/test-utils'
+import commandMap from './command-map'
 
 test('registers color theme commands when VS Code starts up', async () => {
   const commands = await vscode.commands.getCommands()
-  expect(commands).toContain('shifty.shiftColorTheme')
-  expect(commands).toContain('shifty.favoriteColorTheme')
-  expect(commands).toContain('shifty.ignoreColorTheme')
+  expect(commands).toContain(commandMap.SHIFT_COLOR_THEME)
+  expect(commands).toContain(commandMap.TOGGLE_FAVORITE_COLOR_THEME)
+  expect(commands).toContain(commandMap.IGNORE_COLOR_THEME)
 })
 
-test('shifts the color theme when running the "shifty.shiftColorTheme" command', async () => {
-  await vscode.commands.executeCommand('shifty.shiftColorTheme')
+// prettier-ignore
+test(`shifts the color theme when running the "${commandMap.SHIFT_COLOR_THEME}" command`, async () => {
+  await vscode.commands.executeCommand(commandMap.SHIFT_COLOR_THEME)
   expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME.id)
 })
 
-test('favorites the current color theme when running the "shifty.favoriteColorTheme" command', async () => {
+// prettier-ignore
+test(`favorites the current color theme when running the "${commandMap.TOGGLE_FAVORITE_COLOR_THEME}" command`, async () => {
   const spy = jest.spyOn(vscode.window, 'showInformationMessage')
-  await vscode.commands.executeCommand('shifty.favoriteColorTheme')
+  await vscode.commands.executeCommand(commandMap.TOGGLE_FAVORITE_COLOR_THEME)
 
   const {favoriteColorThemes} = vscode.workspace.getConfiguration(
     'shifty.colorThemes',
@@ -37,9 +40,31 @@ test('favorites the current color theme when running the "shifty.favoriteColorTh
   spy.mockRestore()
 })
 
-test('ignores the current color theme and shifts the color theme when running the "shifty.ignoreColorTheme" command', async () => {
+// prettier-ignore
+test(`unfavorites the current color theme when running the "${commandMap.TOGGLE_FAVORITE_COLOR_THEME}" command`, async () => {
+  const favorites = ['Abyss', DEFAULT_COLOR_THEME.id]
+  await updateConfig('shifty.colorThemes.favoriteColorThemes', favorites)
+
   const spy = jest.spyOn(vscode.window, 'showInformationMessage')
-  await vscode.commands.executeCommand('shifty.ignoreColorTheme')
+  await vscode.commands.executeCommand(commandMap.TOGGLE_FAVORITE_COLOR_THEME)
+
+  const {favoriteColorThemes} = vscode.workspace.getConfiguration(
+    'shifty.colorThemes',
+  )
+  expect(favoriteColorThemes).not.toContain(DEFAULT_COLOR_THEME.id)
+
+  const [firstCall] = spy.mock.calls
+  expect(formatSnapshot(firstCall)).toMatchInlineSnapshot(
+    `"['Removed \\"Default Dark+\\" from favorites']"`,
+  )
+
+  spy.mockRestore()
+})
+
+// prettier-ignore
+test(`ignores the current color theme and shifts the color theme when running the "${commandMap.IGNORE_COLOR_THEME}" command`, async () => {
+  const spy = jest.spyOn(vscode.window, 'showInformationMessage')
+  await vscode.commands.executeCommand(commandMap.IGNORE_COLOR_THEME)
 
   const {ignoreColorThemes} = vscode.workspace.getConfiguration(
     'shifty.colorThemes',
@@ -56,10 +81,11 @@ test('ignores the current color theme and shifts the color theme when running th
   spy.mockRestore()
 })
 
-test('ignores the current color theme and removes the color theme from favorites when running the "shifty.ignoreColorTheme" command', async () => {
+// prettier-ignore
+test(`ignores the current color theme and removes the color theme from favorites when running the "${commandMap.IGNORE_COLOR_THEME}" command`, async () => {
   const favorites = ['Abyss', DEFAULT_COLOR_THEME.id]
   await updateConfig('shifty.colorThemes.favoriteColorThemes', favorites)
-  await vscode.commands.executeCommand('shifty.ignoreColorTheme')
+  await vscode.commands.executeCommand(commandMap.IGNORE_COLOR_THEME)
 
   const {
     favoriteColorThemes,

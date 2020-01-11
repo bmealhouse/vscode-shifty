@@ -36,17 +36,24 @@ export function activateColorThemes(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      commandMap.FAVORITE_COLOR_THEME,
+      commandMap.TOGGLE_FAVORITE_COLOR_THEME,
       async () => {
-        const colorTheme = await favoriteColorTheme()
-        vscode.window.showInformationMessage(
-          `Added "${colorTheme}" to favorites`,
-        )
+        const colorTheme = getColorTheme()
+
+        if (hasFavoritedColorTheme(colorTheme)) {
+          await unfavoriteColorTheme(colorTheme)
+          vscode.window.showInformationMessage(
+            `Removed "${colorTheme}" from favorites`,
+          )
+        } else {
+          await favoriteColorTheme(colorTheme)
+          vscode.window.showInformationMessage(
+            `Added "${colorTheme}" to favorites`,
+          )
+        }
       },
     ),
   )
-
-  // FEATURE REQUEST: Unfavorite color theme
 
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.IGNORE_COLOR_THEME, async () => {
@@ -83,9 +90,15 @@ export async function shiftColorTheme(): Promise<void> {
   await setColorTheme(nextColorTheme.id)
 }
 
-export async function favoriteColorTheme(): Promise<string> {
-  const colorTheme = getColorTheme()
+export function hasFavoritedColorTheme(colorTheme: string): boolean {
+  const favoriteColorThemes = vscode.workspace
+    .getConfiguration('shifty.colorThemes')
+    .get<string[]>('favoriteColorThemes', [])
 
+  return favoriteColorThemes.includes(colorTheme)
+}
+
+export async function favoriteColorTheme(colorTheme: string): Promise<void> {
   const config = vscode.workspace.getConfiguration('shifty.colorThemes')
   const favoriteColorThemes = config.get<string[]>('favoriteColorThemes', [])
 
@@ -94,8 +107,19 @@ export async function favoriteColorTheme(): Promise<string> {
     unique([...favoriteColorThemes, colorTheme]).sort(localeCompare),
     vscode.ConfigurationTarget.Global,
   )
+}
 
-  return colorTheme
+export async function unfavoriteColorTheme(colorTheme: string): Promise<void> {
+  const config = vscode.workspace.getConfiguration('shifty.colorThemes')
+  const favoriteColorThemes = config.get<string[]>('favoriteColorThemes', [])
+
+  await config.update(
+    'favoriteColorThemes',
+    unique(favoriteColorThemes.filter(ct => ct !== colorTheme)).sort(
+      localeCompare,
+    ),
+    vscode.ConfigurationTarget.Global,
+  )
 }
 
 export async function ignoreColorTheme(): Promise<string> {
