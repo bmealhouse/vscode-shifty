@@ -18,8 +18,13 @@ test('registers color theme commands when VS Code starts up', async () => {
 
 // prettier-ignore
 test(`shifts the color theme when running the "${commandMap.SHIFT_COLOR_THEME}" command`, async () => {
+  const spy = jest.spyOn(vscode.commands, 'executeCommand')
   await vscode.commands.executeCommand(commandMap.SHIFT_COLOR_THEME)
+
   expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME.id)
+
+  const [,secondCall] = spy.mock.calls
+  expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
 })
 
 // prettier-ignore

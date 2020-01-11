@@ -38,11 +38,10 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
   primeFontFamiliesCache()
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      commandMap.SHIFT_FONT_FAMILY,
-      shiftFontFamily,
-      // FEATURE REQUEST: Reset shift interval
-    ),
+    vscode.commands.registerCommand(commandMap.SHIFT_FONT_FAMILY, async () => {
+      await shiftFontFamily()
+      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL)
+    }),
   )
 
   context.subscriptions.push(

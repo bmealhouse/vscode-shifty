@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(commandMap.SHIFT, async () => {
       await shiftFontFamily()
       await shiftColorTheme()
-      // FEATURE REQUEST: Reset shift interval
+      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL)
     }),
   )
 

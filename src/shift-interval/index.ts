@@ -20,6 +20,12 @@ export async function activateShiftInterval(
     }),
   )
 
+  context.subscriptions.push(
+    vscode.commands.registerCommand(commandMap.RESET_SHIFT_INTERVAL, () => {
+      connection.resetShiftInterval()
+    }),
+  )
+
   // 1. Attempt to connect as client.
   connection = await ipcClient.connect()
 }

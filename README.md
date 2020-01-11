@@ -84,6 +84,7 @@ Anything shifty can do is exposed via commands. Open the VS Code command palette
 - Ignore font family
 - Start shift interval
 - Pause shift interval
+- Reset shift interval
 - Show status
 - Enable debugging
 

@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `shifty.resetShiftInterval` command
+
 ### Changed
 
 - Rename commands
   - `shifty.shiftBoth` -> `shifty.shift`
   - `shifty.favoriteColorTheme` -> `shifty.toggleFavoriteColorTheme`
   - `shifty.favoriteFontFamily` -> `shifty.toggleFavoriteFontFamily`
+- Reset the shift interval when the user shifts the color theme and/or font family
 
 ### Removed
 

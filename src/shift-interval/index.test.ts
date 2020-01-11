@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import {getColorTheme, DEFAULT_COLOR_THEME} from '../color-themes'
 import {getFontFamily, DEFAULT_FONT_FAMILY} from '../font-families'
 import {updateConfig, sleep, wait} from '../test/test-utils'
+import commandMap from '../command-map'
 import * as ipcServer from './ipc-server'
 import * as ipcClient from './ipc-client'
 import {ConnectionOptions} from './ipc-types'
@@ -16,8 +17,9 @@ const connectionOptions: ConnectionOptions = {
 
 test('registers shift interval commands when VS Code starts up', async () => {
   const commands = await vscode.commands.getCommands()
-  expect(commands).toContain('shifty.startShiftInterval')
-  expect(commands).toContain('shifty.pauseShiftInterval')
+  expect(commands).toContain(commandMap.START_SHIFT_INTERVAL)
+  expect(commands).toContain(commandMap.PAUSE_SHIFT_INTERVAL)
+  expect(commands).toContain(commandMap.RESET_SHIFT_INTERVAL)
 })
 
 test('registers client socket with node-ipc server', async () => {
@@ -125,7 +127,7 @@ test('should not start the shift interval on VS Code startup when "shifty.shiftI
 
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toBe(0)
 
@@ -139,7 +141,7 @@ test('should not start the shift interval on VS Code startup when "shifty.shiftI
 
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toBe(0)
 
@@ -153,7 +155,7 @@ test('should not start the shift interval on VS Code startup when "shifty.shiftI
 
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toBe(0)
 
@@ -161,16 +163,17 @@ test('should not start the shift interval on VS Code startup when "shifty.shiftI
   server.close()
 })
 
-test('should pause the shift interval on the server when running the "shifty.pauseShiftInterval" command', async () => {
+// prettier-ignore
+test(`should pause the shift interval on the server when running the "${commandMap.PAUSE_SHIFT_INTERVAL}" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   server.pauseShiftInterval() // FIXME: would be nice to be able to await this
-  await sleep(25)
+  await sleep(50)
 
   const previousStatusMessagesReceived = client.statusMessagesReceived
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toEqual(previousStatusMessagesReceived)
 
@@ -178,16 +181,17 @@ test('should pause the shift interval on the server when running the "shifty.pau
   server.close()
 })
 
-test('should pause the shift interval on the client when running the "shifty.pauseShiftInterval" command', async () => {
+// prettier-ignore
+test(`should pause the shift interval on the client when running the "${commandMap.PAUSE_SHIFT_INTERVAL}" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   await client.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   const previousStatusMessagesReceived = client.statusMessagesReceived
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toEqual(previousStatusMessagesReceived)
 
@@ -195,21 +199,22 @@ test('should pause the shift interval on the client when running the "shifty.pau
   server.close()
 })
 
-test('should start the shift interval on the server when running the "shifty.startShiftInterval" command', async () => {
+// prettier-ignore
+test(`should start the shift interval on the server when running the "${commandMap.START_SHIFT_INTERVAL}" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   server.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   const previousStatusMessagesReceived = client.statusMessagesReceived
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toEqual(previousStatusMessagesReceived)
 
   server.startShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toBeGreaterThan(
     previousStatusMessagesReceived,
@@ -219,24 +224,67 @@ test('should start the shift interval on the server when running the "shifty.sta
   server.close()
 })
 
-test('should start the shift interval on the client when running the "shifty.startShiftInterval" command', async () => {
+// prettier-ignore
+test(`should start the shift interval on the client when running the "${commandMap.START_SHIFT_INTERVAL}" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   await client.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   const previousStatusMessagesReceived = client.statusMessagesReceived
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toEqual(previousStatusMessagesReceived)
 
   await client.startShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   expect(client.statusMessagesReceived).toBeGreaterThan(
     previousStatusMessagesReceived,
+  )
+
+  await client.close()
+  server.close()
+})
+
+// prettier-ignore
+test(`should reset the shift interval on the server when running the "${commandMap.RESET_SHIFT_INTERVAL}" command`, async () => {
+  const server = await ipcServer.start(connectionOptions)
+  const client = await ipcClient.connect(connectionOptions)
+  await sleep(50)
+
+  const previousLastUpdateStatusMessageReceived = client.lastUpdateStatusMessageReceived
+  server.resetShiftInterval()
+  await sleep(50)
+
+  expect(client.lastUpdateStatusMessageReceived.lastColorThemeShiftTime).toBeGreaterThan(
+    previousLastUpdateStatusMessageReceived.lastColorThemeShiftTime,
+  )
+  expect(client.lastUpdateStatusMessageReceived.lastFontFamilyShiftTime).toBeGreaterThan(
+    previousLastUpdateStatusMessageReceived.lastFontFamilyShiftTime,
+  )
+
+  await client.close()
+  server.close()
+})
+
+// prettier-ignore
+test(`should reset the shift interval on the client when running the "${commandMap.RESET_SHIFT_INTERVAL}" command`, async () => {
+  const server = await ipcServer.start(connectionOptions)
+  const client = await ipcClient.connect(connectionOptions)
+  await sleep(50)
+
+  const previousLastUpdateStatusMessageReceived = client.lastUpdateStatusMessageReceived
+  await client.resetShiftInterval()
+  await sleep(50)
+
+  expect(client.lastUpdateStatusMessageReceived.lastColorThemeShiftTime).toBeGreaterThan(
+    previousLastUpdateStatusMessageReceived.lastColorThemeShiftTime,
+  )
+  expect(client.lastUpdateStatusMessageReceived.lastFontFamilyShiftTime).toBeGreaterThan(
+    previousLastUpdateStatusMessageReceived.lastFontFamilyShiftTime,
   )
 
   await client.close()
@@ -251,7 +299,7 @@ test.todo(
 test('should display remaining time "##:##" when both shift iterval min settings are the same', async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   expect(client.lastUpdateStatusMessageReceived.text).toMatch(/^\d{2}:\d{2}$/)
 
@@ -282,7 +330,7 @@ test('should display remaining time "##:## (font family)" when the font family w
 
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   expect(client.lastUpdateStatusMessageReceived.text).toMatch(
     /^\d{2}:\d{2} \(font family\)$/,
@@ -295,10 +343,10 @@ test('should display remaining time "##:## (font family)" when the font family w
 test('should display remaining time "##:## (paused)" when the shift interval is paused', async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   server.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   expect(client.lastUpdateStatusMessageReceived.text).toMatch(
     /^\d{2}:\d{2} \(paused\)$/,
@@ -314,7 +362,7 @@ test('should display remaining time "##:##" when the font family shift interval 
 
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   expect(client.lastUpdateStatusMessageReceived.text).toMatch(/^\d{2}:\d{2}$/)
 
@@ -328,7 +376,7 @@ test('should display remaining time "##:##" when the color theme shift interval 
 
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   expect(client.lastUpdateStatusMessageReceived.text).toMatch(/^\d{2}:\d{2}$/)
 
@@ -395,15 +443,15 @@ test('should shift the color theme & font family when the remaining time is <= 0
 test('should pause the shift interval from the server and do nothing when running the "shifty.pauseShiftInterval" command from the server', async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   server.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   const statusBarText = client.lastUpdateStatusMessageReceived.text
 
   server.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   expect(statusBarText).toBe(client.lastUpdateStatusMessageReceived.text)
 
@@ -414,15 +462,15 @@ test('should pause the shift interval from the server and do nothing when runnin
 test('should pause the shift interval from the server and do nothing when running the "shifty.pauseShiftInterval" command from the client', async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   server.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   const statusBarText = client.lastUpdateStatusMessageReceived.text
 
   await client.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   expect(statusBarText).toBe(client.lastUpdateStatusMessageReceived.text)
 
@@ -433,15 +481,15 @@ test('should pause the shift interval from the server and do nothing when runnin
 test('should pause the shift interval from the client and do nothing when running the "shifty.pauseShiftInterval" command from the client', async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   await client.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   const statusBarText = client.lastUpdateStatusMessageReceived.text
 
   await client.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   expect(statusBarText).toBe(client.lastUpdateStatusMessageReceived.text)
 
@@ -452,15 +500,15 @@ test('should pause the shift interval from the client and do nothing when runnin
 test('should pause the shift interval from the client and do nothing when running the "shifty.pauseShiftInterval" command from the server', async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
-  await sleep(25)
+  await sleep(50)
 
   await client.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   const statusBarText = client.lastUpdateStatusMessageReceived.text
 
   server.pauseShiftInterval()
-  await sleep(25)
+  await sleep(50)
 
   expect(statusBarText).toBe(client.lastUpdateStatusMessageReceived.text)
 

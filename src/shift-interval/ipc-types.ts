@@ -21,6 +21,7 @@ export declare interface ClientConnection {
   close: () => Promise<void>
   pauseShiftInterval: () => Promise<void>
   startShiftInterval: () => Promise<void>
+  resetShiftInterval: () => Promise<void>
 }
 
 export declare interface ServerConnection {
@@ -32,6 +33,7 @@ export declare interface ServerConnection {
   close: () => void
   pauseShiftInterval: () => void
   startShiftInterval: () => void
+  resetShiftInterval: () => void
 }
 
 export const enum MessageTypes {
@@ -45,6 +47,8 @@ export const enum MessageTypes {
   PAUSE_INTERVAL_COMPLETE = 'interval.pause-complete',
   START_INTERVAL = 'interval.start',
   START_INTERVAL_COMPLETE = 'interval.start-complete',
+  RESET_INTERVAL = 'interval.reset',
+  RESET_INTERVAL_COMPLETE = 'interval.reset-complete',
 }
 
 export declare interface UpdateStatusMessage {

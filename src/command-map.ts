@@ -8,6 +8,7 @@ export default {
   IGNORE_FONT_FAMILY: 'shifty.ignoreFontFamily',
   START_SHIFT_INTERVAL: 'shifty.startShiftInterval',
   PAUSE_SHIFT_INTERVAL: 'shifty.pauseShiftInterval',
+  RESET_SHIFT_INTERVAL: 'shifty.resetShiftInterval',
   SHOW_STATUS: 'shifty.showStatus',
   ENABLE_DEBUGGING: 'shifty.enableDebugging',
 }

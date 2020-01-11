@@ -27,11 +27,10 @@ export function activateColorThemes(context: vscode.ExtensionContext): void {
   primeColorThemesCache()
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      commandMap.SHIFT_COLOR_THEME,
-      shiftColorTheme,
-      // FEATURE REQUEST: Reset shift interval
-    ),
+    vscode.commands.registerCommand(commandMap.SHIFT_COLOR_THEME, async () => {
+      await shiftColorTheme()
+      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL)
+    }),
   )
 
   context.subscriptions.push(

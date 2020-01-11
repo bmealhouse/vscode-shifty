@@ -200,6 +200,17 @@ export async function start({
         ipc.server.emit(socket, MessageTypes.PAUSE_INTERVAL_COMPLETE)
       })
 
+      const internalResetShiftInterval = (): void => {
+        const now = Date.now()
+        lastColorThemeShiftTime = now
+        lastFontFamilyShiftTime = now
+      }
+
+      ipc.server.on(MessageTypes.RESET_INTERVAL, (_, socket) => {
+        internalResetShiftInterval()
+        ipc.server.emit(socket, MessageTypes.RESET_INTERVAL_COMPLETE)
+      })
+
       if (automaticallyStartShiftInterval) {
         const {
           shiftColorThemeIntervalMin,
@@ -238,6 +249,13 @@ export async function start({
           }
 
           internalStartShiftInterval()
+        },
+        resetShiftInterval() {
+          if (lastPauseTime > 0) {
+            return
+          }
+
+          internalResetShiftInterval()
         },
       }
 

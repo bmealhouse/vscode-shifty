@@ -32,7 +32,7 @@ test('includes the fallback font family when shifty sets "editor.fontFamily"', a
 
 test(`sets the font family with out a fallback`, async () => {
   await updateConfig('shifty.fontFamilies.fallbackFontFamily', null)
-  await vscode.commands.executeCommand('shifty.shiftFontFamily')
+  await vscode.commands.executeCommand(commandMap.SHIFT_FONT_FAMILY)
 
   const {fontFamily} = vscode.workspace.getConfiguration('editor')
   expect(fontFamily.includes(', ')).toBeFalsy()
@@ -67,8 +67,13 @@ test('registers font family commands when VS Code starts up', async () => {
 
 // prettier-ignore
 test(`shifts the font family when running the "${commandMap.SHIFT_FONT_FAMILY}" command`, async () => {
+  const spy = jest.spyOn(vscode.commands, 'executeCommand')
   await vscode.commands.executeCommand(commandMap.SHIFT_FONT_FAMILY)
+
   expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id)
+
+  const [,secondCall] = spy.mock.calls
+  expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
 })
 
 // prettier-ignore

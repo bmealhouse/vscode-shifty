@@ -27,6 +27,7 @@ export async function connect({
     let resolveCloseSocket: () => void = () => {}
     let resolvePauseShiftInterval: () => void = () => {}
     let resolveStartShiftInterval: () => void = () => {}
+    let resolveResetShiftInterval: () => void = () => {}
 
     const ipc = new IPC()
     ipc.config.id = shortid.generate()
@@ -93,6 +94,16 @@ export async function connect({
               socket.emit(MessageTypes.START_INTERVAL)
             })
           },
+          async resetShiftInterval() {
+            return new Promise(resolve => {
+              if (lastPauseTime > 0) {
+                return resolve()
+              }
+
+              resolveResetShiftInterval = resolve
+              socket.emit(MessageTypes.RESET_INTERVAL)
+            })
+          },
         }
 
         resolve(connection)
@@ -156,6 +167,10 @@ export async function connect({
 
       socket.on(MessageTypes.START_INTERVAL_COMPLETE, () => {
         resolveStartShiftInterval()
+      })
+
+      socket.on(MessageTypes.RESET_INTERVAL_COMPLETE, () => {
+        resolveResetShiftInterval()
       })
     })
   })
