@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import {formatSnapshot, updateConfig} from './test/test-utils'
+import {formatSnapshot, updateConfig} from './test-utils'
 import commandMap from './command-map'
 import {DEFAULT_COLOR_THEME} from './color-themes'
 import {DEFAULT_FONT_FAMILY} from './font-families'

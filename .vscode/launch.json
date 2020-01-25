@@ -6,7 +6,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Extension Tests",
+      "name": "Jest: All tests",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
@@ -16,32 +16,37 @@
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/dist/test/jest-test-runner"
-      ],
-      "skipFiles": ["<node_internals>/**/*.js"],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "preLaunchTask": "npm: compile",
-      "internalConsoleOptions": "openOnSessionStart"
-    },
-    {
-      "name": "Extension Tests (Current File)",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "stopOnEntry": false,
-      "sourceMaps": true,
-      "smartStep": true,
-      "args": [
-        "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/dist/test/jest-test-runner"
+        "--extensionTestsPath=${workspaceFolder}/node_modules/jest-runner-vscode"
       ],
       "skipFiles": ["<node_internals>/**/*.js"],
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "preLaunchTask": "npm: compile",
       "internalConsoleOptions": "openOnSessionStart",
       "env": {
-        "TEST_FILE": "${file}"
+        "JEST_RUNNER_VSCODE_SETUP": "${workspaceFolder}/dist/test-utils/jest-runner-vscode-setup.js",
+        "JEST_RUNNER_VSCODE_TEST_REGEX": ""
+      }
+    },
+    {
+      "name": "Jest: Current file",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "stopOnEntry": false,
+      "sourceMaps": true,
+      "smartStep": true,
+      "args": [
+        "--disable-extensions",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionTestsPath=${workspaceFolder}/node_modules/jest-runner-vscode"
+      ],
+      "skipFiles": ["<node_internals>/**/*.js"],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "npm: compile",
+      "internalConsoleOptions": "openOnSessionStart",
+      "env": {
+        "JEST_RUNNER_VSCODE_SETUP": "${workspaceFolder}/dist/test-utils/jest-runner-vscode-setup.js",
+        "JEST_RUNNER_VSCODE_TEST_REGEX": "${file}"
       }
     }
   ]

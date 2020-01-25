@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import {updateConfig, formatSnapshot} from '../test/test-utils'
+import {updateConfig, formatSnapshot} from '../test-utils'
 import commandMap from '../command-map'
 import {
   DEFAULT_FONT_FAMILY,

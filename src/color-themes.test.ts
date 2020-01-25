@@ -6,7 +6,7 @@ import {
   getRawColorThemesCache,
   getAvailableColorThemes,
 } from './color-themes'
-import {updateConfig, formatSnapshot} from './test/test-utils'
+import {updateConfig, formatSnapshot} from './test-utils'
 import commandMap from './command-map'
 
 test('registers color theme commands when VS Code starts up', async () => {

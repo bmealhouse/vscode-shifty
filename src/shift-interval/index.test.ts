@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import {getColorTheme, DEFAULT_COLOR_THEME} from '../color-themes'
 import {getFontFamily, DEFAULT_FONT_FAMILY} from '../font-families'
-import {updateConfig, sleep, wait} from '../test/test-utils'
+import {updateConfig, sleep, wait} from '../test-utils'
 import commandMap from '../command-map'
 import * as ipcServer from './ipc-server'
 import * as ipcClient from './ipc-client'
