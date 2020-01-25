@@ -4654,10 +4654,10 @@ jest-resolve@^25.1.0:
     jest-pnp-resolver "^1.2.1"
     realpath-native "^1.1.0"
 
-jest-runner-vscode@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/jest-runner-vscode/-/jest-runner-vscode-1.0.0.tgz#f53534948bf7052815de8c5f93dc09d1e0017c14"
-  integrity sha512-qV5OwcTV54zrNHvfwGScfkyYNUj+D7YRJwSOjagMiEPafSdh/SoBqqYwc8ydLWLmfWyyBwbzqX9inJa7x+3rhA==
+jest-runner-vscode@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/jest-runner-vscode/-/jest-runner-vscode-1.1.0.tgz#f0491f3a28e187e61313aee77725658615c9069b"
+  integrity sha512-CU49aQfRzJQrkJUp6NDAl9007P0DmoAQtWVaxW3rnILaWp4+boDJ3loiR4buLDgk7lIVF4v14GiMYUYxEqO1pw==
   dependencies:
     "@jest/core" "25.1.0"
     "@jest/test-result" "25.1.0"

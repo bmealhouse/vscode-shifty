@@ -9,8 +9,7 @@ test('registers status bar commands when VS Code starts up', async () => {
   expect(commands).toContain(commandMap.SHOW_STATUS)
 })
 
-// prettier-ignore
-test(`displays the current color theme when running the "${commandMap.SHOW_STATUS}" command`, async () => {
+test(`displays the current color theme when running the "commandMap.SHOW_STATUS" command`, async () => {
   const spy = jest.spyOn(vscode.window, 'showInformationMessage')
   await vscode.commands.executeCommand(commandMap.SHOW_STATUS)
 
@@ -22,8 +21,7 @@ test(`displays the current color theme when running the "${commandMap.SHOW_STATU
   spy.mockRestore()
 })
 
-// prettier-ignore
-test(`displays the unfavorite button when running the "${commandMap.SHOW_STATUS}" command and the current color theme has already been favorited`, async () => {
+test(`displays the unfavorite button when running the "commandMap.SHOW_STATUS" command and the current color theme has already been favorited`, async () => {
   const favorites = ['Abyss', DEFAULT_COLOR_THEME.id]
   await updateConfig('shifty.colorThemes.favoriteColorThemes', favorites)
 
@@ -38,8 +36,7 @@ test(`displays the unfavorite button when running the "${commandMap.SHOW_STATUS}
   spy.mockRestore()
 })
 
-// prettier-ignore
-test(`displays the current font family when running the "${commandMap.SHOW_STATUS}" command`, async () => {
+test(`displays the current font family when running the "commandMap.SHOW_STATUS" command`, async () => {
   const spy = jest.spyOn(vscode.window, 'showInformationMessage')
   await vscode.commands.executeCommand(commandMap.SHOW_STATUS)
 
@@ -51,8 +48,7 @@ test(`displays the current font family when running the "${commandMap.SHOW_STATU
   spy.mockRestore()
 })
 
-// prettier-ignore
-test(`displays the unfavorite button when running the "${commandMap.SHOW_STATUS}" command and the current font family has already been favorited`, async () => {
+test(`displays the unfavorite button when running the "commandMap.SHOW_STATUS" command and the current font family has already been favorited`, async () => {
   const favorites = [DEFAULT_FONT_FAMILY.id, 'SF Mono']
   await updateConfig('shifty.fontFamilies.favoriteFontFamilies', favorites)
 

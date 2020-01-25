@@ -163,8 +163,7 @@ test('should not start the shift interval on VS Code startup when "shifty.shiftI
   server.close()
 })
 
-// prettier-ignore
-test(`should pause the shift interval on the server when running the "${commandMap.PAUSE_SHIFT_INTERVAL}" command`, async () => {
+test(`should pause the shift interval on the server when running the "commandMap.PAUSE_SHIFT_INTERVAL" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
   await sleep(50)
@@ -181,8 +180,7 @@ test(`should pause the shift interval on the server when running the "${commandM
   server.close()
 })
 
-// prettier-ignore
-test(`should pause the shift interval on the client when running the "${commandMap.PAUSE_SHIFT_INTERVAL}" command`, async () => {
+test(`should pause the shift interval on the client when running the "commandMap.PAUSE_SHIFT_INTERVAL" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
   await sleep(50)
@@ -199,8 +197,7 @@ test(`should pause the shift interval on the client when running the "${commandM
   server.close()
 })
 
-// prettier-ignore
-test(`should start the shift interval on the server when running the "${commandMap.START_SHIFT_INTERVAL}" command`, async () => {
+test(`should start the shift interval on the server when running the "commandMap.START_SHIFT_INTERVAL" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
   await sleep(50)
@@ -224,8 +221,7 @@ test(`should start the shift interval on the server when running the "${commandM
   server.close()
 })
 
-// prettier-ignore
-test(`should start the shift interval on the client when running the "${commandMap.START_SHIFT_INTERVAL}" command`, async () => {
+test(`should start the shift interval on the client when running the "commandMap.START_SHIFT_INTERVAL" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
   await sleep(50)
@@ -249,20 +245,25 @@ test(`should start the shift interval on the client when running the "${commandM
   server.close()
 })
 
-// prettier-ignore
-test(`should reset the shift interval on the server when running the "${commandMap.RESET_SHIFT_INTERVAL}" command`, async () => {
+test(`should reset the shift interval on the server when running the "commandMap.RESET_SHIFT_INTERVAL" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
   await sleep(50)
 
-  const previousLastUpdateStatusMessageReceived = client.lastUpdateStatusMessageReceived
+  const previousLastUpdateStatusMessageReceived =
+    client.lastUpdateStatusMessageReceived
+
   server.resetShiftInterval()
   await sleep(50)
 
-  expect(client.lastUpdateStatusMessageReceived.lastColorThemeShiftTime).toBeGreaterThan(
+  expect(
+    client.lastUpdateStatusMessageReceived.lastColorThemeShiftTime,
+  ).toBeGreaterThan(
     previousLastUpdateStatusMessageReceived.lastColorThemeShiftTime,
   )
-  expect(client.lastUpdateStatusMessageReceived.lastFontFamilyShiftTime).toBeGreaterThan(
+  expect(
+    client.lastUpdateStatusMessageReceived.lastFontFamilyShiftTime,
+  ).toBeGreaterThan(
     previousLastUpdateStatusMessageReceived.lastFontFamilyShiftTime,
   )
 
@@ -270,20 +271,25 @@ test(`should reset the shift interval on the server when running the "${commandM
   server.close()
 })
 
-// prettier-ignore
-test(`should reset the shift interval on the client when running the "${commandMap.RESET_SHIFT_INTERVAL}" command`, async () => {
+test(`should reset the shift interval on the client when running the "commandMap.RESET_SHIFT_INTERVAL" command`, async () => {
   const server = await ipcServer.start(connectionOptions)
   const client = await ipcClient.connect(connectionOptions)
   await sleep(50)
 
-  const previousLastUpdateStatusMessageReceived = client.lastUpdateStatusMessageReceived
+  const previousLastUpdateStatusMessageReceived =
+    client.lastUpdateStatusMessageReceived
+
   await client.resetShiftInterval()
   await sleep(50)
 
-  expect(client.lastUpdateStatusMessageReceived.lastColorThemeShiftTime).toBeGreaterThan(
+  expect(
+    client.lastUpdateStatusMessageReceived.lastColorThemeShiftTime,
+  ).toBeGreaterThan(
     previousLastUpdateStatusMessageReceived.lastColorThemeShiftTime,
   )
-  expect(client.lastUpdateStatusMessageReceived.lastFontFamilyShiftTime).toBeGreaterThan(
+  expect(
+    client.lastUpdateStatusMessageReceived.lastFontFamilyShiftTime,
+  ).toBeGreaterThan(
     previousLastUpdateStatusMessageReceived.lastFontFamilyShiftTime,
   )
 

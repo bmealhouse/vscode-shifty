@@ -9,15 +9,14 @@ test('registers global commands when VS Code starts up', async () => {
   expect(commands).toContain(commandMap.ENABLE_DEBUGGING)
 })
 
-// prettier-ignore
-test(`shifts the color theme and font family when running the "${commandMap.SHIFT}" command`, async () => {
+test(`shifts the color theme and font family when running the "commandMap.SHIFT" command`, async () => {
   const spy = jest.spyOn(vscode.commands, 'executeCommand')
   await vscode.commands.executeCommand(commandMap.SHIFT)
 
   expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME.id)
   expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id)
 
-  const [,secondCall] = spy.mock.calls
+  const [, secondCall] = spy.mock.calls
   expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
 
   spy.mockRestore()
