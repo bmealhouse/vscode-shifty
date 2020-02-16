@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Use [jest-runner-vscode](https://github.com/bmealhouse/jest-runner-vscode)
+- Use [vscode-jest-test-runner](https://github.com/bmealhouse/vscode-jest-test-runner)
 - Upgrade dependencies
 
 ## [2.0.1] - 2020-01-11
