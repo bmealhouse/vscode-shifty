@@ -4,14 +4,10 @@
     "target": "es6",
     "outDir": "out",
     "lib": ["es6"],
-    "esModuleInterop": true,
     "sourceMap": true,
+    "rootDir": "src",
     "strict": true,
-    "rootDir": "src"
+    "esModuleInterop": true
   },
-  "include": [
-    "src/**/*.ts",
-    "./node_modules/vscode/vscode.d.ts",
-    "./node_modules/vscode/lib/*"
-  ]
+  "exclude": ["node_modules", ".vscode-test"]
 }

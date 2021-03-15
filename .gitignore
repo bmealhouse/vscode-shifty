@@ -1,8 +1,7 @@
+*.vsix
 .DS_Store
 .vscode/settings.json
-node_modules
-
-# extension
 .vscode-test
-*.vsix
 dist
+node_modules
+out
