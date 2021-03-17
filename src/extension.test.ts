@@ -1,25 +1,33 @@
 import expect from "expect";
+import sinon from "sinon";
 import vscode from "vscode";
 
-import { commandMap } from "./constants";
+import { commandMap, DEFAULT_COLOR_THEME } from "./constants";
+import { getColorTheme } from "./color-themes";
 
 suite("extension.test.ts", () => {
   test("registers global commands at vscode start up", async () => {
+    // arrange
+    // act
     const commands = await vscode.commands.getCommands();
+
+    // assert
     expect(commands).toContain(commandMap.SHIFT);
     expect(commands).toContain(commandMap.ENABLE_DEBUGGING);
   });
 
-  // test('shifts the color theme and font when running the "SHIFT" command', async () => {
-  //   const spy = spyOn(vscode.commands, "executeCommand");
-  //   await vscode.commands.executeCommand(commandMap.SHIFT);
+  test('shifts the color theme and font when running the "SHIFT" command', async () => {
+    // arrange
+    const spy = sinon.spy(vscode.commands, "executeCommand");
 
-  //   expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME.id);
-  //   expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id);
+    // act
+    await vscode.commands.executeCommand(commandMap.SHIFT);
 
-  //   const [, secondCall] = spy.mock.calls;
-  //   expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL]);
+    // assert
+    expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
+    // expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id);
+    expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
 
-  //   spy.mockRestore();
-  // });
+    spy.restore();
+  });
 });

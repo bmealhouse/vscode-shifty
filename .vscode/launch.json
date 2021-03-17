@@ -18,11 +18,15 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
+        "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/out/test/suite"
       ],
       "outFiles": ["${workspaceFolder}/out/**/*.test.js"],
-      "preLaunchTask": "npm: test-compile"
+      "preLaunchTask": "npm: test-compile",
+      "env": {
+        "NODE_ENV": "test"
+      }
     }
   ]
 }

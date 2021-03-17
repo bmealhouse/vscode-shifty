@@ -12,3 +12,5 @@ export const commandMap = {
   SHOW_STATUS: "shifty.showStatus",
   ENABLE_DEBUGGING: "shifty.enableDebugging",
 };
+
+export const DEFAULT_COLOR_THEME = "Default Dark+";
