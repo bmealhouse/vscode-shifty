@@ -1,22 +1,22 @@
 import expect from "expect";
 import { beforeEach } from "mocha";
+import sinon from "sinon";
 import vscode from "vscode";
 
 import { commandMap, DEFAULT_FONT_FAMILY } from "./constants";
+import {
+  // FontFamilyPlatform,
+  // FontFamilyType,
+  // getAllFontFamilies,
+  // getAvailableFontFamilies,
+  getFontFamily,
+  // getRawFontFamiliesCache,
+  // setFontFamily,
+} from "./font-families";
 import { resetVscodeConfig } from "./test/mock-vscode-config";
 import { updateConfig } from "./test/utils";
 
 // import { updateConfig, formatSnapshot } from "../test-utils";
-// import {
-//   DEFAULT_FONT_FAMILY,
-//   FontFamilyPlatform,
-//   FontFamilyType,
-//   getAllFontFamilies,
-//   getAvailableFontFamilies,
-//   getFontFamily,
-//   getRawFontFamiliesCache,
-//   setFontFamily,
-// } from ".";
 
 // const DEFAULT_PLATFORM = FontFamilyPlatform.MAC_OS;
 
@@ -89,17 +89,19 @@ suite("font-families.test.ts", () => {
     expect(commands).toContain(commandMap.IGNORE_FONT_FAMILY);
   });
 
-  // test(`shifts the font family when running the "commandMap.SHIFT_FONT_FAMILY" command`, async () => {
-  //   const spy = jest.spyOn(vscode.commands, "executeCommand");
-  //   await vscode.commands.executeCommand(commandMap.SHIFT_FONT_FAMILY);
+  test('shifts the font family when running the "SHIFT_FONT_FAMILY" command', async () => {
+    // arrange
+    const spy = sinon.spy(vscode.commands, "executeCommand");
 
-  //   expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id);
+    // act
+    await vscode.commands.executeCommand(commandMap.SHIFT_FONT_FAMILY);
 
-  //   const [, secondCall] = spy.mock.calls;
-  //   expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL]);
+    // assert
+    expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
+    expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
 
-  //   spy.mockRestore();
-  // });
+    spy.restore();
+  });
 
   // test(`favorites the current font family when running the "commandMap.TOGGLE_FAVORITE_FONT_FAMILY" command`, async () => {
   //   const spy = jest.spyOn(vscode.window, "showInformationMessage");

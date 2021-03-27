@@ -1,8 +1,9 @@
+import { getMonospaceFonts } from "node-monospace-fonts";
 import vscode from "vscode";
 // import { getMonospaceFonts } from "node-monospace-fonts";
 
-import { commandMap } from "./constants";
-// import { getRandomItem } from "../utils";
+import { commandMap, DEFAULT_FONT_FAMILY } from "./constants";
+import { getRandomItem } from "./utils";
 
 // import * as os from "os";
 // import { getRandomItem, localeCompare, unique } from "../utils";
@@ -34,20 +35,18 @@ import { commandMap } from "./constants";
 // };
 
 let cache: string[];
-let cacheWithMetadata: string[];
 let nextFontFamily: string;
 
 export const getRawCache = () => cache;
-export const getRawCacheWithMetadata = () => cacheWithMetadata;
 
 export function activateFontFamilies(context: vscode.ExtensionContext): void {
   cache = getCache();
-  // nextFontFamily = getNextFontFamily();
+  nextFontFamily = getNextFontFamily();
 
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHIFT_FONT_FAMILY, async () => {
-      // await shiftFontFamily();
-      // await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+      await shiftFontFamily();
+      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
     }),
     vscode.commands.registerCommand(
       commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
@@ -87,12 +86,10 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
 //   }
 // }
 
-/*
 export async function shiftFontFamily(): Promise<void> {
   await setFontFamily(nextFontFamily);
   nextFontFamily = getNextFontFamily(nextFontFamily);
 }
-*/
 
 // export function hasFavoritedFontFamily(fontFamily: string): boolean {
 //   const favoriteFontFamilies = vscode.workspace
@@ -146,7 +143,6 @@ export async function shiftFontFamily(): Promise<void> {
 //   await shiftFontFamily();
 // }
 
-/*
 export function getFontFamily(): string {
   const { fontFamily } = vscode.workspace.getConfiguration("editor");
   const [mainFontFamily] = fontFamily.split(",");
@@ -171,15 +167,13 @@ export async function setFontFamily(fontFamily: string): Promise<void> {
 
   const fontFamilyWithFallback = `${formattedFontFamily}, ${fallbackFontFamily}`;
 
-  return vscode.workspace
-    .getConfiguration("editor")
-    .update(
-      "fontFamily",
-      fallbackFontFamily ? fontFamilyWithFallback : fontFamily,
-      vscode.ConfigurationTarget.Global
-    );
+  const editor = vscode.workspace.getConfiguration("editor");
+  await editor.update(
+    "fontFamily",
+    fallbackFontFamily ? fontFamilyWithFallback : fontFamily,
+    vscode.ConfigurationTarget.Global
+  );
 }
-*/
 
 // export function getAvailableFontFamilies(): FontFamily[] {
 //   const fontFamily = getFontFamily();
@@ -209,42 +203,41 @@ export async function setFontFamily(fontFamily: string): Promise<void> {
 // }
 
 function getCache(): string[] {
-  // const {
-  //   shiftMode,
-  //   fontFamilies: {
-  //     favoriteFontFamilies,
-  //     ignoreCodefaceFontFamilies,
-  //     ignoreFontFamilies,
-  //   },
-  // } = vscode.workspace.getConfiguration("shifty");
-  // if (shiftMode === "favorites") {
-  //   fontFamiliesCache = favoriteFontFamilies.map(getFontFamilyById);
-  //   return;
-  // }
+  const {
+    shiftMode,
+    fontFamilies: {
+      favoriteFontFamilies,
+      ignoreCodefaceFontFamilies, // remove setting
+      ignoreFontFamilies,
+      includeFontFamilies,
+    },
+  } = vscode.workspace.getConfiguration("shifty");
 
-  // const monospaceFonts = getMonospaceFonts();
-  // console.log(monospaceFonts);
+  const allFontFamilies: string[] = getMonospaceFonts();
 
-  // cacheWithMetadata = getAllFontFamilies().filter(
-  //   (ff) =>
-  //     !(
-  //       ignoreFontFamilies.includes(ff.id.replace(/"/g, "")) ||
-  //       (ignoreCodefaceFontFamilies && ff.type === FontFamilyType.CODEFACE) ||
-  //       (shiftMode === "discovery" &&
-  //         favoriteFontFamilies.includes(ff.id.replace(/"/g, ""))) ||
-  //       !ff.supportedPlatforms.includes(os.type() as FontFamilyPlatform)
-  //     )
-  // );
-  // if (fontFamiliesCache.length === 0) {
-  //   fontFamiliesCache = favoriteFontFamilies.map(getFontFamilyById);
-  // }
-  // if (fontFamiliesCache!.length === 0) {
-  //   fontFamiliesCache = [DEFAULT_FONT_FAMILY];
-  // }
+  if (shiftMode === "favorites") {
+    return allFontFamilies.filter((fontFamily) =>
+      favoriteFontFamilies.includes(fontFamily)
+    );
+  }
 
-  return [];
+  let fontFamiliesCache = allFontFamilies.filter(
+    (fontFamily) =>
+      !(
+        ignoreFontFamilies.includes(fontFamily) ||
+        (shiftMode === "discovery" && favoriteFontFamilies.includes(fontFamily))
+      )
+  );
+
+  if (fontFamiliesCache.length === 0) {
+    fontFamiliesCache = allFontFamilies.map((fontFamily) =>
+      favoriteFontFamilies.includes(fontFamily)
+    );
+  }
+
+  if (fontFamiliesCache.length === 0) {
+    fontFamiliesCache = [DEFAULT_FONT_FAMILY];
+  }
+
+  return fontFamiliesCache;
 }
-
-// function getFontFamilyById(id: string): FontFamily | undefined {
-//   return getAllFontFamilies().find((ff) => ff.id === id);
-// }

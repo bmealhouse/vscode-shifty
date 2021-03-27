@@ -14,3 +14,4 @@ export const commandMap = {
 };
 
 export const DEFAULT_COLOR_THEME = "Default Dark+";
+export const DEFAULT_FONT_FAMILY = "Courier New";

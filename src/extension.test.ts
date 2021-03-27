@@ -3,8 +3,13 @@ import { beforeEach } from "mocha";
 import sinon from "sinon";
 import vscode from "vscode";
 
-import { commandMap, DEFAULT_COLOR_THEME } from "./constants";
+import {
+  commandMap,
+  DEFAULT_COLOR_THEME,
+  DEFAULT_FONT_FAMILY,
+} from "./constants";
 import { getColorTheme } from "./color-themes";
+import { getFontFamily } from "./font-families";
 import { resetVscodeConfig } from "./test/mock-vscode-config";
 
 suite("extension.test.ts", () => {
@@ -31,7 +36,7 @@ suite("extension.test.ts", () => {
 
     // assert
     expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
-    // expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id);
+    expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
     expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
 
     spy.restore();

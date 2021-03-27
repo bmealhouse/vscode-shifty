@@ -9,7 +9,7 @@ import {
   activateShiftInterval,
   // deactivateShiftInterval,
 } from "./shift-interval";
-import { activateFontFamilies /* shiftFontFamily */ } from "./font-families";
+import { activateFontFamilies, shiftFontFamily } from "./font-families";
 import { activateColorThemes, shiftColorTheme } from "./color-themes";
 // import { activateStatusBar } from "./status-bar";
 
@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHIFT, async () => {
-      await Promise.all([/* shiftFontFamily(), */ shiftColorTheme()]);
+      await Promise.all([shiftFontFamily(), shiftColorTheme()]);
       await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
     }),
     vscode.commands.registerCommand(commandMap.ENABLE_DEBUGGING, () => {

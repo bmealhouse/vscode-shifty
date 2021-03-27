@@ -14,7 +14,7 @@
   "author": "Brent Mealhouse <bmealhouse@gmail.com>",
   "publisher": "bmealhouse",
   "engines": {
-    "vscode": "^1.31.0"
+    "vscode": "^1.54.3"
   },
   "categories": [
     "Themes",
@@ -197,6 +197,7 @@
   },
   "dependencies": {
     "node-ipc": "9.1.4",
+    "node-monospace-fonts": "0.0.3",
     "shortid": "2.2.16"
   },
   "devDependencies": {
@@ -207,6 +208,7 @@
     "@types/shortid": "0.0.29",
     "@types/sinon": "9.0.11",
     "@types/vscode": "1.54.0",
+    "copy-webpack-plugin": "8.1.0",
     "expect": "26.6.2",
     "glob": "7.1.6",
     "husky": "5.1.3",
