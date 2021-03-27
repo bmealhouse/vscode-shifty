@@ -5,20 +5,19 @@ if (process.env.NODE_ENV === "test") {
 import vscode from "vscode";
 
 import { commandMap } from "./constants";
-import { activateColorThemes, shiftColorTheme } from "./color-themes";
 import {
   activateShiftInterval,
   // deactivateShiftInterval,
 } from "./shift-interval";
-
+import { activateFontFamilies /* shiftFontFamily */ } from "./font-families";
+import { activateColorThemes, shiftColorTheme } from "./color-themes";
 // import { activateStatusBar } from "./status-bar";
-// import { activateFontFamilies, shiftFontFamily } from "./font-families";
 
 export function activate(context: vscode.ExtensionContext): void {
   // activateStatusBar(context);
   void activateShiftInterval(context);
   activateColorThemes(context);
-  // activateFontFamilies(context);
+  activateFontFamilies(context);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHIFT, async () => {
