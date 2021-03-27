@@ -1,5 +1,5 @@
 import expect from "expect";
-import { afterEach } from "mocha";
+import { beforeEach } from "mocha";
 import sinon from "sinon";
 import vscode from "vscode";
 
@@ -13,7 +13,7 @@ import { resetVscodeConfig } from "./test/mock-vscode-config";
 import { updateConfig } from "./test/utils";
 
 suite("color-themes.test.ts", () => {
-  afterEach(() => {
+  beforeEach(() => {
     resetVscodeConfig();
   });
 

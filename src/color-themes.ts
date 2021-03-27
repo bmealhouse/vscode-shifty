@@ -9,8 +9,8 @@ interface ColorThemeWithMetadata {
 }
 
 let cache: string[];
-let nextColorTheme: string;
 let cacheWithMetadata: ColorThemeWithMetadata[];
+let nextColorTheme: string;
 
 export const getRawCache = () => cache;
 export const getRawCacheWithMetadata = () => cacheWithMetadata;
