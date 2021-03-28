@@ -3,57 +3,64 @@ import sinon from "sinon";
 import vscode from "vscode";
 
 import { commandMap, DEFAULT_FONT_FAMILY } from "./constants";
-import {
-  // getAllFontFamilies,
-  // getAvailableFontFamilies,
-  getFontFamily,
-  getRawCache,
-  // setFontFamily,
-} from "./font-families";
+import { getFontFamily, getRawCache, setFontFamily } from "./font-families";
 import { updateConfig } from "./test/utils";
 
 suite("font-families.test.ts", () => {
-  // FIXME: Test real implementation, not mock data
-  // test('includes the fallback font family when shifty sets "editor.fontFamily"', async () => {
-  //   // arrange
-  //   // act
-  //   const { fontFamily } = vscode.workspace.getConfiguration("editor");
+  test('includes the fallback font family when shifty sets "editor.fontFamily"', async () => {
+    // arrange
+    const menlo = "Menlo";
 
-  //   // assert
-  //   expect(fontFamily).toBe(`"${DEFAULT_FONT_FAMILY}", monospace`);
-  // });
+    // act
+    await setFontFamily(menlo);
 
-  // test(`sets the font family with out a fallback`, async () => {
-  //   // arrage
-  //   await updateConfig("shifty.fontFamilies.fallbackFontFamily", null);
+    // assert
+    const { fontFamily } = vscode.workspace.getConfiguration("editor");
+    expect(fontFamily).toBe(`${menlo}, monospace`);
+  });
 
-  //   // act
-  //   await vscode.commands.executeCommand(commandMap.SHIFT_FONT_FAMILY);
+  test("sets the font family with out a fallback", async () => {
+    // arrage
+    await updateConfig("shifty.fontFamilies.fallbackFontFamily", null);
 
-  //   // assert
-  //   const { fontFamily } = vscode.workspace.getConfiguration("editor");
-  //   expect(fontFamily.includes(", ")).toBeFalsy();
-  // });
+    // act
+    await vscode.commands.executeCommand(commandMap.SHIFT_FONT_FAMILY);
 
-  // test("wraps font families with quotes when they include spaces", async () => {
-  //   const fontFamilyWithWhitespace = getAllFontFamilies().find((ff) =>
-  //     /\s/.test(ff.id)
-  //   );
+    // assert
+    const { fontFamily } = vscode.workspace.getConfiguration("editor");
+    expect(fontFamily.includes(", ")).toBeFalsy();
+  });
 
-  //   await setFontFamily(fontFamilyWithWhitespace!.id);
+  test("wraps font families with quotes when they include spaces", async () => {
+    // arrange
+    const fontFamilyWithWhitespace = getRawCache().find((fontFamily) =>
+      /\s/.test(fontFamily)
+    );
 
-  //   const { fontFamily } = vscode.workspace.getConfiguration("editor");
-  //   expect(fontFamily).toBe(`"${fontFamilyWithWhitespace!.id}", monospace`);
-  // });
+    if (fontFamilyWithWhitespace) {
+      // act
+      await setFontFamily(fontFamilyWithWhitespace);
 
-  // test("returns the current font family without quotes", async () => {
-  //   const fontFamilyWithWhitespace = getAllFontFamilies().find((ff) =>
-  //     /\s/.test(ff.id)
-  //   );
+      // assert
+      const { fontFamily } = vscode.workspace.getConfiguration("editor");
+      expect(fontFamily).toBe(`"${fontFamilyWithWhitespace}", monospace`);
+    }
+  });
 
-  //   await setFontFamily(fontFamilyWithWhitespace!.id);
-  //   expect(getFontFamily()).toBe(fontFamilyWithWhitespace!.id);
-  // });
+  test("returns the current font family without quotes", async () => {
+    // arrange
+    const fontFamilyWithWhitespace = getRawCache().find((fontFamily) =>
+      /\s/.test(fontFamily)
+    );
+
+    if (fontFamilyWithWhitespace) {
+      // act
+      await setFontFamily(fontFamilyWithWhitespace);
+
+      // assert
+      expect(getFontFamily()).toBe(fontFamilyWithWhitespace);
+    }
+  });
 
   test("registers font family commands when VS Code starts up", async () => {
     // arrange
@@ -156,16 +163,18 @@ suite("font-families.test.ts", () => {
     expect(favoriteFontFamilies).not.toContain(DEFAULT_FONT_FAMILY);
   });
 
-  // test('primes the font families cache after the "shifty.fontFamilies" config changes', async () => {
-  //   // arrange
-  //   const rawCache = getRawCache();
+  test('primes the font families cache after the "shifty.fontFamilies" config changes', async () => {
+    // arrange
+    const rawCache = getRawCache();
 
-  //   // act
-  //   await updateConfig("shifty.fontFamilies.fallbackFontFamily", "");
+    // act
+    await updateConfig("shifty.fontFamilies.includeFontFamilies", [
+      "Hello World",
+    ]);
 
-  //   // assert
-  //   expect(getRawCache()).not.toEqual(rawCache);
-  // });
+    // assert
+    expect(getRawCache()).not.toEqual(rawCache);
+  });
 
   test("returns all font families when no font families are ignored", async () => {
     // arrange
@@ -193,14 +202,14 @@ suite("font-families.test.ts", () => {
 
   test("returns user specified font families", async () => {
     // arrange
-    const dankMono = "Dank Mono";
-    await updateConfig("shifty.fontFamilies.includeFontFamilies", [dankMono]);
+    const helloWorld = "Hello World";
+    await updateConfig("shifty.fontFamilies.includeFontFamilies", [helloWorld]);
 
     // act
     const rawCache = getRawCache();
 
     // assert
-    expect(rawCache).toContain(dankMono);
+    expect(rawCache).toContain(helloWorld);
   });
 
   test('returns favorite font familes when shiftMode is set to "favorites"', async () => {

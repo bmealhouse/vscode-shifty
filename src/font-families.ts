@@ -131,33 +131,6 @@ export async function setFontFamily(fontFamily: string): Promise<void> {
   );
 }
 
-// export function getAvailableFontFamilies(): FontFamily[] {
-//   const fontFamily = getFontFamily();
-//   return fontFamiliesCache.filter((ff) => ff.id !== fontFamily);
-// }
-
-// export function getAllFontFamilies(): FontFamily[] {
-//   const { includeFontFamilies } = vscode.workspace.getConfiguration(
-//     "shifty.fontFamilies"
-//   );
-
-//   return [
-//     ...codefaceFontFamilies,
-//     ...systemFontFamilies,
-//     ...includeFontFamilies.map(
-//       (ff: string): FontFamily => ({
-//         id: ff,
-//         supportedPlatforms: [
-//           FontFamilyPlatform.LINUX,
-//           FontFamilyPlatform.MAC_OS,
-//           FontFamilyPlatform.WINDOWS,
-//         ],
-//         type: FontFamilyType.USER,
-//       })
-//     ),
-//   ];
-// }
-
 function getCache(): string[] {
   const {
     shiftMode,
@@ -165,11 +138,14 @@ function getCache(): string[] {
       favoriteFontFamilies,
       ignoreCodefaceFontFamilies, // remove setting
       ignoreFontFamilies,
-      includeFontFamilies, // use setting
+      includeFontFamilies,
     },
   } = vscode.workspace.getConfiguration("shifty");
 
-  const allFontFamilies: string[] = getMonospaceFonts();
+  const allFontFamilies: string[] = [
+    ...getMonospaceFonts(),
+    ...includeFontFamilies,
+  ];
 
   if (shiftMode === "favorites") {
     return allFontFamilies.filter((fontFamily) =>
