@@ -7,14 +7,14 @@ import vscode from "vscode";
 import { commandMap } from "./constants";
 import {
   activateShiftInterval,
-  // deactivateShiftInterval,
+  deactivateShiftInterval,
 } from "./shift-interval";
 import { activateFontFamilies, shiftFontFamily } from "./font-families";
 import { activateColorThemes, shiftColorTheme } from "./color-themes";
-// import { activateStatusBar } from "./status-bar";
+import { activateStatusBar } from "./status-bar";
 
 export function activate(context: vscode.ExtensionContext): void {
-  // activateStatusBar(context);
+  activateStatusBar(context);
   void activateShiftInterval(context);
   activateColorThemes(context);
   activateFontFamilies(context);
@@ -31,5 +31,5 @@ export function activate(context: vscode.ExtensionContext): void {
 }
 
 export async function deactivate(): Promise<void> {
-  // await deactivateShiftInterval();
+  await deactivateShiftInterval();
 }

@@ -62,7 +62,7 @@ suite("font-families.test.ts", () => {
     }
   });
 
-  test("registers font family commands when VS Code starts up", async () => {
+  test("registers font family commands at vscode start up", async () => {
     // arrange
     // act
     const commands = await vscode.commands.getCommands();
