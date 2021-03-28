@@ -1,5 +1,4 @@
 import expect from "expect";
-import { beforeEach } from "mocha";
 import sinon from "sinon";
 import vscode from "vscode";
 

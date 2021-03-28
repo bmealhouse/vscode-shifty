@@ -9,6 +9,7 @@ export async function run(): Promise<void> {
   const mocha = new Mocha({
     ui: "tdd",
     color: true,
+    retries: 1,
     rootHooks: {
       beforeEach() {
         resetVscodeConfig();

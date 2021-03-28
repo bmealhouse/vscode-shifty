@@ -1,5 +1,4 @@
 import expect from "expect";
-import { beforeEach } from "mocha";
 import sinon from "sinon";
 import vscode from "vscode";
 
@@ -79,91 +78,90 @@ suite("font-families.test.ts", () => {
     expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
   });
 
-  // test(`favorites the current font family when running the "commandMap.TOGGLE_FAVORITE_FONT_FAMILY" command`, async () => {
-  //   const spy = jest.spyOn(vscode.window, "showInformationMessage");
-  //   await vscode.commands.executeCommand(commandMap.TOGGLE_FAVORITE_FONT_FAMILY);
+  test('favorites the current font family when running the "TOGGLE_FAVORITE_FONT_FAMILY" command', async () => {
+    // arrange
+    const spy = sinon.spy(vscode.window, "showInformationMessage");
 
-  //   const { favoriteFontFamilies } = vscode.workspace.getConfiguration(
-  //     "shifty.fontFamilies"
-  //   );
-  //   expect(favoriteFontFamilies).toContain(DEFAULT_FONT_FAMILY.id);
+    // act
+    await vscode.commands.executeCommand(
+      commandMap.TOGGLE_FAVORITE_FONT_FAMILY
+    );
 
-  //   const [firstCall] = spy.mock.calls;
-  //   expect(formatSnapshot(firstCall)).toMatchInlineSnapshot(
-  //     `"['Added \\"Courier New\\" to favorites']"`
-  //   );
+    // assert
+    const { favoriteFontFamilies } = vscode.workspace.getConfiguration(
+      "shifty.fontFamilies"
+    );
+    expect(favoriteFontFamilies).toContain(DEFAULT_FONT_FAMILY);
+    expect(spy.firstCall.firstArg).toBe('Added "Courier New" to favorites');
+  });
 
-  //   spy.mockRestore();
-  // });
+  test('unfavorites the current font family when running the "TOGGLE_FAVORITE_FONT_FAMILY" command', async () => {
+    // arrange
+    const favorites = [DEFAULT_FONT_FAMILY, "Menlo"];
+    await updateConfig("shifty.fontFamilies.favoriteFontFamilies", favorites);
+    const spy = sinon.spy(vscode.window, "showInformationMessage");
 
-  // test(`unfavorites the current font family when running the "commandMap.TOGGLE_FAVORITE_FONT_FAMILY" command`, async () => {
-  //   const favorites = [DEFAULT_FONT_FAMILY.id, "SF Mono"];
-  //   await updateConfig("shifty.fontFamilies.favoriteFontFamilies", favorites);
+    // act
+    await vscode.commands.executeCommand(
+      commandMap.TOGGLE_FAVORITE_FONT_FAMILY
+    );
 
-  //   const spy = jest.spyOn(vscode.window, "showInformationMessage");
-  //   await vscode.commands.executeCommand(commandMap.TOGGLE_FAVORITE_FONT_FAMILY);
+    // assert
+    const { favoriteFontFamilies } = vscode.workspace.getConfiguration(
+      "shifty.fontFamilies"
+    );
+    expect(favoriteFontFamilies).not.toContain(DEFAULT_FONT_FAMILY);
+    expect(spy.firstCall.firstArg).toBe('Removed "Courier New" from favorites');
+  });
 
-  //   const { favoriteFontFamilies } = vscode.workspace.getConfiguration(
-  //     "shifty.fontFamilies"
-  //   );
-  //   expect(favoriteFontFamilies).not.toContain(DEFAULT_FONT_FAMILY.id);
+  test('ignores the current font family, shifts the font family, and resets the shift interval when running the "IGNORE_FONT_FAMILY" command', async () => {
+    // arrange
+    const showInformationMessageSpy = sinon.spy(
+      vscode.window,
+      "showInformationMessage"
+    );
+    const executeCommandSpy = sinon.spy(vscode.commands, "executeCommand");
 
-  //   const [firstCall] = spy.mock.calls;
-  //   expect(formatSnapshot(firstCall)).toMatchInlineSnapshot(
-  //     `"['Removed \\"Courier New\\" from favorites']"`
-  //   );
+    // act
+    await vscode.commands.executeCommand(commandMap.IGNORE_FONT_FAMILY);
 
-  //   spy.mockRestore();
-  // });
+    // assert
+    const { ignoreFontFamilies } = vscode.workspace.getConfiguration(
+      "shifty.fontFamilies"
+    );
+    expect(ignoreFontFamilies).toContain(DEFAULT_FONT_FAMILY);
+    expect(showInformationMessageSpy.firstCall.firstArg).toBe(
+      'Ignored "Courier New"'
+    );
+    expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
+    expect(executeCommandSpy.secondCall.firstArg).toBe(
+      commandMap.RESET_SHIFT_INTERVAL
+    );
+  });
 
-  // test(`ignores the current font family, shifts the font family, and resets the shift interval when running the "commandMap.IGNORE_FONT_FAMILY" command`, async () => {
-  //   const showInformationMessageSpy = jest.spyOn(
-  //     vscode.window,
-  //     "showInformationMessage"
-  //   );
+  test('ignores the current font family and remove the font family from favorites when running the "IGNORE_FONT_FAMILY" command', async () => {
+    // arrange
+    const favorites = [DEFAULT_FONT_FAMILY, "Menlo"];
+    await updateConfig("shifty.fontFamilies.favoriteFontFamilies", favorites);
 
-  //   const executeCommandSpy = jest.spyOn(vscode.commands, "executeCommand");
-  //   await vscode.commands.executeCommand(commandMap.IGNORE_FONT_FAMILY);
+    // act
+    await vscode.commands.executeCommand(commandMap.IGNORE_FONT_FAMILY);
 
-  //   const { ignoreFontFamilies } = vscode.workspace.getConfiguration(
-  //     "shifty.fontFamilies"
-  //   );
-  //   expect(ignoreFontFamilies).toContain(DEFAULT_FONT_FAMILY.id);
-
-  //   const [firstCall] = showInformationMessageSpy.mock.calls;
-  //   expect(formatSnapshot(firstCall)).toMatchInlineSnapshot(
-  //     `"['Ignored \\"Courier New\\"']"`
-  //   );
-
-  //   expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id);
-
-  //   const [, secondCall] = executeCommandSpy.mock.calls;
-  //   expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL]);
-
-  //   showInformationMessageSpy.mockRestore();
-  //   executeCommandSpy.mockRestore();
-  // });
-
-  // test(`ignores the current font family and remove the font family from favorites when running the "commandMap.IGNORE_FONT_FAMILY" command`, async () => {
-  //   const favorites = [DEFAULT_FONT_FAMILY.id, "SF Mono"];
-  //   await updateConfig("shifty.fontFamilies.favoriteFontFamilies", favorites);
-  //   await vscode.commands.executeCommand(commandMap.IGNORE_FONT_FAMILY);
-
-  //   const {
-  //     favoriteFontFamilies,
-  //     ignoreFontFamilies,
-  //   } = vscode.workspace.getConfiguration("shifty.fontFamilies");
-
-  //   expect(ignoreFontFamilies).toContain(DEFAULT_FONT_FAMILY.id);
-  //   expect(favoriteFontFamilies).not.toContain(DEFAULT_FONT_FAMILY.id);
-  // });
+    // assert
+    const {
+      favoriteFontFamilies,
+      ignoreFontFamilies,
+    } = vscode.workspace.getConfiguration("shifty.fontFamilies");
+    expect(ignoreFontFamilies).toContain(DEFAULT_FONT_FAMILY);
+    expect(favoriteFontFamilies).not.toContain(DEFAULT_FONT_FAMILY);
+  });
 
   // test('primes the font families cache after the "shifty.fontFamilies" config changes', async () => {
   //   // arrange
   //   const rawCache = getRawCache();
 
   //   // act
-  //   await updateConfig("shifty.fontFamilies.ignoreCodefaceFontFamilies", true);
+  //   await updateConfig("shifty.fontFamilies.fallbackFontFamily", "");
 
   //   // assert
   //   expect(getRawCache()).not.toEqual(rawCache);

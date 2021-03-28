@@ -2,8 +2,7 @@ import vscode from "vscode";
 import { getMonospaceFonts } from "node-monospace-fonts";
 
 import { commandMap, DEFAULT_FONT_FAMILY } from "./constants";
-import { getRandomItem } from "./utils";
-// import { getRandomItem, localeCompare, unique } from "../utils";
+import { getRandomItem, localeCompare, unique } from "./utils";
 
 let cache: string[];
 let nextFontFamily: string;
@@ -22,25 +21,63 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
       async () => {
-        // const fontFamily = getFontFamily();
-        // if (hasFavoritedFontFamily(fontFamily)) {
-        //   await unfavoriteFontFamily(fontFamily);
-        //   vscode.window.showInformationMessage(
-        //     `Removed "${fontFamily}" from favorites`
-        //   );
-        // } else {
-        //   await favoriteFontFamily(fontFamily);
-        //   vscode.window.showInformationMessage(
-        //     `Added "${fontFamily}" to favorites`
-        //   );
-        // }
+        const currentFontFamily = getFontFamily();
+        const config = vscode.workspace.getConfiguration("shifty.fontFamilies");
+        const favorites = config.get<string[]>("favoriteFontFamilies", []);
+
+        if (favorites.includes(currentFontFamily)) {
+          await config.update(
+            "favoriteFontFamilies",
+            unique(
+              favorites.filter((fontFamily) => fontFamily !== currentFontFamily)
+            ).sort(localeCompare),
+            vscode.ConfigurationTarget.Global
+          );
+          void vscode.window.showInformationMessage(
+            `Removed "${currentFontFamily}" from favorites`
+          );
+        } else {
+          await config.update(
+            "favoriteFontFamilies",
+            unique([...favorites, currentFontFamily]).sort(localeCompare),
+            vscode.ConfigurationTarget.Global
+          );
+          void vscode.window.showInformationMessage(
+            `Added "${currentFontFamily}" to favorites`
+          );
+        }
       }
     ),
     vscode.commands.registerCommand(commandMap.IGNORE_FONT_FAMILY, async () => {
-      // const fontFamily = getFontFamily();
-      // await ignoreFontFamily(fontFamily);
-      // vscode.window.showInformationMessage(`Ignored "${fontFamily}"`);
-      // vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+      const currentFontFamily = getFontFamily();
+
+      await shiftFontFamily();
+      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+
+      const config = vscode.workspace.getConfiguration("shifty.fontFamilies");
+      const ignoreFontFamilies = config.get<string[]>("ignoreFontFamilies", []);
+      const favoriteFontFamilies = config.get<string[]>(
+        "favoriteFontFamilies",
+        []
+      );
+
+      await config.update(
+        "ignoreFontFamilies",
+        unique([...ignoreFontFamilies, currentFontFamily]).sort(localeCompare),
+        vscode.ConfigurationTarget.Global
+      );
+
+      await config.update(
+        "favoriteFontFamilies",
+        favoriteFontFamilies
+          .filter((fontFamily) => fontFamily !== currentFontFamily)
+          .sort(localeCompare),
+        vscode.ConfigurationTarget.Global
+      );
+
+      void vscode.window.showInformationMessage(
+        `Ignored "${currentFontFamily}"`
+      );
     }),
     vscode.workspace.onDidChangeConfiguration(handleDidChangeConfiguration)
   );
@@ -61,58 +98,6 @@ export async function shiftFontFamily(): Promise<void> {
   await setFontFamily(nextFontFamily);
   nextFontFamily = getNextFontFamily(nextFontFamily);
 }
-
-// export function hasFavoritedFontFamily(fontFamily: string): boolean {
-//   const favoriteFontFamilies = vscode.workspace
-//     .getConfiguration("shifty.fontFamilies")
-//     .get<string[]>("favoriteFontFamilies", []);
-
-//   return favoriteFontFamilies.includes(fontFamily);
-// }
-
-// export async function favoriteFontFamily(fontFamily: string): Promise<void> {
-//   const config = vscode.workspace.getConfiguration("shifty.fontFamilies");
-//   const favoriteFontFamilies = config.get<string[]>("favoriteFontFamilies", []);
-
-//   await config.update(
-//     "favoriteFontFamilies",
-//     unique([...favoriteFontFamilies, fontFamily]).sort(localeCompare),
-//     vscode.ConfigurationTarget.Global
-//   );
-// }
-
-// export async function unfavoriteFontFamily(fontFamily: string): Promise<void> {
-//   const config = vscode.workspace.getConfiguration("shifty.fontFamilies");
-//   const favoriteFontFamilies = config.get<string[]>("favoriteFontFamilies", []);
-
-//   await config.update(
-//     "favoriteFontFamilies",
-//     unique(favoriteFontFamilies.filter((ff) => ff !== fontFamily)).sort(
-//       localeCompare
-//     ),
-//     vscode.ConfigurationTarget.Global
-//   );
-// }
-
-// export async function ignoreFontFamily(fontFamily: string): Promise<void> {
-//   const config = vscode.workspace.getConfiguration("shifty.fontFamilies");
-//   const favoriteFontFamilies = config.get<string[]>("favoriteFontFamilies", []);
-//   const ignoreFontFamilies = config.get<string[]>("ignoreFontFamilies", []);
-
-//   await config.update(
-//     "ignoreFontFamilies",
-//     unique([...ignoreFontFamilies, fontFamily]).sort(localeCompare),
-//     vscode.ConfigurationTarget.Global
-//   );
-
-//   await config.update(
-//     "favoriteFontFamilies",
-//     favoriteFontFamilies.filter((ff) => ff !== fontFamily).sort(localeCompare),
-//     vscode.ConfigurationTarget.Global
-//   );
-
-//   await shiftFontFamily();
-// }
 
 export function getFontFamily(): string {
   const { fontFamily } = vscode.workspace.getConfiguration("editor");
@@ -180,7 +165,7 @@ function getCache(): string[] {
       favoriteFontFamilies,
       ignoreCodefaceFontFamilies, // remove setting
       ignoreFontFamilies,
-      includeFontFamilies,
+      includeFontFamilies, // use setting
     },
   } = vscode.workspace.getConfiguration("shifty");
 
