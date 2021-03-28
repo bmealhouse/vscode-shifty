@@ -136,7 +136,6 @@ function getCache(): string[] {
     shiftMode,
     fontFamilies: {
       favoriteFontFamilies,
-      ignoreCodefaceFontFamilies, // remove setting
       ignoreFontFamilies,
       includeFontFamilies,
     },

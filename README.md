@@ -120,9 +120,6 @@ Controls which font family will be used as the fallback. Supports comma delimite
 **`shifty.fontFamilies.favoriteFontFamilies`**<br/>
 List of font families you've favorited.
 
-**`shifty.fontFamilies.ignoreCodefaceFontFamilies`**<br/>
-Controls whether Codeface font families are ignored.
-
 **`shifty.fontFamilies.ignoreFontFamilies`**<br/>
 List of font families you've ignored.
 

@@ -91,11 +91,6 @@
           "default": [],
           "description": "List of font families you've favorited."
         },
-        "shifty.fontFamilies.ignoreCodefaceFontFamilies": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether Codeface font families are ignored."
-        },
         "shifty.fontFamilies.ignoreFontFamilies": {
           "type": "array",
           "default": [],

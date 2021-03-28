@@ -74,7 +74,6 @@ function getWorkspaceConfig(): Record<string, any> {
       fontFamilies: {
         fallbackFontFamily: "monospace",
         favoriteFontFamilies: [],
-        ignoreCodefaceFontFamilies: false,
         ignoreFontFamilies: [],
         includeFontFamilies: [],
       },
