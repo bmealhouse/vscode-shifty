@@ -10,13 +10,8 @@ import {
 } from "./constants";
 import { getColorTheme } from "./color-themes";
 import { getFontFamily } from "./font-families";
-import { resetVscodeConfig } from "./test/mock-vscode-config";
 
 suite("extension.test.ts", () => {
-  beforeEach(() => {
-    resetVscodeConfig();
-  });
-
   test("registers global commands at vscode start up", async () => {
     // arrange
     // act
@@ -38,7 +33,5 @@ suite("extension.test.ts", () => {
     expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
     expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
     expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
-
-    spy.restore();
   });
 });

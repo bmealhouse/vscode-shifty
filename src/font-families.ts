@@ -1,38 +1,9 @@
-import { getMonospaceFonts } from "node-monospace-fonts";
 import vscode from "vscode";
-// import { getMonospaceFonts } from "node-monospace-fonts";
+import { getMonospaceFonts } from "node-monospace-fonts";
 
 import { commandMap, DEFAULT_FONT_FAMILY } from "./constants";
 import { getRandomItem } from "./utils";
-
-// import * as os from "os";
 // import { getRandomItem, localeCompare, unique } from "../utils";
-// import { codefaceFontFamilies } from "./codeface-font-families";
-// import { systemFontFamilies } from "./system-font-families";
-
-// export interface FontFamily {
-//   id: string;
-//   supportedPlatforms: FontFamilyPlatform[];
-//   type: FontFamilyType;
-// }
-
-// export const enum FontFamilyPlatform {
-//   LINUX = "Linux",
-//   MAC_OS = "Darwin",
-//   WINDOWS = "Windows_NT",
-// }
-
-// export const enum FontFamilyType {
-//   CODEFACE = "CODEFACE",
-//   SYSTEM = "SYSTEM",
-//   USER = "USER",
-// }
-
-// export const DEFAULT_FONT_FAMILY = {
-//   id: "Courier New",
-//   supportedPlatforms: [FontFamilyPlatform.MAC_OS, FontFamilyPlatform.WINDOWS],
-//   type: FontFamilyType.SYSTEM,
-// };
 
 let cache: string[];
 let nextFontFamily: string;
@@ -70,21 +41,21 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
       // await ignoreFontFamily(fontFamily);
       // vscode.window.showInformationMessage(`Ignored "${fontFamily}"`);
       // vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
-    })
-    // vscode.workspace.onDidChangeConfiguration(handleDidChangeConfiguration)
+    }),
+    vscode.workspace.onDidChangeConfiguration(handleDidChangeConfiguration)
   );
 }
 
-// export function handleDidChangeConfiguration(
-//   event: vscode.ConfigurationChangeEvent
-// ): void {
-//   if (
-//     event.affectsConfiguration("shifty.fontFamilies") ||
-//     event.affectsConfiguration("shifty.shiftMode")
-//   ) {
-//     primeFontFamiliesCache();
-//   }
-// }
+export function handleDidChangeConfiguration(
+  event: vscode.ConfigurationChangeEvent
+): void {
+  if (
+    event.affectsConfiguration("shifty.fontFamilies") ||
+    event.affectsConfiguration("shifty.shiftMode")
+  ) {
+    cache = getCache();
+  }
+}
 
 export async function shiftFontFamily(): Promise<void> {
   await setFontFamily(nextFontFamily);
@@ -230,7 +201,7 @@ function getCache(): string[] {
   );
 
   if (fontFamiliesCache.length === 0) {
-    fontFamiliesCache = allFontFamilies.map((fontFamily) =>
+    fontFamiliesCache = allFontFamilies.filter((fontFamily) =>
       favoriteFontFamilies.includes(fontFamily)
     );
   }

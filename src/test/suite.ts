@@ -1,12 +1,22 @@
 import path from "path";
-import Mocha from "mocha";
 import glob from "glob";
+import Mocha from "mocha";
+import sinon from "sinon";
+
+import { resetVscodeConfig } from "./mock-vscode-config";
 
 export async function run(): Promise<void> {
-  // Create the mocha test
   const mocha = new Mocha({
     ui: "tdd",
     color: true,
+    rootHooks: {
+      beforeEach() {
+        resetVscodeConfig();
+      },
+      afterEach() {
+        sinon.restore();
+      },
+    },
   });
 
   const testsRoot = path.resolve(__dirname, "..");

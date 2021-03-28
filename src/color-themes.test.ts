@@ -9,14 +9,9 @@ import {
   getRawCache,
   getRawCacheWithMetadata,
 } from "./color-themes";
-import { resetVscodeConfig } from "./test/mock-vscode-config";
 import { updateConfig } from "./test/utils";
 
 suite("color-themes.test.ts", () => {
-  beforeEach(() => {
-    resetVscodeConfig();
-  });
-
   test("registers color theme commands at vscode start up", async () => {
     // arrange
     // act
@@ -38,8 +33,6 @@ suite("color-themes.test.ts", () => {
     // assert
     expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
     expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
-
-    spy.restore();
   });
 
   test('favorites the current color theme when running the "TOGGLE_FAVORITE_COLOR_THEME" command', async () => {
@@ -57,8 +50,6 @@ suite("color-themes.test.ts", () => {
     );
     expect(favoriteColorThemes).toContain(DEFAULT_COLOR_THEME);
     expect(spy.firstCall.firstArg).toBe('Added "Default Dark+" to favorites');
-
-    spy.restore();
   });
 
   test('unfavorites the current color theme when running the "TOGGLE_FAVORITE_COLOR_THEME" command', async () => {
@@ -80,8 +71,6 @@ suite("color-themes.test.ts", () => {
     expect(spy.firstCall.firstArg).toBe(
       'Removed "Default Dark+" from favorites'
     );
-
-    spy.restore();
   });
 
   test('ignores the current color theme, shifts the color theme, and resets the shift interval when running the "IGNORE_COLOR_THEME" command', async () => {
@@ -107,9 +96,6 @@ suite("color-themes.test.ts", () => {
     expect(executeCommandSpy.secondCall.firstArg).toBe(
       commandMap.RESET_SHIFT_INTERVAL
     );
-
-    showInformationMessaageSpy.restore();
-    executeCommandSpy.restore();
   });
 
   test('ignores the current color theme and removes the color theme from favorites when running the "IGNORE_COLOR_THEME" command', async () => {
