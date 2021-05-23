@@ -1,0 +1,5 @@
+*.md
+.vscode-test
+dist
+package.json
+out
