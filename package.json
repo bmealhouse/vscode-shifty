@@ -24,8 +24,7 @@
     "shift",
     "random",
     "theme",
-    "font",
-    "pomodoro"
+    "font"
   ],
   "icon": "images/shifty-logo.png",
   "galleryBanner": {

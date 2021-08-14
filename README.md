@@ -194,8 +194,6 @@ Controls whether the shift interval will start automatically.
 
 ### A monospace font on my system is not detected. How do I get shifty to recognize it?
 
-### How do I use shifty as a Pomodoro timer?
-
 ## Contributing
 
 1. [Fork](https://help.github.com/en/articles/fork-a-repo) this repository to your own GitHub account and then [clone](https://help.github.com/en/articles/cloning-a-repository) it to your local device
