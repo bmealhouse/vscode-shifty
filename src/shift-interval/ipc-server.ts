@@ -103,23 +103,23 @@ export async function start({
             const remainingTime = calculateRemainingTime(now);
             updateStatusBarText(remainingTime);
 
-            if (process.env.SHIFTY_DEBUG === "true") {
-              console.debug(
-                "SHIFTY_DEBUG: updated status bar text",
-                JSON.stringify(
-                  {
-                    now,
-                    shiftInProgress,
-                    lastColorThemeShiftTime,
-                    lastFontFamilyShiftTime,
-                    lastPauseTime,
-                    text: remainingTime,
-                  },
-                  null,
-                  2
-                )
-              );
-            }
+            // if (process.env.SHIFTY_DEBUG === "true") {
+            //   console.debug(
+            //     "SHIFTY_DEBUG: updated status bar text",
+            //     JSON.stringify(
+            //       {
+            //         now,
+            //         shiftInProgress,
+            //         lastColorThemeShiftTime,
+            //         lastFontFamilyShiftTime,
+            //         lastPauseTime,
+            //         text: remainingTime,
+            //       },
+            //       null,
+            //       2
+            //     )
+            //   );
+            // }
 
             if (connectedSockets.length > 0) {
               const updateStatusMessage: UpdateStatusMessage = {
@@ -316,27 +316,27 @@ export async function start({
         }
       }
 
-      if (
-        process.env.SHIFTY_DEBUG === "true" &&
-        shiftColorThemeIntervalMin === shiftFontFamilyIntervalMin &&
-        lastColorThemeShiftTime !== lastFontFamilyShiftTime
-      ) {
-        console.debug(
-          "SHIFTY_DEBUG: last shift time values have diverged",
-          JSON.stringify(
-            {
-              now,
-              lastColorThemeShiftTime,
-              lastFontFamilyShiftTime,
-              shiftColorThemeRemainingSeconds,
-              shiftFontFamilyRemainingSeconds,
-              calculationResult,
-            },
-            null,
-            2
-          )
-        );
-      }
+      // if (
+      //   process.env.SHIFTY_DEBUG === "true" &&
+      //   shiftColorThemeIntervalMin === shiftFontFamilyIntervalMin &&
+      //   lastColorThemeShiftTime !== lastFontFamilyShiftTime
+      // ) {
+      //   console.debug(
+      //     "SHIFTY_DEBUG: last shift time values have diverged",
+      //     JSON.stringify(
+      //       {
+      //         now,
+      //         lastColorThemeShiftTime,
+      //         lastFontFamilyShiftTime,
+      //         shiftColorThemeRemainingSeconds,
+      //         shiftFontFamilyRemainingSeconds,
+      //         calculationResult,
+      //       },
+      //       null,
+      //       2
+      //     )
+      //   );
+      // }
 
       return calculationResult;
     }

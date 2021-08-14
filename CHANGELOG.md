@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use minimal linting config
 - Upgrade dependencies
 
+### Removed
+
+- Remove `shifty.enableDebugging` command
+
 ## [2.0.1] - 2020-01-11
 
 ### Fixed

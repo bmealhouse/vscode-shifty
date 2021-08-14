@@ -18,7 +18,6 @@ suite("extension.test.ts", () => {
 
     // assert
     expect(commands).toContain(commandMap.SHIFT);
-    expect(commands).toContain(commandMap.ENABLE_DEBUGGING);
   });
 
   test('shifts the color theme and font when running the "SHIFT" command', async () => {

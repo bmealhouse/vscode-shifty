@@ -178,11 +178,6 @@
         "command": "shifty.showStatus",
         "title": "Show status",
         "category": "shifty"
-      },
-      {
-        "command": "shifty.enableDebugging",
-        "title": "Enable debugging",
-        "category": "shifty"
       }
     ]
   },

@@ -11,6 +11,7 @@ import {
 } from "./shift-interval";
 import { activateFontFamilies, shiftFontFamily } from "./font-families";
 import { activateColorThemes, shiftColorTheme } from "./color-themes";
+import { log } from "./output-channel";
 import { activateStatusBar } from "./status-bar";
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -23,9 +24,6 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(commandMap.SHIFT, async () => {
       await Promise.all([shiftFontFamily(), shiftColorTheme()]);
       await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
-    }),
-    vscode.commands.registerCommand(commandMap.ENABLE_DEBUGGING, () => {
-      process.env.SHIFTY_DEBUG = "true";
     })
   );
 }
