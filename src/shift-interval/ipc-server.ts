@@ -27,10 +27,6 @@ export async function start({
     ipc.config.id = serverId;
     ipc.config.silent = true;
 
-    const {
-      automaticallyStartShiftInterval,
-    } = vscode.workspace.getConfiguration("shifty.shiftInterval");
-
     ipc.serve(serverPath, () => {
       // 4. Register client socket.
       ipc.server.on(
@@ -44,8 +40,19 @@ export async function start({
             backupSocketServerId = id;
           }
 
+          const initialStatusMessage: UpdateStatusMessage = {
+            lastColorThemeShiftTime,
+            lastFontFamilyShiftTime,
+            lastPauseTime,
+            text: calculateRemainingTime(Date.now()),
+          };
+
           // 5. Client socket registration complete.
-          ipc.server.emit(socket, MessageTypes.REGISTER_SOCKET_COMPLETE);
+          ipc.server.emit(
+            socket,
+            MessageTypes.REGISTER_SOCKET_COMPLETE,
+            initialStatusMessage
+          );
         }
       );
 
@@ -171,6 +178,12 @@ export async function start({
           },
           process.env.NODE_ENV === "test" ? 0 : 1000
         );
+
+        void vscode.commands.executeCommand(
+          "setContext",
+          "shifty.isShiftIntervalRunning",
+          true
+        );
       };
 
       ipc.server.on(MessageTypes.START_INTERVAL, (_, socket) => {
@@ -195,6 +208,12 @@ export async function start({
 
           ipc.server.broadcast(MessageTypes.UPDATE_STATUS, updateStatusMessage);
         }
+
+        void vscode.commands.executeCommand(
+          "setContext",
+          "shifty.isShiftIntervalRunning",
+          false
+        );
       };
 
       ipc.server.on(MessageTypes.PAUSE_INTERVAL, (_, socket) => {
@@ -202,26 +221,28 @@ export async function start({
         ipc.server.emit(socket, MessageTypes.PAUSE_INTERVAL_COMPLETE);
       });
 
-      const internalResetShiftInterval = (): void => {
+      const internalRestartShiftInterval = (): void => {
         const now = Date.now();
         lastColorThemeShiftTime = now;
         lastFontFamilyShiftTime = now;
       };
 
-      ipc.server.on(MessageTypes.RESET_INTERVAL, (_, socket) => {
-        internalResetShiftInterval();
-        ipc.server.emit(socket, MessageTypes.RESET_INTERVAL_COMPLETE);
+      ipc.server.on(MessageTypes.RESTART_INTERVAL, (_, socket) => {
+        internalRestartShiftInterval();
+        ipc.server.emit(socket, MessageTypes.RESTART_INTERVAL_COMPLETE);
       });
 
-      if (automaticallyStartShiftInterval) {
-        const {
-          shiftColorThemeIntervalMin,
-          shiftFontFamilyIntervalMin,
-        } = vscode.workspace.getConfiguration("shifty.shiftInterval");
+      const {
+        automaticallyStartShiftInterval,
+        shiftColorThemeIntervalMin,
+        shiftFontFamilyIntervalMin,
+      } = vscode.workspace.getConfiguration("shifty.shiftInterval");
 
-        if (shiftColorThemeIntervalMin > 0 || shiftFontFamilyIntervalMin > 0) {
-          void internalStartShiftInterval();
-        }
+      if (
+        automaticallyStartShiftInterval &&
+        (shiftColorThemeIntervalMin > 0 || shiftFontFamilyIntervalMin > 0)
+      ) {
+        void internalStartShiftInterval();
       }
 
       const connection: ServerConnection = {
@@ -252,12 +273,12 @@ export async function start({
 
           void internalStartShiftInterval();
         },
-        resetShiftInterval() {
+        restartShiftInterval() {
           if (lastPauseTime > 0) {
             return;
           }
 
-          internalResetShiftInterval();
+          internalRestartShiftInterval();
         },
       };
 

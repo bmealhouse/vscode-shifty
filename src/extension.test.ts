@@ -30,6 +30,6 @@ suite("extension.test.ts", () => {
     // assert
     expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
     expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
-    expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
+    expect(spy.lastCall.firstArg).toBe(commandMap.RESTART_SHIFT_INTERVAL);
   });
 });

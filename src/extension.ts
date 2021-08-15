@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHIFT, async () => {
       await Promise.all([shiftFontFamily(), shiftColorTheme()]);
-      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+      await vscode.commands.executeCommand(commandMap.RESTART_SHIFT_INTERVAL);
     })
   );
 }

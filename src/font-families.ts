@@ -16,7 +16,7 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHIFT_FONT_FAMILY, async () => {
       await shiftFontFamily();
-      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+      await vscode.commands.executeCommand(commandMap.RESTART_SHIFT_INTERVAL);
     }),
     vscode.commands.registerCommand(
       commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
@@ -52,7 +52,7 @@ export function activateFontFamilies(context: vscode.ExtensionContext): void {
       const currentFontFamily = getFontFamily();
 
       await shiftFontFamily();
-      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+      await vscode.commands.executeCommand(commandMap.RESTART_SHIFT_INTERVAL);
 
       const config = vscode.workspace.getConfiguration("shifty.fontFamilies");
       const ignoreFontFamilies = config.get<string[]>("ignoreFontFamilies", []);

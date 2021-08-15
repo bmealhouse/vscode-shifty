@@ -82,7 +82,7 @@ suite("font-families.test.ts", () => {
 
     // assert
     expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
-    expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
+    expect(spy.lastCall.firstArg).toBe(commandMap.RESTART_SHIFT_INTERVAL);
   });
 
   test('favorites the current font family when running the "TOGGLE_FAVORITE_FONT_FAMILY" command', async () => {
@@ -141,8 +141,8 @@ suite("font-families.test.ts", () => {
       'Ignored "Courier New"'
     );
     expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
-    expect(executeCommandSpy.secondCall.firstArg).toBe(
-      commandMap.RESET_SHIFT_INTERVAL
+    expect(executeCommandSpy.lastCall.firstArg).toBe(
+      commandMap.RESTART_SHIFT_INTERVAL
     );
   });
 

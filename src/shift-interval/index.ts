@@ -9,6 +9,8 @@ let connection: ClientConnection | ServerConnection;
 export async function activateShiftInterval(
   context: vscode.ExtensionContext
 ): Promise<void> {
+  void setInitialContext();
+
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.START_SHIFT_INTERVAL, () => {
       void connection.startShiftInterval();
@@ -16,8 +18,8 @@ export async function activateShiftInterval(
     vscode.commands.registerCommand(commandMap.PAUSE_SHIFT_INTERVAL, () => {
       void connection.pauseShiftInterval();
     }),
-    vscode.commands.registerCommand(commandMap.RESET_SHIFT_INTERVAL, () => {
-      void connection.resetShiftInterval();
+    vscode.commands.registerCommand(commandMap.RESTART_SHIFT_INTERVAL, () => {
+      void connection.restartShiftInterval();
     })
   );
 
@@ -33,4 +35,12 @@ export function setConnection(
   nextConnection: ClientConnection | ServerConnection
 ): void {
   connection = nextConnection;
+}
+
+export async function setInitialContext() {
+  return vscode.commands.executeCommand(
+    "setContext",
+    "shifty.isShiftIntervalRunning",
+    false
+  );
 }

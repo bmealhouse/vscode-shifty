@@ -162,17 +162,20 @@
       {
         "command": "shifty.startShiftInterval",
         "title": "Start shift interval",
-        "category": "shifty"
+        "category": "shifty",
+        "enablement": "!shifty.isShiftIntervalRunning"
       },
       {
         "command": "shifty.pauseShiftInterval",
         "title": "Pause shift interval",
-        "category": "shifty"
+        "category": "shifty",
+        "enablement": "shifty.isShiftIntervalRunning"
       },
       {
-        "command": "shifty.resetShiftInterval",
-        "title": "Reset shift interval",
-        "category": "shifty"
+        "command": "shifty.restartShiftInterval",
+        "title": "Restart shift interval",
+        "category": "shifty",
+        "enablement": "shifty.isShiftIntervalRunning"
       },
       {
         "command": "shifty.showStatus",

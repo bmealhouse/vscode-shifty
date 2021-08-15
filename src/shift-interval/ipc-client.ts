@@ -1,3 +1,4 @@
+import vscode from "vscode";
 import { IPC } from "node-ipc";
 import shortid from "shortid";
 
@@ -58,64 +59,92 @@ export async function connect({
       });
 
       // 6. Client socket registration complete.
-      socket.on(MessageTypes.REGISTER_SOCKET_COMPLETE, () => {
-        ipc.config.maxRetries = isBackupSocketServer ? 0 : 10;
+      socket.on(
+        MessageTypes.REGISTER_SOCKET_COMPLETE,
+        (initialMessage: UpdateStatusMessage) => {
+          ipc.config.maxRetries = isBackupSocketServer ? 0 : 10;
 
-        const connection: ClientConnection = {
-          id: ipc.config.id,
-          get statusMessagesReceived() {
-            return messagesReceived;
-          },
-          get lastUpdateStatusMessageReceived() {
-            return lastUpdateStatusMessageReceived;
-          },
-          async close() {
-            return new Promise((resolve) => {
-              closingSocket = true;
-              resolveCloseSocket = resolve;
-              socket.emit(MessageTypes.CLOSE_SOCKET, ipc.config.id);
-            });
-          },
-          async pauseShiftInterval() {
-            return new Promise((resolve) => {
-              if (lastPauseTime > 0) {
-                resolve();
-                return;
-              }
+          const {
+            automaticallyStartShiftInterval,
+            shiftColorThemeIntervalMin,
+            shiftFontFamilyIntervalMin,
+          } = vscode.workspace.getConfiguration("shifty.shiftInterval");
 
-              resolvePauseShiftInterval = resolve;
-              socket.emit(MessageTypes.PAUSE_INTERVAL);
-            });
-          },
-          async startShiftInterval() {
-            return new Promise((resolve) => {
-              if (
-                lastPauseTime === 0 &&
-                (lastColorThemeShiftTime > 0 || lastFontFamilyShiftTime > 0)
-              ) {
-                resolve();
-                return;
-              }
+          if (
+            automaticallyStartShiftInterval &&
+            (shiftColorThemeIntervalMin > 0 || shiftFontFamilyIntervalMin > 0)
+          ) {
+            lastUpdateStatusMessageReceived = initialMessage;
+            lastColorThemeShiftTime = initialMessage.lastColorThemeShiftTime;
+            lastFontFamilyShiftTime = initialMessage.lastFontFamilyShiftTime;
+            lastPauseTime = initialMessage.lastPauseTime;
+            updateStatusBarText(initialMessage.text);
 
-              resolveStartShiftInterval = resolve;
-              socket.emit(MessageTypes.START_INTERVAL);
-            });
-          },
-          async resetShiftInterval() {
-            return new Promise((resolve) => {
-              if (lastPauseTime > 0) {
-                resolve();
-                return;
-              }
+            if (initialMessage.lastPauseTime === 0) {
+              void vscode.commands.executeCommand(
+                "setContext",
+                "shifty.isShiftIntervalRunning",
+                true
+              );
+            }
+          }
 
-              resolveResetShiftInterval = resolve;
-              socket.emit(MessageTypes.RESET_INTERVAL);
-            });
-          },
-        };
+          const connection: ClientConnection = {
+            id: ipc.config.id,
+            get statusMessagesReceived() {
+              return messagesReceived;
+            },
+            get lastUpdateStatusMessageReceived() {
+              return lastUpdateStatusMessageReceived;
+            },
+            async close() {
+              return new Promise((resolve) => {
+                closingSocket = true;
+                resolveCloseSocket = resolve;
+                socket.emit(MessageTypes.CLOSE_SOCKET, ipc.config.id);
+              });
+            },
+            async pauseShiftInterval() {
+              return new Promise((resolve) => {
+                if (lastPauseTime > 0) {
+                  resolve();
+                  return;
+                }
 
-        resolve(connection);
-      });
+                resolvePauseShiftInterval = resolve;
+                socket.emit(MessageTypes.PAUSE_INTERVAL);
+              });
+            },
+            async startShiftInterval() {
+              return new Promise((resolve) => {
+                if (
+                  lastPauseTime === 0 &&
+                  (lastColorThemeShiftTime > 0 || lastFontFamilyShiftTime > 0)
+                ) {
+                  resolve();
+                  return;
+                }
+
+                resolveStartShiftInterval = resolve;
+                socket.emit(MessageTypes.START_INTERVAL);
+              });
+            },
+            async restartShiftInterval() {
+              return new Promise((resolve) => {
+                if (lastPauseTime > 0) {
+                  resolve();
+                  return;
+                }
+
+                resolveResetShiftInterval = resolve;
+                socket.emit(MessageTypes.RESTART_INTERVAL);
+              });
+            },
+          };
+
+          resolve(connection);
+        }
+      );
 
       // ?. Receive status bar update message
       socket.on(MessageTypes.UPDATE_STATUS, (message: UpdateStatusMessage) => {
@@ -171,13 +200,23 @@ export async function connect({
 
       socket.on(MessageTypes.PAUSE_INTERVAL_COMPLETE, () => {
         resolvePauseShiftInterval();
+        void vscode.commands.executeCommand(
+          "setContext",
+          "shifty.isShiftIntervalRunning",
+          false
+        );
       });
 
       socket.on(MessageTypes.START_INTERVAL_COMPLETE, () => {
         resolveStartShiftInterval();
+        void vscode.commands.executeCommand(
+          "setContext",
+          "shifty.isShiftIntervalRunning",
+          true
+        );
       });
 
-      socket.on(MessageTypes.RESET_INTERVAL_COMPLETE, () => {
+      socket.on(MessageTypes.RESTART_INTERVAL_COMPLETE, () => {
         resolveResetShiftInterval();
       });
     });

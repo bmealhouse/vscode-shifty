@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add command enablement
+  - `shifty.startShiftInterval`
+  - `shifty.pauseShiftInterval`
+  - `shifty.restartShiftInterval`
+
 ### Changed
 
-- Use minimal linting config
 - Upgrade dependencies
+- Use minimal linting config
+- Rename command `shifty.resetShiftInterval` -> `shifty.restartShiftInterval`
 
 ### Removed
 

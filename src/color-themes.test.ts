@@ -31,7 +31,7 @@ suite("color-themes.test.ts", () => {
 
     // assert
     expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
-    expect(spy.secondCall.firstArg).toBe(commandMap.RESET_SHIFT_INTERVAL);
+    expect(spy.lastCall.firstArg).toBe(commandMap.RESTART_SHIFT_INTERVAL);
   });
 
   test('favorites the current color theme when running the "TOGGLE_FAVORITE_COLOR_THEME" command', async () => {
@@ -92,8 +92,8 @@ suite("color-themes.test.ts", () => {
       'Ignored "Default Dark+"'
     );
     expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
-    expect(executeCommandSpy.secondCall.firstArg).toBe(
-      commandMap.RESET_SHIFT_INTERVAL
+    expect(executeCommandSpy.lastCall.firstArg).toBe(
+      commandMap.RESTART_SHIFT_INTERVAL
     );
   });
 

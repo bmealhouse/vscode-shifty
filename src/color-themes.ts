@@ -22,7 +22,7 @@ export function activateColorThemes(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHIFT_COLOR_THEME, async () => {
       await shiftColorTheme();
-      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+      await vscode.commands.executeCommand(commandMap.RESTART_SHIFT_INTERVAL);
     }),
     vscode.commands.registerCommand(
       commandMap.TOGGLE_FAVORITE_COLOR_THEME,
@@ -58,7 +58,7 @@ export function activateColorThemes(context: vscode.ExtensionContext): void {
       const currentColorTheme = getColorTheme();
 
       await shiftColorTheme();
-      await vscode.commands.executeCommand(commandMap.RESET_SHIFT_INTERVAL);
+      await vscode.commands.executeCommand(commandMap.RESTART_SHIFT_INTERVAL);
 
       const config = vscode.workspace.getConfiguration("shifty.colorThemes");
       const ignoreColorThemes = config.get<string[]>("ignoreColorThemes", []);

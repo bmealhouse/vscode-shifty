@@ -1,4 +1,5 @@
 import expect from "expect";
+import sinon from "sinon";
 import vscode from "vscode";
 
 import {
@@ -12,6 +13,7 @@ import { updateConfig, sleep, wait } from "../test/utils";
 import * as ipcServer from "./ipc-server";
 import * as ipcClient from "./ipc-client";
 import { ConnectionOptions } from "./ipc-types";
+import { setInitialContext } from ".";
 
 const connectionOptions: ConnectionOptions = {
   serverId: "fake-id",
@@ -22,6 +24,21 @@ const connectionOptions: ConnectionOptions = {
 };
 
 suite("shift-interval/index.test.ts", () => {
+  test('sets initial context for "shifty.isShiftIntervalRunning"', async () => {
+    // arrange
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
+    // act
+    await setInitialContext();
+
+    // assert
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isShiftIntervalRunning",
+      false,
+    ]);
+  });
+
   test("registers shift interval commands at vscode start up", async () => {
     // arrange
     // act
@@ -30,7 +47,7 @@ suite("shift-interval/index.test.ts", () => {
     // assert
     expect(commands).toContain(commandMap.START_SHIFT_INTERVAL);
     expect(commands).toContain(commandMap.PAUSE_SHIFT_INTERVAL);
-    expect(commands).toContain(commandMap.RESET_SHIFT_INTERVAL);
+    expect(commands).toContain(commandMap.RESTART_SHIFT_INTERVAL);
   });
 
   test("registers client socket with node-ipc server", async () => {
@@ -148,6 +165,8 @@ suite("shift-interval/index.test.ts", () => {
 
   test('should start the shift interval on VS Code startup when "shifty.shiftInterval.automaticallyStartShiftInterval" setting is enabled', async () => {
     // arrange
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
     // act
     const server = await ipcServer.start(connectionOptions);
     const client = await ipcClient.connect(connectionOptions);
@@ -156,6 +175,11 @@ suite("shift-interval/index.test.ts", () => {
     await wait(() => {
       expect(client.statusMessagesReceived).toBeGreaterThan(0);
     });
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isShiftIntervalRunning",
+      true,
+    ]);
 
     // cleanup
     await client.close();
@@ -168,6 +192,7 @@ suite("shift-interval/index.test.ts", () => {
       "shifty.shiftInterval.automaticallyStartShiftInterval",
       false
     );
+    const spy = sinon.spy(vscode.commands, "executeCommand");
 
     // act
     const server = await ipcServer.start(connectionOptions);
@@ -176,6 +201,7 @@ suite("shift-interval/index.test.ts", () => {
 
     // assert
     expect(client.statusMessagesReceived).toBe(0);
+    expect(spy.called).toBe(false);
 
     // cleanup
     await client.close();
@@ -186,6 +212,7 @@ suite("shift-interval/index.test.ts", () => {
     // arrange
     await updateConfig("shifty.shiftInterval.shiftColorThemeIntervalMin", null);
     await updateConfig("shifty.shiftInterval.shiftFontFamilyIntervalMin", null);
+    const spy = sinon.spy(vscode.commands, "executeCommand");
 
     // act
     const server = await ipcServer.start(connectionOptions);
@@ -194,6 +221,7 @@ suite("shift-interval/index.test.ts", () => {
 
     // assert
     expect(client.statusMessagesReceived).toBe(0);
+    expect(spy.called).toBe(false);
 
     // cleanup
     await client.close();
@@ -204,6 +232,7 @@ suite("shift-interval/index.test.ts", () => {
     // arrange
     await updateConfig("shifty.shiftInterval.shiftColorThemeIntervalMin", 0);
     await updateConfig("shifty.shiftInterval.shiftFontFamilyIntervalMin", 0);
+    const spy = sinon.spy(vscode.commands, "executeCommand");
 
     // act
     const server = await ipcServer.start(connectionOptions);
@@ -212,6 +241,7 @@ suite("shift-interval/index.test.ts", () => {
 
     // assert
     expect(client.statusMessagesReceived).toBe(0);
+    expect(spy.called).toBe(false);
 
     // cleanup
     await client.close();
@@ -224,6 +254,8 @@ suite("shift-interval/index.test.ts", () => {
     const client = await ipcClient.connect(connectionOptions);
     await sleep(50);
 
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
     // act
     server.pauseShiftInterval(); // FIXME: would be nice to be able to await this
     await sleep(50);
@@ -234,6 +266,11 @@ suite("shift-interval/index.test.ts", () => {
     expect(client.statusMessagesReceived).toEqual(
       previousStatusMessagesReceived
     );
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isShiftIntervalRunning",
+      false,
+    ]);
 
     // cleanup
     await client.close();
@@ -246,6 +283,8 @@ suite("shift-interval/index.test.ts", () => {
     const client = await ipcClient.connect(connectionOptions);
     await sleep(50);
 
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
     // act
     await client.pauseShiftInterval();
     await sleep(50);
@@ -256,6 +295,11 @@ suite("shift-interval/index.test.ts", () => {
     expect(client.statusMessagesReceived).toEqual(
       previousStatusMessagesReceived
     );
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isShiftIntervalRunning",
+      false,
+    ]);
 
     // cleanup
     await client.close();
@@ -278,6 +322,8 @@ suite("shift-interval/index.test.ts", () => {
       previousStatusMessagesReceived
     );
 
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
     // act
     server.startShiftInterval();
     await sleep(50);
@@ -286,6 +332,11 @@ suite("shift-interval/index.test.ts", () => {
     expect(client.statusMessagesReceived).toBeGreaterThan(
       previousStatusMessagesReceived
     );
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isShiftIntervalRunning",
+      true,
+    ]);
 
     // cleanup
     await client.close();
@@ -308,6 +359,8 @@ suite("shift-interval/index.test.ts", () => {
       previousStatusMessagesReceived
     );
 
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
     // act
     await client.startShiftInterval();
     await sleep(50);
@@ -316,13 +369,18 @@ suite("shift-interval/index.test.ts", () => {
     expect(client.statusMessagesReceived).toBeGreaterThan(
       previousStatusMessagesReceived
     );
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isShiftIntervalRunning",
+      true,
+    ]);
 
     // cleanup
     await client.close();
     server.close();
   });
 
-  test('should reset the shift interval on the server when running the "RESET_SHIFT_INTERVAL" command', async () => {
+  test('should restart the shift interval on the server when running the "RESTART_SHIFT_INTERVAL" command', async () => {
     // arrange
     const server = await ipcServer.start(connectionOptions);
     const client = await ipcClient.connect(connectionOptions);
@@ -332,7 +390,7 @@ suite("shift-interval/index.test.ts", () => {
       client.lastUpdateStatusMessageReceived;
 
     // act
-    server.resetShiftInterval();
+    server.restartShiftInterval();
     await sleep(50);
 
     // assert
@@ -352,7 +410,7 @@ suite("shift-interval/index.test.ts", () => {
     server.close();
   });
 
-  test('should reset the shift interval on the client when running the "RESET_SHIFT_INTERVAL" command', async () => {
+  test('should restart the shift interval on the client when running the "RESTART_SHIFT_INTERVAL" command', async () => {
     // arrange
     const server = await ipcServer.start(connectionOptions);
     const client = await ipcClient.connect(connectionOptions);
@@ -362,7 +420,7 @@ suite("shift-interval/index.test.ts", () => {
       client.lastUpdateStatusMessageReceived;
 
     // act
-    await client.resetShiftInterval();
+    await client.restartShiftInterval();
     await sleep(50);
 
     // assert
