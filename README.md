@@ -9,6 +9,10 @@
 - [Displays the remaining time until your next shift in the status bar](#shift-interval)
 - [Highly configurable](#settings)
 
+<!-- TODO: https://code.visualstudio.com/updates/v1_59#_rich-status-bar-hover -->
+<!-- TODO: https://code.visualstudio.com/updates/v1_58#_settings-editor -->
+<!-- TODO: https://code.visualstudio.com/updates/v1_57#_status-bar-item-id-and-name-properties -->
+
 <!-- TODO: Record new gif -->
 ![shifty status](./images/shifty-status.gif)
 
@@ -61,22 +65,24 @@ The shift interval is the bread & butter of shifty. It will start automatically 
 
 ## Commands
 
+<!-- TODO: ensure favorite/unfavorite font family is tested and working -->
+<!-- TODO: ensure favorite/unfavorite color theme is tested and working -->
+
 All shifty features have commands associated with them. Open the VS Code command palette (`⇧⌘P`) and type `shifty` to see the list of commands available to you.
 
-- Shift – _shifts color theme & font family_
-- Shift color theme
-- Shift font family
-- Favorite color theme <!-- TODO: Ensure implementation works -->
-- Unfavorite color theme <!-- TODO: Ensure implementation works -->
-- Ignore color theme - _ignores & unfavorites the color theme_
-- Favorite font family <!-- TODO: Ensure implementation works -->
-- Unfavorite font family <!-- TODO: Ensure implementaion works -->
-- Ignore font family - _ignores & unfavorites the font family_
-- Start shift interval
-- Pause shift interval
-- Restart shift interval <!-- TODO: Rename to Restart? -->
-- Show status
-- Enable debugging
+- Shift – _shifts your color theme & font family_
+- Shift color theme – _shifts your color theme_
+- Shift font family – _shifts your font family_
+- Favorite color theme – _adds the current color theme to you favorites_
+- Unfavorite color theme – _removes the current color theme from your favorites_
+- Ignore color theme - _ignores & unfavorites the current color theme_
+- Favorite font family – _adds the current font family to your favoties_
+- Unfavorite font family – _removes the current font family from your favorites_
+- Ignore font family - _ignores & unfavorites the current font family_
+- Start shift interval – _starts the shift interval_
+- Pause shift interval – _pauses the shift interval_
+- Restart shift interval – _restarts the shift interval timer_
+- Show status – _displays your current color theme & font family_
 
 ## Settings
 

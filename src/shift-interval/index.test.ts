@@ -23,7 +23,7 @@ const connectionOptions: ConnectionOptions = {
   lastPauseTime: 0,
 };
 
-suite("shift-interval/index.test.ts", () => {
+suite.only("shift-interval/index.test.ts", () => {
   test('sets initial context for "shifty.isShiftIntervalRunning"', async () => {
     // arrange
     const spy = sinon.spy(vscode.commands, "executeCommand");
@@ -583,23 +583,28 @@ suite("shift-interval/index.test.ts", () => {
     server.close();
   });
 
-  test("should shift the font family when the remaining time is <= 0", async () => {
+  test.only("should shift the font family when the remaining time is <= 0", async () => {
     // arrage
     await updateConfig("shifty.shiftInterval.shiftColorThemeIntervalMin", 10);
     await updateConfig("shifty.shiftInterval.shiftFontFamilyIntervalMin", 0.01);
     await updateConfig("shifty.fontFamilies.fallbackFontFamily", ""); // prime the cache
 
     // act
+    console.log("> starting server");
     const server = await ipcServer.start(connectionOptions);
+    console.log("> connecting client");
     const client = await ipcClient.connect(connectionOptions);
 
     // assert
     await wait(() => {
+      console.log("> testing font family client");
       expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
     });
 
     // cleanup
+    console.log("> closing client");
     await client.close();
+    console.log("> closing server");
     server.close();
   });
 

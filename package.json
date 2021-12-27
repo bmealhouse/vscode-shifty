@@ -140,19 +140,33 @@
         "category": "shifty"
       },
       {
-        "command": "shifty.toggleFavoriteColorTheme",
-        "title": "Toggle favorite color theme",
-        "category": "shifty"
+        "command": "shifty.favoriteColorTheme",
+        "title": "Favorite color theme",
+        "category": "shifty",
+        "enablement": "!shifty.isFavoriteColorTheme"
       },
       {
-        "command": "shifty.toggleFavoriteFontFamily",
-        "title": "Toggle favorite font family",
-        "category": "shifty"
+        "command": "shifty.unfavoriteColorTheme",
+        "title": "Unfavorite color theme",
+        "category": "shifty",
+        "enablement": "shifty.isFavoriteColorTheme"
       },
       {
         "command": "shifty.ignoreColorTheme",
         "title": "Ignore color theme",
         "category": "shifty"
+      },
+      {
+        "command": "shifty.favoriteFontFamily",
+        "title": "Favorite font family",
+        "category": "shifty",
+        "enablement": "!shifty.isFavoriteFontFamily"
+      },
+      {
+        "command": "shifty.unfavoriteFontFamily",
+        "title": "Unfavorite font family",
+        "category": "shifty",
+        "enablement": "shifty.isFavoriteFontFamily"
       },
       {
         "command": "shifty.ignoreFontFamily",

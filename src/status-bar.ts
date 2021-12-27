@@ -11,6 +11,7 @@ const STATUS_BAR_PRIORITY = 0;
 
 let statusBar: vscode.StatusBarItem;
 
+// TODO: implement status bar hover capabilities
 export function activateStatusBar(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHOW_STATUS, () => {
@@ -42,10 +43,8 @@ export function activateStatusBar(context: vscode.ExtensionContext): void {
           if (action) {
             void vscode.commands.executeCommand(
               {
-                [actionTextMap.FAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
-                [actionTextMap.UNFAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
+                [actionTextMap.FAVORITE]: commandMap.FAVORITE_FONT_FAMILY,
+                [actionTextMap.UNFAVORITE]: commandMap.UNFAVORITE_FONT_FAMILY,
                 [actionTextMap.IGNORE]: commandMap.IGNORE_FONT_FAMILY,
                 [actionTextMap.SHIFT]: commandMap.SHIFT_FONT_FAMILY,
               }[action]
@@ -66,10 +65,8 @@ export function activateStatusBar(context: vscode.ExtensionContext): void {
           if (action) {
             void vscode.commands.executeCommand(
               {
-                [actionTextMap.FAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_COLOR_THEME,
-                [actionTextMap.UNFAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_COLOR_THEME,
+                [actionTextMap.FAVORITE]: commandMap.FAVORITE_COLOR_THEME,
+                [actionTextMap.UNFAVORITE]: commandMap.UNFAVORITE_COLOR_THEME,
                 [actionTextMap.IGNORE]: commandMap.IGNORE_COLOR_THEME,
                 [actionTextMap.SHIFT]: commandMap.SHIFT_COLOR_THEME,
               }[action]

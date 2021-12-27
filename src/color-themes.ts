@@ -19,39 +19,47 @@ export function activateColorThemes(context: vscode.ExtensionContext): void {
   cache = getCache();
   nextColorTheme = getNextColorTheme();
 
+  // TODO: setContext in activation
+
   context.subscriptions.push(
     vscode.commands.registerCommand(commandMap.SHIFT_COLOR_THEME, async () => {
       await shiftColorTheme();
       await vscode.commands.executeCommand(commandMap.RESTART_SHIFT_INTERVAL);
     }),
     vscode.commands.registerCommand(
-      commandMap.TOGGLE_FAVORITE_COLOR_THEME,
+      commandMap.FAVORITE_COLOR_THEME,
       async () => {
         const currentColorTheme = getColorTheme();
         const config = vscode.workspace.getConfiguration("shifty.colorThemes");
         const favorites = config.get<string[]>("favoriteColorThemes", []);
 
-        if (favorites.includes(currentColorTheme)) {
-          await config.update(
-            "favoriteColorThemes",
-            unique(
-              favorites.filter((colorTheme) => colorTheme !== currentColorTheme)
-            ).sort(localeCompare),
-            vscode.ConfigurationTarget.Global
-          );
-          void vscode.window.showInformationMessage(
-            `Removed "${currentColorTheme}" from favorites`
-          );
-        } else {
-          await config.update(
-            "favoriteColorThemes",
-            unique([...favorites, currentColorTheme]).sort(localeCompare),
-            vscode.ConfigurationTarget.Global
-          );
-          void vscode.window.showInformationMessage(
-            `Added "${currentColorTheme}" to favorites`
-          );
-        }
+        await config.update(
+          "favoriteColorThemes",
+          unique([...favorites, currentColorTheme]).sort(localeCompare),
+          vscode.ConfigurationTarget.Global
+        );
+        void vscode.window.showInformationMessage(
+          `Added "${currentColorTheme}" to favorites`
+        );
+      }
+    ),
+    vscode.commands.registerCommand(
+      commandMap.UNFAVORITE_COLOR_THEME,
+      async () => {
+        const currentColorTheme = getColorTheme();
+        const config = vscode.workspace.getConfiguration("shifty.colorThemes");
+        const favorites = config.get<string[]>("favoriteColorThemes", []);
+
+        await config.update(
+          "favoriteColorThemes",
+          unique(
+            favorites.filter((colorTheme) => colorTheme !== currentColorTheme)
+          ).sort(localeCompare),
+          vscode.ConfigurationTarget.Global
+        );
+        void vscode.window.showInformationMessage(
+          `Removed "${currentColorTheme}" from favorites`
+        );
       }
     ),
     vscode.commands.registerCommand(commandMap.IGNORE_COLOR_THEME, async () => {
@@ -122,7 +130,18 @@ function getNextColorTheme(currentColorTheme?: string): string {
 export async function setColorTheme(colorTheme: string): Promise<void> {
   const target = vscode.ConfigurationTarget.Global;
   const workbench = vscode.workspace.getConfiguration("workbench");
-  await workbench.update("colorTheme", colorTheme, target);
+  const favorites = vscode.workspace
+    .getConfiguration("shifty.colorThemes")
+    .get<string[]>("favoriteColorThemes", []);
+
+  await Promise.all([
+    workbench.update("colorTheme", colorTheme, target),
+    vscode.commands.executeCommand(
+      "setContext",
+      "shifty.isFavoriteColorTheme",
+      favorites.includes(colorTheme)
+    ),
+  ]);
 }
 
 function getCache(): string[] {

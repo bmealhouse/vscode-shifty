@@ -3,7 +3,12 @@ import sinon from "sinon";
 import vscode from "vscode";
 
 import { commandMap, DEFAULT_FONT_FAMILY } from "./constants";
-import { getFontFamily, getRawCache, setFontFamily } from "./font-families";
+import {
+  getFontFamily,
+  getRawCache,
+  setFontFamily,
+  setContextForIsFavoriteFontFamily,
+} from "./font-families";
 import { updateConfig } from "./test/utils";
 
 suite("font-families.test.ts", () => {
@@ -62,6 +67,39 @@ suite("font-families.test.ts", () => {
     }
   });
 
+  test('sets initial context for "shifty.isFavoriteFontFamily" to false when the current font family is not favorited', async () => {
+    // arrange
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
+    // act
+    await setContextForIsFavoriteFontFamily();
+
+    // assert
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isFavoriteFontFamily",
+      false,
+    ]);
+  });
+
+  test('sets initial context for "shifty.isFavoriteFontFamily" to true when the current font family has been favorited', async () => {
+    // arrange
+    await updateConfig("shifty.fontFamilies.favoriteFontFamilies", [
+      DEFAULT_FONT_FAMILY,
+    ]);
+    const spy = sinon.spy(vscode.commands, "executeCommand");
+
+    // act
+    await setContextForIsFavoriteFontFamily();
+
+    // assert
+    expect(spy.firstCall.args).toStrictEqual([
+      "setContext",
+      "shifty.isFavoriteFontFamily",
+      true,
+    ]);
+  });
+
   test("registers font family commands at vscode start up", async () => {
     // arrange
     // act
@@ -69,7 +107,8 @@ suite("font-families.test.ts", () => {
 
     // assert
     expect(commands).toContain(commandMap.SHIFT_FONT_FAMILY);
-    expect(commands).toContain(commandMap.TOGGLE_FAVORITE_FONT_FAMILY);
+    expect(commands).toContain(commandMap.FAVORITE_FONT_FAMILY);
+    expect(commands).toContain(commandMap.UNFAVORITE_FONT_FAMILY);
     expect(commands).toContain(commandMap.IGNORE_FONT_FAMILY);
   });
 
@@ -85,14 +124,12 @@ suite("font-families.test.ts", () => {
     expect(spy.lastCall.firstArg).toBe(commandMap.RESTART_SHIFT_INTERVAL);
   });
 
-  test('favorites the current font family when running the "TOGGLE_FAVORITE_FONT_FAMILY" command', async () => {
+  test('favorites the current font family when running the "FAVORITE_FONT_FAMILY" command', async () => {
     // arrange
     const spy = sinon.spy(vscode.window, "showInformationMessage");
 
     // act
-    await vscode.commands.executeCommand(
-      commandMap.TOGGLE_FAVORITE_FONT_FAMILY
-    );
+    await vscode.commands.executeCommand(commandMap.FAVORITE_FONT_FAMILY);
 
     // assert
     const { favoriteFontFamilies } = vscode.workspace.getConfiguration(
@@ -102,16 +139,14 @@ suite("font-families.test.ts", () => {
     expect(spy.firstCall.firstArg).toBe('Added "Courier New" to favorites');
   });
 
-  test('unfavorites the current font family when running the "TOGGLE_FAVORITE_FONT_FAMILY" command', async () => {
+  test('unfavorites the current font family when running the "UNFAVORITE_FONT_FAMILY" command', async () => {
     // arrange
     const favorites = [DEFAULT_FONT_FAMILY, "Menlo"];
     await updateConfig("shifty.fontFamilies.favoriteFontFamilies", favorites);
     const spy = sinon.spy(vscode.window, "showInformationMessage");
 
     // act
-    await vscode.commands.executeCommand(
-      commandMap.TOGGLE_FAVORITE_FONT_FAMILY
-    );
+    await vscode.commands.executeCommand(commandMap.UNFAVORITE_FONT_FAMILY);
 
     // assert
     const { favoriteFontFamilies } = vscode.workspace.getConfiguration(

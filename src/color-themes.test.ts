@@ -18,7 +18,8 @@ suite("color-themes.test.ts", () => {
 
     // assert
     expect(commands).toContain(commandMap.SHIFT_COLOR_THEME);
-    expect(commands).toContain(commandMap.TOGGLE_FAVORITE_COLOR_THEME);
+    expect(commands).toContain(commandMap.FAVORITE_COLOR_THEME);
+    expect(commands).toContain(commandMap.UNFAVORITE_COLOR_THEME);
     expect(commands).toContain(commandMap.IGNORE_COLOR_THEME);
   });
 
@@ -34,14 +35,12 @@ suite("color-themes.test.ts", () => {
     expect(spy.lastCall.firstArg).toBe(commandMap.RESTART_SHIFT_INTERVAL);
   });
 
-  test('favorites the current color theme when running the "TOGGLE_FAVORITE_COLOR_THEME" command', async () => {
+  test('favorites the current color theme when running the "FAVORITE_COLOR_THEME" command', async () => {
     // arrange
     const spy = sinon.spy(vscode.window, "showInformationMessage");
 
     // act
-    await vscode.commands.executeCommand(
-      commandMap.TOGGLE_FAVORITE_COLOR_THEME
-    );
+    await vscode.commands.executeCommand(commandMap.FAVORITE_COLOR_THEME);
 
     // assert
     const { favoriteColorThemes } = vscode.workspace.getConfiguration(
@@ -51,16 +50,14 @@ suite("color-themes.test.ts", () => {
     expect(spy.firstCall.firstArg).toBe('Added "Default Dark+" to favorites');
   });
 
-  test('unfavorites the current color theme when running the "TOGGLE_FAVORITE_COLOR_THEME" command', async () => {
+  test('unfavorites the current color theme when running the "UNFAVORITE_COLOR_THEME" command', async () => {
     // arrange
     const favorites = ["Abyss", DEFAULT_COLOR_THEME];
     await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
     const spy = sinon.spy(vscode.window, "showInformationMessage");
 
     // act
-    await vscode.commands.executeCommand(
-      commandMap.TOGGLE_FAVORITE_COLOR_THEME
-    );
+    await vscode.commands.executeCommand(commandMap.UNFAVORITE_COLOR_THEME);
 
     // assert
     const { favoriteColorThemes } = vscode.workspace.getConfiguration(
