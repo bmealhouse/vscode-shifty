@@ -1,10 +1,15 @@
 .editorconfig
 .gitignore
-.vscode
+.prettierignore
+.vscode/**
+.vscode-test/**
+.yarnrc
 node_modules
-
-# extension
-.vscode-test
+out/**
 src/**
-package-json.lock
-tsconfig.json
+prettier.config.js
+webpack.config.js
+xo.config.js
+**/tsconfig.json
+**/*.map
+**/*.ts

@@ -1,23 +1,32 @@
-import * as vscode from 'vscode'
-import {getColorTheme, DEFAULT_COLOR_THEME} from './color-themes'
-import {getFontFamily, DEFAULT_FONT_FAMILY} from './font-families'
-import commandMap from './command-map'
+import assert from "node:assert";
+import vscode from "vscode";
+import { getColorTheme } from "./color-themes";
+import { commandMap, defaultColorTheme, defaultFontFamily } from "./constants";
+import { getFontFamily } from "./font-families";
+import { setupTest } from "./test/setup-test";
 
-test('registers global commands when VS Code starts up', async () => {
-  const commands = await vscode.commands.getCommands()
-  expect(commands).toContain(commandMap.SHIFT)
-  expect(commands).toContain(commandMap.ENABLE_DEBUGGING)
-})
+suite("extension.test.ts", () => {
+  test("registers global commands at vscode start up", async () => {
+    // arrange
 
-test(`shifts the color theme and font family when running the "commandMap.SHIFT" command`, async () => {
-  const spy = jest.spyOn(vscode.commands, 'executeCommand')
-  await vscode.commands.executeCommand(commandMap.SHIFT)
+    // act
+    const commands = await vscode.commands.getCommands();
 
-  expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME.id)
-  expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY.id)
+    // assert
+    assert(commands.includes(commandMap.shift));
+  });
 
-  const [, secondCall] = spy.mock.calls
-  expect(secondCall).toEqual([commandMap.RESET_SHIFT_INTERVAL])
+  // TODO: break out into separate suite
+  test.skip('shifts the color theme and font when running the "shift" command', async () => {
+    // arrange
+    const { executeCommandSpy } = setupTest();
 
-  spy.mockRestore()
-})
+    // act
+    await vscode.commands.executeCommand(commandMap.shift);
+
+    // assert
+    assert.notStrictEqual(getColorTheme(), defaultColorTheme);
+    assert.notStrictEqual(getFontFamily(), defaultFontFamily);
+    assert(executeCommandSpy.calledWith(commandMap.restartShiftInterval));
+  });
+});

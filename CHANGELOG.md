@@ -7,10 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add command enablement
+  - `shifty.startShiftInterval`
+  - `shifty.pauseShiftInterval`
+  - `shifty.restartShiftInterval`
+
 ### Changed
 
-- Use [vscode-jest-test-runner](https://github.com/bmealhouse/vscode-jest-test-runner)
 - Upgrade dependencies
+- Use minimal linting config
+- Rename command `shifty.resetShiftInterval` -> `shifty.restartShiftInterval`
+
+### Removed
+
+- Remove `shifty.enableDebugging` command
 
 ## [2.0.1] - 2020-01-11
 

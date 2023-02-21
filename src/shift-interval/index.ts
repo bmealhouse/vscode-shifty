@@ -1,41 +1,46 @@
-import * as vscode from 'vscode'
-import commandMap from '../command-map'
-import * as ipcClient from './ipc-client'
-import {ClientConnection, ServerConnection} from './ipc-types'
+import vscode from "vscode";
 
-let connection: ClientConnection | ServerConnection
+import { commandMap } from "../constants";
+import { ClientConnection, ServerConnection } from "./ipc-types";
+// import * as ipcClient from "./ipc-client";
+
+let connection: ClientConnection | ServerConnection;
 
 export async function activateShiftInterval(
   context: vscode.ExtensionContext,
 ): Promise<void> {
-  context.subscriptions.push(
-    vscode.commands.registerCommand(commandMap.START_SHIFT_INTERVAL, () => {
-      connection.startShiftInterval()
-    }),
-  )
+  // void setInitialContext();
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(commandMap.PAUSE_SHIFT_INTERVAL, () => {
-      connection.pauseShiftInterval()
+    // vscode.commands.registerCommand(commandMap.START_SHIFT_INTERVAL, () => {
+    //   void connection.startShiftInterval();
+    // }),
+    // vscode.commands.registerCommand(commandMap.PAUSE_SHIFT_INTERVAL, () => {
+    //   void connection.pauseShiftInterval();
+    // }),
+    vscode.commands.registerCommand(commandMap.restartShiftInterval, () => {
+      // void connection.restartShiftInterval();
     }),
-  )
+  );
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand(commandMap.RESET_SHIFT_INTERVAL, () => {
-      connection.resetShiftInterval()
-    }),
-  )
-
-  // 1. Attempt to connect as client.
-  connection = await ipcClient.connect()
+  // 1 // Attempt to connect to existing server as client
+  // connection = await ipcClient.connect();
 }
 
 export async function deactivateShiftInterval(): Promise<void> {
-  await connection.close()
+  await connection.close();
 }
 
 export function setConnection(
   nextConnection: ClientConnection | ServerConnection,
 ): void {
-  connection = nextConnection
+  connection = nextConnection;
+}
+
+export async function setInitialContext() {
+  return vscode.commands.executeCommand(
+    "setContext",
+    "shifty.isShiftIntervalRunning",
+    false,
+  );
 }

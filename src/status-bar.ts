@@ -1,91 +1,94 @@
-import * as vscode from 'vscode'
-import commandMap from './command-map'
-import {getColorTheme, hasFavoritedColorTheme} from './color-themes'
-import {getFontFamily, hasFavoritedFontFamily} from './font-families'
+import * as vscode from "vscode";
 
-const STATUS_BAR_DISPLAY_TEXT = '$(color-mode) shifty'
-const STATUS_BAR_PRIORITY = 0
+import { commandMap } from "./constants";
+import { getColorTheme } from "./color-themes";
+import { getFontFamily } from "./font-families";
 
-let statusBar: vscode.StatusBarItem
+const STATUS_BAR_DISPLAY_TEXT = "$(color-mode) shifty";
+const STATUS_BAR_PRIORITY = 0;
+// const COLOR_THEME_ICON = "$(color-mode)"; // activate-breakpoints, color-mode
+// const FONT_FAMILY_ICON = "$(text-size)"; // case-sensitive, symbol-parameter, symbol-text, text-size
 
+let statusBar: vscode.StatusBarItem;
+
+// TODO: implement status bar hover capabilities
 export function activateStatusBar(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
-    vscode.commands.registerCommand(commandMap.SHOW_STATUS, () => {
-      const fontFamily = getFontFamily()
-      const colorTheme = getColorTheme()
+    vscode.commands.registerCommand(commandMap.showStatus, () => {
+      const fontFamily = getFontFamily();
+      const colorTheme = getColorTheme();
+
+      const {
+        colorThemes: { favoriteColorThemes },
+        fontFamilies: { favoriteFontFamilies },
+      } = vscode.workspace.getConfiguration("shifty");
 
       const actionTextMap = {
-        UNFAVORITE: 'Unfavorite',
-        FAVORITE: 'Favorite',
-        IGNORE: 'Ignore',
-        SHIFT: 'Shift',
-      }
+        UNFAVORITE: "Unfavorite",
+        FAVORITE: "Favorite",
+        IGNORE: "Ignore",
+        SHIFT: "Shift",
+      };
 
-      vscode.window
+      void vscode.window
         .showInformationMessage(
           `Using "${fontFamily}" font family`,
-          hasFavoritedFontFamily(fontFamily)
+          favoriteFontFamilies.includes(fontFamily)
             ? actionTextMap.UNFAVORITE
             : actionTextMap.FAVORITE,
           actionTextMap.IGNORE,
           actionTextMap.SHIFT,
         )
-        .then(action => {
+        .then((action) => {
           if (action) {
-            vscode.commands.executeCommand(
-              // eslint-disable-next-line no-use-extend-native/no-use-extend-native
+            void vscode.commands.executeCommand(
               {
-                [actionTextMap.FAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
-                [actionTextMap.UNFAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_FONT_FAMILY,
-                [actionTextMap.IGNORE]: commandMap.IGNORE_FONT_FAMILY,
-                [actionTextMap.SHIFT]: commandMap.SHIFT_FONT_FAMILY,
+                [actionTextMap.FAVORITE]: commandMap.favoriteFontFamily,
+                [actionTextMap.UNFAVORITE]: commandMap.unfavoriteFontFamily,
+                [actionTextMap.IGNORE]: commandMap.ignoreFontFamily,
+                [actionTextMap.SHIFT]: commandMap.shiftFontFamily,
               }[action],
-            )
+            );
           }
-        })
+        });
 
-      vscode.window
+      void vscode.window
         .showInformationMessage(
           `Using "${colorTheme}" color theme`,
-          hasFavoritedColorTheme(colorTheme)
+          favoriteColorThemes.includes(colorTheme)
             ? actionTextMap.UNFAVORITE
             : actionTextMap.FAVORITE,
           actionTextMap.IGNORE,
           actionTextMap.SHIFT,
         )
-        .then(action => {
+        .then((action) => {
           if (action) {
-            vscode.commands.executeCommand(
-              // eslint-disable-next-line no-use-extend-native/no-use-extend-native
+            void vscode.commands.executeCommand(
               {
-                [actionTextMap.FAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_COLOR_THEME,
-                [actionTextMap.UNFAVORITE]:
-                  commandMap.TOGGLE_FAVORITE_COLOR_THEME,
-                [actionTextMap.IGNORE]: commandMap.IGNORE_COLOR_THEME,
-                [actionTextMap.SHIFT]: commandMap.SHIFT_COLOR_THEME,
+                [actionTextMap.FAVORITE]: commandMap.favoriteColorTheme,
+                [actionTextMap.UNFAVORITE]: commandMap.unfavoriteColorTheme,
+                [actionTextMap.IGNORE]: commandMap.ignoreColorTheme,
+                [actionTextMap.SHIFT]: commandMap.shiftColorTheme,
               }[action],
-            )
+            );
           }
-        })
+        });
     }),
-  )
+  );
 
   statusBar = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     STATUS_BAR_PRIORITY,
-  )
+  );
 
-  statusBar.command = commandMap.SHOW_STATUS
-  statusBar.text = STATUS_BAR_DISPLAY_TEXT
-  context.subscriptions.push(statusBar)
+  statusBar.command = commandMap.showStatus;
+  statusBar.text = STATUS_BAR_DISPLAY_TEXT;
+  context.subscriptions.push(statusBar);
 
-  statusBar.show()
+  statusBar.show();
 }
 
 export function updateStatusBarText(text: string): void {
-  if (!statusBar) return
-  statusBar.text = `${STATUS_BAR_DISPLAY_TEXT}: ${text}`
+  if (!statusBar) return;
+  statusBar.text = `${STATUS_BAR_DISPLAY_TEXT}: ${text}`;
 }

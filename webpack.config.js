@@ -1,20 +1,24 @@
-const path = require('path')
+const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 
-module.exports = {
-  target: 'node',
-  entry: './src/extension.ts',
+/** @type {import('webpack').Configuration} */
+const config = {
+  target: "node", // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
+  mode: "none", // this leaves the source code as close as possible to the original (when packaging we set this to 'production')
+  entry: "./src/extension.ts", // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'extension.js',
-    libraryTarget: 'commonjs2',
-    devtoolModuleFilenameTemplate: '../[resource-path]',
+    // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
+    path: path.resolve(__dirname, "dist"),
+    filename: "extension.js",
+    libraryTarget: "commonjs2",
   },
-  devtool: 'source-map',
+  devtool: "nosources-source-map",
   externals: {
-    vscode: 'commonjs vscode',
+    vscode: "commonjs vscode", // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
+    extensions: [".ts", ".js"],
   },
   module: {
     rules: [
@@ -23,10 +27,22 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader',
+            loader: "ts-loader",
           },
         ],
       },
     ],
   },
-}
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "node_modules/node-monospace-fonts/prebuilds",
+          to: "prebuilds",
+        },
+      ],
+    }),
+  ],
+};
+
+module.exports = config;

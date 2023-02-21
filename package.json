@@ -2,7 +2,7 @@
   "name": "shifty",
   "displayName": "shifty",
   "description": "Shifts your color theme & font family automatically",
-  "version": "2.0.1",
+  "version": "3.0.0-canary.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -14,7 +14,8 @@
   "author": "Brent Mealhouse <bmealhouse@gmail.com>",
   "publisher": "bmealhouse",
   "engines": {
-    "vscode": "^1.31.0"
+    "node": ">=14.0.0",
+    "vscode": "^1.69.0"
   },
   "categories": [
     "Themes",
@@ -24,8 +25,7 @@
     "shift",
     "random",
     "theme",
-    "font",
-    "pomodoro"
+    "font"
   ],
   "icon": "images/shifty-logo.png",
   "galleryBanner": {
@@ -33,7 +33,7 @@
     "theme": "dark"
   },
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -56,6 +56,25 @@
             "Cycles through favorite color themes & font families."
           ]
         },
+        "shifty.colorThemes.colorThemeType": {
+          "type": "string",
+          "default": "auto-detect",
+          "description": "Controls the type of color themes the shift between. When auto-detect is enabled, ensure window.autoDetectColorScheme and window.autoDetectHighContrast are also enabled.",
+          "enum": [
+            "auto-detect",
+            "dark",
+            "light",
+            "high-contrast-dark",
+            "high-contrast-light"
+          ],
+          "enumDescriptions": [
+            "Automatically detects the color theme type based on the OS appearance.",
+            "Only dark color themes.",
+            "Only light color themes.",
+            "Only high-contrast dark color themes.",
+            "Only high-contrast light color themes."
+          ]
+        },
         "shifty.colorThemes.favoriteColorThemes": {
           "type": "array",
           "default": [],
@@ -66,21 +85,6 @@
           "default": [],
           "description": "List of color themes you've ignored."
         },
-        "shifty.colorThemes.ignoreDarkColorThemes": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether dark color themes are ignored."
-        },
-        "shifty.colorThemes.ignoreHighContrastColorThemes": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether high contrast color themes are ignored."
-        },
-        "shifty.colorThemes.ignoreLightColorThemes": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether light color themes are ignored."
-        },
         "shifty.fontFamilies.fallbackFontFamily": {
           "type": "string",
           "default": "monospace",
@@ -90,11 +94,6 @@
           "type": "array",
           "default": [],
           "description": "List of font families you've favorited."
-        },
-        "shifty.fontFamilies.ignoreCodefaceFontFamilies": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether Codeface font families are ignored."
         },
         "shifty.fontFamilies.ignoreFontFamilies": {
           "type": "array",
@@ -146,19 +145,33 @@
         "category": "shifty"
       },
       {
-        "command": "shifty.toggleFavoriteColorTheme",
-        "title": "Toggle favorite color theme",
-        "category": "shifty"
+        "command": "shifty.favoriteColorTheme",
+        "title": "Favorite color theme",
+        "category": "shifty",
+        "enablement": "!shifty.isFavoriteColorTheme"
       },
       {
-        "command": "shifty.toggleFavoriteFontFamily",
-        "title": "Toggle favorite font family",
-        "category": "shifty"
+        "command": "shifty.unfavoriteColorTheme",
+        "title": "Unfavorite color theme",
+        "category": "shifty",
+        "enablement": "shifty.isFavoriteColorTheme"
       },
       {
         "command": "shifty.ignoreColorTheme",
         "title": "Ignore color theme",
         "category": "shifty"
+      },
+      {
+        "command": "shifty.favoriteFontFamily",
+        "title": "Favorite font family",
+        "category": "shifty",
+        "enablement": "!shifty.isFavoriteFontFamily"
+      },
+      {
+        "command": "shifty.unfavoriteFontFamily",
+        "title": "Unfavorite font family",
+        "category": "shifty",
+        "enablement": "shifty.isFavoriteFontFamily"
       },
       {
         "command": "shifty.ignoreFontFamily",
@@ -168,153 +181,103 @@
       {
         "command": "shifty.startShiftInterval",
         "title": "Start shift interval",
-        "category": "shifty"
+        "category": "shifty",
+        "enablement": "!shifty.isShiftIntervalRunning"
       },
       {
         "command": "shifty.pauseShiftInterval",
         "title": "Pause shift interval",
-        "category": "shifty"
+        "category": "shifty",
+        "enablement": "shifty.isShiftIntervalRunning"
       },
       {
-        "command": "shifty.resetShiftInterval",
-        "title": "Reset shift interval",
-        "category": "shifty"
+        "command": "shifty.restartShiftInterval",
+        "title": "Restart shift interval",
+        "category": "shifty",
+        "enablement": "shifty.isShiftIntervalRunning"
       },
       {
         "command": "shifty.showStatus",
         "title": "Show status",
         "category": "shifty"
-      },
-      {
-        "command": "shifty.enableDebugging",
-        "title": "Enable debugging",
-        "category": "shifty"
       }
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "*.ts": [
-      "xo",
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,ts}": "eslint"
   },
   "prettier": {
     "useTabs": false,
-    "semi": false,
-    "singleQuote": true,
     "trailingComma": "all",
-    "bracketSpacing": false
-  },
-  "xo": {
-    "envs": [
-      "jest"
-    ],
-    "ignores": [
-      "webpack.config.js"
-    ],
-    "prettier": true,
-    "plugins": [
-      "filenames"
-    ],
-    "extends": "xo-typescript",
-    "extensions": [
-      "ts"
-    ],
-    "settings": {
-      "import/core-modules": [
-        "vscode"
-      ]
-    },
-    "rules": {
-      "unicorn/no-abusive-eslint-disable": "off",
-      "capitalized-comments": "off",
-      "@typescript-eslint/indent": [
-        "error",
-        2
-      ],
-      "@typescript-eslint/member-delimiter-style": [
-        "error",
-        {
-          "multiline": {
-            "delimiter": "none"
-          }
-        }
-      ],
-      "@typescript-eslint/no-empty-function": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          "ignoreRestSiblings": true,
-          "argsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_"
-        }
-      ],
-      "@typescript-eslint/semi": [
-        "error",
-        "never"
-      ],
-      "filenames/match-exported": [
-        "error",
-        "kebab",
-        "^__"
-      ]
-    },
-    "overrides": [
-      {
-        "files": "**/*.test.ts",
-        "rules": {
-          "@typescript-eslint/quotes": "off"
-        }
-      }
-    ]
+    "singleQuote": false,
+    "bracketSpacing": true
   },
   "dependencies": {
-    "node-ipc": "9.1.1",
-    "shortid": "2.2.15"
+    "multicast-dns": "7.2.5",
+    "node-fetch": "2.x",
+    "node-ipc": "9.1.4",
+    "node-monospace-fonts": "0.0.3",
+    "shortid": "2.2.16"
   },
   "devDependencies": {
-    "@types/jest": "25.1.2",
-    "@types/node": "13.7.1",
-    "@types/node-ipc": "9.1.1",
+    "@types/glob": "7.1.3",
+    "@types/mocha": "8.2.1",
+    "@types/node": "14.14.34",
+    "@types/node-fetch": "2.6.2",
+    "@types/node-ipc": "9.1.3",
     "@types/shortid": "0.0.29",
-    "@types/source-map-support": "0.5.1",
-    "@typescript-eslint/eslint-plugin": "2.19.2",
-    "@typescript-eslint/parser": "2.19.2",
-    "babel-eslint": "10.0.3",
-    "eslint": "6.8.0",
-    "eslint-config-xo-typescript": "0.26.0",
-    "eslint-plugin-filenames": "1.3.2",
-    "husky": "4.2.3",
-    "jest": "25.1.0",
-    "lint-staged": "10.0.7",
-    "patch-package": "6.2.0",
-    "rimraf": "3.0.2",
-    "source-map-support": "0.5.16",
-    "ts-jest": "25.2.0",
-    "ts-loader": "6.2.1",
-    "typescript": "3.7.5",
-    "vsce": "1.73.0",
-    "vscode": "1.1.36",
-    "vscode-jest-test-runner": "1.0.0",
+    "@types/sinon": "9.0.11",
+    "@types/vscode": "1.69.0",
+    "@typescript-eslint/eslint-plugin": "5.30.5",
+    "@typescript-eslint/parser": "5.30.5",
+    "@vscode/test-electron": "2.1.5",
+    "c8": "7.11.3",
+    "copy-webpack-plugin": "8.1.0",
+    "eslint": "8.19.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-config-xo": "0.41.0",
+    "eslint-config-xo-typescript": "0.51.1",
+    "eslint-plugin-eslint-comments": "3.2.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-n": "15.2.4",
+    "eslint-plugin-no-use-extend-native": "0.5.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-promise": "6.0.0",
+    "eslint-plugin-unicorn": "43.0.1",
+    "expect": "26.6.2",
+    "glob": "7.1.6",
+    "husky": "5.1.3",
+    "lint-staged": "10.5.4",
+    "mocha": "8.3.2",
+    "nyc": "15.1.0",
+    "patch-package": "6.4.7",
+    "prettier": "2.7.1",
+    "sinon": "9.2.4",
+    "ts-loader": "8.0.18",
+    "typescript": "4.2.3",
+    "vsce": "1.87.0",
+    "vscode-test": "1.5.1",
     "wait-for-expect": "3.0.2",
-    "webpack": "4.41.6",
-    "webpack-cli": "3.3.11",
-    "xo": "0.26.1"
+    "webpack": "5.25.1",
+    "webpack-cli": "4.5.0",
+    "xo": "0.50.0"
   },
   "scripts": {
-    "compile": "rimraf ./dist && tsc -p ./ --outDir ./dist",
+    "compile": "webpack",
     "format": "prettier \"**/*.{js,ts}\" --write",
-    "package": "rimraf ./dist && yarn wp:prod && vsce package",
-    "postinstall": "patch-package && node ./node_modules/vscode/bin/install",
-    "test": "yarn compile && node ./node_modules/vscode/bin/test",
-    "vscode:prepublish": "rimraf ./dist && yarn wp:prod",
-    "wp": "webpack --mode none",
-    "wp:prod": "webpack --mode production"
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "lint": "eslint",
+    "postinstall": "patch-package && husky install",
+    "test": "yarn test-compile && node ./out/test/run-tests.js",
+    "test-compile": "rm -rf ./out && yarn compile && tsc -p ./",
+    "test-watch": "tsc -watch -p ./",
+    "watch": "webpack --watch",
+    "vscode:prepublish": "yarn package"
+  },
+  "__metadata": {
+    "id": "2cabb25d-aa9a-4073-8592-ce3668f833b2",
+    "publisherDisplayName": "Brent Mealhouse",
+    "publisherId": "9eab3f07-d10e-4851-bcc6-44429f0862af",
+    "isPreReleaseVersion": false
   }
 }
