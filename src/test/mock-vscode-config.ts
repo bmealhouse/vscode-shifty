@@ -2,22 +2,23 @@ import vscode from "vscode";
 
 let rootConfig = getWorkspaceConfig();
 
-export const resetVscodeConfig = () => {
+export function resetVscodeConfig() {
   rootConfig = getWorkspaceConfig();
-};
+}
 
 vscode.workspace.getConfiguration = (
   section?: string,
-  scope?: vscode.ConfigurationScope | null
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  scope?: vscode.ConfigurationScope | null,
 ): vscode.WorkspaceConfiguration => {
-  let config = rootConfig;
+  let config: Record<string, unknown> = rootConfig;
   for (const sectionKey of section?.split(".") ?? []) {
-    config = config[sectionKey];
+    config = config[sectionKey] as Record<string, unknown>;
   }
 
   function get<T>(section: string): T | undefined;
   function get<T>(section: string, defaultValue?: T): T {
-    return config[section] || defaultValue;
+    return (config[section] || defaultValue) as T;
   }
 
   function has(section: string): boolean {
@@ -32,21 +33,21 @@ vscode.workspace.getConfiguration = (
     section: string,
     value: any,
     configurationTarget?: vscode.ConfigurationTarget | boolean,
-    overrideInLanguage?: boolean
+    overrideInLanguage?: boolean,
   ): Promise<void> {
     let nestedConfig = config;
 
     if (section.includes(".")) {
       for (const sectionKey of section.split(".")) {
-        nestedConfig = nestedConfig[sectionKey];
+        nestedConfig = nestedConfig[sectionKey] as Record<string, unknown>;
       }
     }
 
-    nestedConfig[section] = value;
+    nestedConfig[section] = value as unknown;
   }
 
   return {
-    ...config,
+    // ...confg,
     get,
     has,
     inspect,
@@ -54,7 +55,7 @@ vscode.workspace.getConfiguration = (
   };
 };
 
-function getWorkspaceConfig(): Record<string, any> {
+function getWorkspaceConfig() {
   return {
     editor: {
       fontFamily: '"Courier New", monospace',
@@ -65,11 +66,9 @@ function getWorkspaceConfig(): Record<string, any> {
     shifty: {
       shiftMode: "default",
       colorThemes: {
+        type: "dark",
         favoriteColorThemes: [],
         ignoreColorThemes: [],
-        ignoreDarkColorThemes: false,
-        ignoreHighContrastColorThemes: false,
-        ignoreLightColorThemes: false,
       },
       fontFamilies: {
         fallbackFontFamily: "monospace",

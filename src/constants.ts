@@ -1,18 +1,18 @@
 export const commandMap = {
-  SHIFT: "shifty.shift",
-  SHIFT_COLOR_THEME: "shifty.shiftColorTheme",
-  SHIFT_FONT_FAMILY: "shifty.shiftFontFamily",
-  FAVORITE_COLOR_THEME: "shifty.favoriteColorTheme",
-  UNFAVORITE_COLOR_THEME: "shifty.unfavoriteColorTheme",
-  IGNORE_COLOR_THEME: "shifty.ignoreColorTheme",
-  FAVORITE_FONT_FAMILY: "shifty.favoriteFontFamily",
-  UNFAVORITE_FONT_FAMILY: "shifty.unfavoriteFontFamily",
-  IGNORE_FONT_FAMILY: "shifty.ignoreFontFamily",
-  START_SHIFT_INTERVAL: "shifty.startShiftInterval",
-  PAUSE_SHIFT_INTERVAL: "shifty.pauseShiftInterval",
-  RESTART_SHIFT_INTERVAL: "shifty.restartShiftInterval",
-  SHOW_STATUS: "shifty.showStatus",
+  shift: "shifty.shift",
+  shiftColorTheme: "shifty.shiftColorTheme",
+  shiftFontFamily: "shifty.shiftFontFamily",
+  favoriteColorTheme: "shifty.favoriteColorTheme",
+  unfavoriteColorTheme: "shifty.unfavoriteColorTheme",
+  ignoreColorTheme: "shifty.ignoreColorTheme",
+  favoriteFontFamily: "shifty.favoriteFontFamily",
+  unfavoriteFontFamily: "shifty.unfavoriteFontFamily",
+  ignoreFontFamily: "shifty.ignoreFontFamily",
+  startShiftInterval: "shifty.startShiftInterval",
+  pauseShiftInterval: "shifty.pauseShiftInterval",
+  restartShiftInterval: "shifty.restartShiftInterval",
+  showStatus: "shifty.showStatus",
 };
 
-export const DEFAULT_COLOR_THEME = "Default Dark+";
-export const DEFAULT_FONT_FAMILY = "Courier New";
+export const defaultColorTheme = "Default Dark+";
+export const defaultFontFamily = "Courier New";

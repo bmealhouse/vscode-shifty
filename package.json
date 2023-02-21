@@ -14,7 +14,8 @@
   "author": "Brent Mealhouse <bmealhouse@gmail.com>",
   "publisher": "bmealhouse",
   "engines": {
-    "vscode": "^1.54.3"
+    "node": ">=14.0.0",
+    "vscode": "^1.69.0"
   },
   "categories": [
     "Themes",
@@ -32,7 +33,7 @@
     "theme": "dark"
   },
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -55,6 +56,25 @@
             "Cycles through favorite color themes & font families."
           ]
         },
+        "shifty.colorThemes.colorThemeType": {
+          "type": "string",
+          "default": "auto-detect",
+          "description": "Controls the type of color themes the shift between. When auto-detect is enabled, ensure window.autoDetectColorScheme and window.autoDetectHighContrast are also enabled.",
+          "enum": [
+            "auto-detect",
+            "dark",
+            "light",
+            "high-contrast-dark",
+            "high-contrast-light"
+          ],
+          "enumDescriptions": [
+            "Automatically detects the color theme type based on the OS appearance.",
+            "Only dark color themes.",
+            "Only light color themes.",
+            "Only high-contrast dark color themes.",
+            "Only high-contrast light color themes."
+          ]
+        },
         "shifty.colorThemes.favoriteColorThemes": {
           "type": "array",
           "default": [],
@@ -64,21 +84,6 @@
           "type": "array",
           "default": [],
           "description": "List of color themes you've ignored."
-        },
-        "shifty.colorThemes.ignoreDarkColorThemes": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether dark color themes are ignored."
-        },
-        "shifty.colorThemes.ignoreHighContrastColorThemes": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether high contrast color themes are ignored."
-        },
-        "shifty.colorThemes.ignoreLightColorThemes": {
-          "type": "boolean",
-          "default": false,
-          "description": "Controls whether light color themes are ignored."
         },
         "shifty.fontFamilies.fallbackFontFamily": {
           "type": "string",
@@ -199,9 +204,17 @@
     ]
   },
   "lint-staged": {
-    "*.{js,ts}": "xo"
+    "*.{js,ts}": "eslint"
+  },
+  "prettier": {
+    "useTabs": false,
+    "trailingComma": "all",
+    "singleQuote": false,
+    "bracketSpacing": true
   },
   "dependencies": {
+    "multicast-dns": "7.2.5",
+    "node-fetch": "2.x",
     "node-ipc": "9.1.4",
     "node-monospace-fonts": "0.0.3",
     "shortid": "2.2.16"
@@ -210,17 +223,35 @@
     "@types/glob": "7.1.3",
     "@types/mocha": "8.2.1",
     "@types/node": "14.14.34",
+    "@types/node-fetch": "2.6.2",
     "@types/node-ipc": "9.1.3",
     "@types/shortid": "0.0.29",
     "@types/sinon": "9.0.11",
-    "@types/vscode": "1.54.0",
+    "@types/vscode": "1.69.0",
+    "@typescript-eslint/eslint-plugin": "5.30.5",
+    "@typescript-eslint/parser": "5.30.5",
+    "@vscode/test-electron": "2.1.5",
+    "c8": "7.11.3",
     "copy-webpack-plugin": "8.1.0",
+    "eslint": "8.19.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-config-xo": "0.41.0",
+    "eslint-config-xo-typescript": "0.51.1",
+    "eslint-plugin-eslint-comments": "3.2.0",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-n": "15.2.4",
+    "eslint-plugin-no-use-extend-native": "0.5.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-promise": "6.0.0",
+    "eslint-plugin-unicorn": "43.0.1",
     "expect": "26.6.2",
     "glob": "7.1.6",
     "husky": "5.1.3",
     "lint-staged": "10.5.4",
     "mocha": "8.3.2",
+    "nyc": "15.1.0",
     "patch-package": "6.4.7",
+    "prettier": "2.7.1",
     "sinon": "9.2.4",
     "ts-loader": "8.0.18",
     "typescript": "4.2.3",
@@ -229,18 +260,24 @@
     "wait-for-expect": "3.0.2",
     "webpack": "5.25.1",
     "webpack-cli": "4.5.0",
-    "xo": "0.38.2"
+    "xo": "0.50.0"
   },
   "scripts": {
     "compile": "webpack",
     "format": "prettier \"**/*.{js,ts}\" --write",
     "package": "webpack --mode production --devtool hidden-source-map",
-    "lint": "xo",
+    "lint": "eslint",
     "postinstall": "patch-package && husky install",
-    "test": "yarn test-compile && node ./out/test/run-test.js",
-    "test-compile": "yarn compile && tsc -p ./",
+    "test": "yarn test-compile && node ./out/test/run-tests.js",
+    "test-compile": "rm -rf ./out && yarn compile && tsc -p ./",
     "test-watch": "tsc -watch -p ./",
     "watch": "webpack --watch",
     "vscode:prepublish": "yarn package"
+  },
+  "__metadata": {
+    "id": "2cabb25d-aa9a-4073-8592-ce3668f833b2",
+    "publisherDisplayName": "Brent Mealhouse",
+    "publisherId": "9eab3f07-d10e-4851-bcc6-44429f0862af",
+    "isPreReleaseVersion": false
   }
 }

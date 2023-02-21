@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import glob from "glob";
 import Mocha from "mocha";
 import sinon from "sinon";
@@ -15,11 +15,13 @@ export async function run(): Promise<void> {
         resetVscodeConfig();
       },
       afterEach() {
+        // eslint-disable-next-line import/no-named-as-default-member
         sinon.restore();
       },
     },
   });
 
+  // eslint-disable-next-line unicorn/prefer-module
   const testsRoot = path.resolve(__dirname, "..");
 
   return new Promise((resolve, reject) => {

@@ -1,310 +1,429 @@
-import expect from "expect";
-import sinon from "sinon";
+import assert from "node:assert";
 import vscode from "vscode";
-
-import { commandMap, DEFAULT_COLOR_THEME } from "./constants";
 import {
   getColorTheme,
-  getRawCache,
-  getRawCacheWithMetadata,
+  getRawNextColorTheme,
+  getAvailableColorThemesForKind,
+  getRawColorThemeHistory,
+  shiftColorTheme,
 } from "./color-themes";
-import { updateConfig } from "./test/utils";
+import { commandMap, defaultColorTheme } from "./constants";
+import { setupTest } from "./test/setup-test";
 
 suite("color-themes.test.ts", () => {
   test("registers color theme commands at vscode start up", async () => {
     // arrange
+
     // act
     const commands = await vscode.commands.getCommands();
 
     // assert
-    expect(commands).toContain(commandMap.SHIFT_COLOR_THEME);
-    expect(commands).toContain(commandMap.FAVORITE_COLOR_THEME);
-    expect(commands).toContain(commandMap.UNFAVORITE_COLOR_THEME);
-    expect(commands).toContain(commandMap.IGNORE_COLOR_THEME);
+    assert(commands.includes(commandMap.shiftColorTheme));
+    assert(commands.includes(commandMap.favoriteColorTheme));
+    assert(commands.includes(commandMap.unfavoriteColorTheme));
+    assert(commands.includes(commandMap.ignoreColorTheme));
   });
 
-  test('shifts the color theme when running the "SHIFT_COLOR_THEME" command', async () => {
+  test('update the next color theme when the "shifty.colorThemes" config changes', async () => {
     // arrange
-    const spy = sinon.spy(vscode.commands, "executeCommand");
+    const { updateConfig } = setupTest();
+    const rawNextColorTheme = getRawNextColorTheme();
 
     // act
-    await vscode.commands.executeCommand(commandMap.SHIFT_COLOR_THEME);
+    await updateConfig("shifty.colorThemes.ignoreColorThemes", []);
 
     // assert
-    expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
-    expect(spy.lastCall.firstArg).toBe(commandMap.RESTART_SHIFT_INTERVAL);
+    assert.notStrictEqual(getRawNextColorTheme(), rawNextColorTheme);
   });
 
-  test('favorites the current color theme when running the "FAVORITE_COLOR_THEME" command', async () => {
-    // arrange
-    const spy = sinon.spy(vscode.window, "showInformationMessage");
+  suite('when running the "shiftColorTheme" command', () => {
+    test("shift the color theme", async () => {
+      // arrange
 
-    // act
-    await vscode.commands.executeCommand(commandMap.FAVORITE_COLOR_THEME);
+      // act
+      await vscode.commands.executeCommand(commandMap.shiftColorTheme);
 
-    // assert
-    const { favoriteColorThemes } = vscode.workspace.getConfiguration(
-      "shifty.colorThemes"
-    );
-    expect(favoriteColorThemes).toContain(DEFAULT_COLOR_THEME);
-    expect(spy.firstCall.firstArg).toBe('Added "Default Dark+" to favorites');
+      // assert
+      const colorTheme = getColorTheme();
+      assert.notStrictEqual(colorTheme, "");
+      assert.notStrictEqual(colorTheme, defaultColorTheme);
+    });
+
+    test("restart the shift interval", async () => {
+      // arrange
+      const { executeCommandSpy } = setupTest();
+
+      // act
+      await vscode.commands.executeCommand(commandMap.shiftColorTheme);
+
+      // assert
+      assert(executeCommandSpy.calledWith(commandMap.restartShiftInterval));
+    });
   });
 
-  test('unfavorites the current color theme when running the "UNFAVORITE_COLOR_THEME" command', async () => {
-    // arrange
-    const favorites = ["Abyss", DEFAULT_COLOR_THEME];
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
-    const spy = sinon.spy(vscode.window, "showInformationMessage");
+  suite('when running the "favoriteColorTheme" command', () => {
+    test("favorite the current color theme", async () => {
+      // arrange
+      const { getFavoriteColorThemes } = setupTest();
 
-    // act
-    await vscode.commands.executeCommand(commandMap.UNFAVORITE_COLOR_THEME);
+      // act
+      await vscode.commands.executeCommand(commandMap.favoriteColorTheme);
 
-    // assert
-    const { favoriteColorThemes } = vscode.workspace.getConfiguration(
-      "shifty.colorThemes"
-    );
-    expect(favoriteColorThemes).not.toContain(DEFAULT_COLOR_THEME);
-    expect(spy.firstCall.firstArg).toBe(
-      'Removed "Default Dark+" from favorites'
-    );
+      // assert
+      assert(getFavoriteColorThemes().includes(defaultColorTheme));
+    });
+
+    test("set the context for shifty.isFavoriteColorTheme", async () => {
+      // arrange
+      const { executeCommandSpy } = setupTest();
+
+      // act
+      await vscode.commands.executeCommand(commandMap.favoriteColorTheme);
+
+      // assert
+      assert(
+        executeCommandSpy.calledWithExactly(
+          "setContext",
+          "shifty.isFavoriteColorTheme",
+          true,
+        ),
+      );
+    });
+
+    test("display a notification to the developer", async () => {
+      // arrange
+      const { showInformationMessaageSpy } = setupTest();
+
+      // act
+      await vscode.commands.executeCommand(commandMap.favoriteColorTheme);
+
+      // assert
+      assert(
+        showInformationMessaageSpy.calledWith(
+          `Added "${defaultColorTheme}" to favorites`,
+        ),
+      );
+    });
   });
 
-  test('ignores the current color theme, shifts the color theme, and resets the shift interval when running the "IGNORE_COLOR_THEME" command', async () => {
-    // arrange
-    const showInformationMessaageSpy = sinon.spy(
-      vscode.window,
-      "showInformationMessage"
-    );
-    const executeCommandSpy = sinon.spy(vscode.commands, "executeCommand");
+  suite('when running the "unfavoriteColorTheme" command', () => {
+    test("remove the current color theme from favorites", async () => {
+      // arrange
+      const { seedConfig, getFavoriteColorThemes } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
 
-    // act
-    await vscode.commands.executeCommand(commandMap.IGNORE_COLOR_THEME);
+      // act
+      await vscode.commands.executeCommand(commandMap.unfavoriteColorTheme);
 
-    // assert
-    const { ignoreColorThemes } = vscode.workspace.getConfiguration(
-      "shifty.colorThemes"
-    );
-    expect(ignoreColorThemes).toContain(DEFAULT_COLOR_THEME);
-    expect(showInformationMessaageSpy.firstCall.firstArg).toBe(
-      'Ignored "Default Dark+"'
-    );
-    expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
-    expect(executeCommandSpy.lastCall.firstArg).toBe(
-      commandMap.RESTART_SHIFT_INTERVAL
-    );
+      // assert
+      assert.strictEqual(
+        getFavoriteColorThemes().includes(defaultColorTheme),
+        false,
+      );
+    });
+
+    test("set the context for shifty.isFavoriteColorTheme", async () => {
+      // arrange
+      const { seedConfig, executeCommandSpy } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+
+      // act
+      await vscode.commands.executeCommand(commandMap.unfavoriteColorTheme);
+
+      // assert
+      assert(
+        executeCommandSpy.calledWithExactly(
+          "setContext",
+          "shifty.isFavoriteColorTheme",
+          false,
+        ),
+      );
+    });
+
+    test("display a notification to the developer", async () => {
+      // arrange
+      const { seedConfig, showInformationMessaageSpy } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+
+      // act
+      await vscode.commands.executeCommand(commandMap.unfavoriteColorTheme);
+
+      // assert
+      assert(
+        showInformationMessaageSpy.calledWith(
+          'Removed "Default Dark+" from favorites',
+        ),
+      );
+    });
   });
 
-  test('ignores the current color theme and removes the color theme from favorites when running the "IGNORE_COLOR_THEME" command', async () => {
-    // arrange
-    const favorites = ["Abyss", DEFAULT_COLOR_THEME];
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+  suite('when running the "ignoreColorTheme" command', () => {
+    test("shift the color theme", async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
 
-    // act
-    await vscode.commands.executeCommand(commandMap.IGNORE_COLOR_THEME);
+      // act
+      await vscode.commands.executeCommand(commandMap.ignoreColorTheme);
 
-    // assert
-    const {
-      favoriteColorThemes,
-      ignoreColorThemes,
-    } = vscode.workspace.getConfiguration("shifty.colorThemes");
-    expect(ignoreColorThemes).toContain(DEFAULT_COLOR_THEME);
-    expect(favoriteColorThemes).not.toContain(DEFAULT_COLOR_THEME);
+      // assert
+      assert.notStrictEqual(getColorTheme(), defaultColorTheme);
+    });
+
+    test("restart the shift interval", async () => {
+      // arrange
+      const { seedConfig, executeCommandSpy } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+
+      // act
+      await vscode.commands.executeCommand(commandMap.ignoreColorTheme);
+
+      // assert
+      assert(executeCommandSpy.calledWith(commandMap.restartShiftInterval));
+    });
+
+    test("ignore the current color theme", async () => {
+      // arrange
+      const { seedConfig, getIgnoreColorThemes } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+
+      // act
+      await vscode.commands.executeCommand(commandMap.ignoreColorTheme);
+
+      // assert
+      assert(getIgnoreColorThemes().includes(defaultColorTheme));
+    });
+
+    test("remove the current color theme from favorites", async () => {
+      // arrange
+      const { seedConfig, getFavoriteColorThemes } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+
+      // act
+      await vscode.commands.executeCommand(commandMap.ignoreColorTheme);
+
+      // assert
+      assert.strictEqual(
+        getFavoriteColorThemes().includes(defaultColorTheme),
+        false,
+      );
+    });
+
+    test("set the context for shifty.isFavoriteColorTheme", async () => {
+      // arrange
+      const { seedConfig, executeCommandSpy } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+
+      // act
+      await vscode.commands.executeCommand(commandMap.ignoreColorTheme);
+
+      // assert
+      assert(
+        executeCommandSpy.calledWithExactly(
+          "setContext",
+          "shifty.isFavoriteColorTheme",
+          false,
+        ),
+      );
+    });
+
+    test("display a notification to the developer", async () => {
+      // arrange
+      const { seedConfig, showInformationMessaageSpy } = setupTest();
+      const favorites = ["Abyss", defaultColorTheme];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+
+      // act
+      await vscode.commands.executeCommand(commandMap.ignoreColorTheme);
+
+      // assert
+      assert(showInformationMessaageSpy.calledWith('Ignored "Default Dark+"'));
+    });
   });
 
-  test('primes the color themes cache after the "shifty.colorThemes" config changes', async () => {
-    // arrange
-    const rawCache = getRawCache();
+  suite("getAvailableColorThemesByKind", () => {
+    test('returns at least one color theme when the "colorThemeType" is auto-detect', async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      await seedConfig("shifty.colorThemes.colorThemeType", "auto-detect");
 
-    // act
-    await updateConfig("shifty.colorThemes.ignoreLightColorThemes", true);
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    expect(getRawCache()).not.toEqual(rawCache);
-  });
+      // assert
+      assert(availableColorThemes.length > 0);
+    });
 
-  test("returns all color themes when no color themes are ignored", async () => {
-    // arrange
-    // change any shifty.colorThemes config to prime the cache
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", []);
+    test('returns all dark color themes when the "colorThemeType" is dark', async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      await seedConfig("shifty.colorThemes.colorThemeType", "dark");
 
-    // act
-    const rawCache = getRawCache();
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    const TOTAL_DEFAULT_VSCODE_THEMES = 14;
-    expect(rawCache.length).toBe(TOTAL_DEFAULT_VSCODE_THEMES);
-  });
+      // assert
+      const totalDarkDefaultVscodeThemes = 9;
+      assert.strictEqual(
+        availableColorThemes.length,
+        totalDarkDefaultVscodeThemes,
+      );
+    });
 
-  test("returns all color themes except the ignored color themes", async () => {
-    // arrange
-    const abyss = "Abyss";
-    await updateConfig("shifty.colorThemes.ignoreColorThemes", [abyss]);
+    test('returns all light color themes when the "colorThemeType" is light', async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      await seedConfig("shifty.colorThemes.colorThemeType", "light");
 
-    // act
-    const rawCache = getRawCache();
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    expect(rawCache).not.toContain(abyss);
-  });
+      // assert
+      const totalLightDefaultVscodeThemes = 4;
+      assert.strictEqual(
+        availableColorThemes.length,
+        totalLightDefaultVscodeThemes,
+      );
+    });
 
-  test("returns no dark color themes when ignored", async () => {
-    // arrange
-    await updateConfig("shifty.colorThemes.ignoreDarkColorThemes", true);
+    test('returns all high contrast dark color themes when the "colorThemeType" is high-contrast-dark', async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      await seedConfig(
+        "shifty.colorThemes.colorThemeType",
+        "high-contrast-dark",
+      );
 
-    // act
-    const rawCacheWithMetadata = getRawCacheWithMetadata();
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    expect(
-      rawCacheWithMetadata.every((colorTheme) => colorTheme.type !== "vs-dark")
-    ).toBeTruthy();
-  });
+      // assert
+      const totalHighContrastDarkDefaultVscodeThemes = 1;
+      assert.strictEqual(
+        availableColorThemes.length,
+        totalHighContrastDarkDefaultVscodeThemes,
+      );
+    });
 
-  test('returns no dark color themes when ignored and in "favorites" mode', async () => {
-    // arrange
-    await updateConfig("shifty.shiftMode", "favorites");
-    const favorites = ["Abyss", "Solarized Light", "Default High Contrast"];
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
-    await updateConfig("shifty.colorThemes.ignoreDarkColorThemes", true);
+    test('returns all high contrast light color themes when the "colorThemeType" is high-contrast-light', async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      await seedConfig(
+        "shifty.colorThemes.colorThemeType",
+        "high-contrast-light",
+      );
 
-    // act
-    const rawCacheWithMetadata = getRawCacheWithMetadata();
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    expect(
-      rawCacheWithMetadata.every((colorTheme) => colorTheme.type !== "vs-dark")
-    ).toBeTruthy();
-  });
+      // assert
+      const totalHighContrastLightDefaultVscodeThemes = 1;
+      assert.strictEqual(
+        availableColorThemes.length,
+        totalHighContrastLightDefaultVscodeThemes,
+      );
+    });
 
-  test("returns no light color themes when ignored", async () => {
-    // arrange
-    await updateConfig("shifty.colorThemes.ignoreLightColorThemes", true);
+    test("returns all color themes except the ignored color themes", async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      const abyss = "Abyss";
+      await seedConfig("shifty.colorThemes.ignoreColorThemes", [abyss]);
 
-    // act
-    const rawCacheWithMetadata = getRawCacheWithMetadata();
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    expect(
-      rawCacheWithMetadata.every((colorTheme) => colorTheme.type !== "vs")
-    ).toBeTruthy();
-  });
+      // assert
+      assert.strictEqual(availableColorThemes.includes(abyss), false);
+    });
 
-  test('returns no light color themes when ignored and in "favorites" mode', async () => {
-    // arrange
-    await updateConfig("shifty.shiftMode", "favorites");
-    const favorites = ["Abyss", "Solarized Light", "Default High Contrast"];
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
-    await updateConfig("shifty.colorThemes.ignoreLightColorThemes", true);
+    test('returns color themes that match the active colorThemeType in "favorites" mode', async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      const favorites = ["Abyss", "Solarized Dark", "Solarized Light"];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+      await seedConfig("shifty.shiftMode", "favorites");
 
-    // act
-    const rawCacheWithMetadata = getRawCacheWithMetadata();
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    expect(
-      rawCacheWithMetadata.every((colorTheme) => colorTheme.type !== "vs")
-    ).toBeTruthy();
-  });
+      // assert
+      assert.strictEqual(availableColorThemes.length, 2);
+      assert.deepStrictEqual(availableColorThemes, ["Abyss", "Solarized Dark"]);
+    });
 
-  test("returns no high contrast color themes when ignored", async () => {
-    // arrange
-    await updateConfig(
-      "shifty.colorThemes.ignoreHighContrastColorThemes",
-      true
-    );
+    test('returns color themes without favorites when shiftMode is set to "discovery"', async () => {
+      // arrange
+      const { seedConfig } = setupTest();
+      const abyss = "Abyss";
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", [abyss]);
+      await seedConfig("shifty.shiftMode", "discovery");
 
-    // act
-    const rawCacheWithMetadata = getRawCacheWithMetadata();
+      // act
+      const availableColorThemes = getAvailableColorThemesForKind();
 
-    // assert
-    expect(
-      rawCacheWithMetadata.every((colorTheme) => colorTheme.type !== "hc-black")
-    ).toBeTruthy();
-  });
+      // assert
+      assert.strictEqual(availableColorThemes.includes(abyss), false);
+    });
 
-  test('returns no hight contrast color themes when ignored and in "favorites" mode', async () => {
-    // arrange
-    await updateConfig("shifty.shiftMode", "favorites");
-    const favorites = ["Abyss", "Solarized Light", "Default High Contrast"];
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
-    await updateConfig(
-      "shifty.colorThemes.ignoreHighContrastColorThemes",
-      true
-    );
+    test('returns favorite color themes when shiftMode is set to "discovery" and all color themes have been ignored or favorited', async () => {
+      // arrange
+      const { seedConfig, updateConfig } = setupTest();
+      const favorites = ["Abyss", "Monokai Dimmed", "Solarized Dark"];
+      await seedConfig("shifty.colorThemes.favoriteColorThemes", favorites);
+      await seedConfig("shifty.shiftMode", "discovery");
 
-    // act
-    const rawCacheWithMetadata = getRawCacheWithMetadata();
+      // act
+      // ignore the rest of the available color themes
+      await updateConfig(
+        "shifty.colorThemes.ignoreColorThemes",
+        getAvailableColorThemesForKind(),
+      );
 
-    // assert
-    expect(
-      rawCacheWithMetadata.every((colorTheme) => colorTheme.type !== "hc-black")
-    ).toBeTruthy();
-  });
+      // assert
+      assert.deepStrictEqual(getAvailableColorThemesForKind(), favorites);
+    });
 
-  test("returns the default color theme when all color theme types are ignored", async () => {
-    // arrange
-    await updateConfig("shifty.colorThemes.ignoreDarkColorThemes", true);
-    await updateConfig("shifty.colorThemes.ignoreLightColorThemes", true);
-    await updateConfig(
-      "shifty.colorThemes.ignoreHighContrastColorThemes",
-      true
-    );
+    test("improves randomization by maintaining a relative history of recent color themes", async () => {
+      // arrange
+      await shiftColorTheme();
+      await shiftColorTheme();
+      await shiftColorTheme();
 
-    // act
-    const rawCache = getRawCache();
+      // act
+      await shiftColorTheme();
 
-    // assert
-    expect(rawCache).toEqual([DEFAULT_COLOR_THEME]);
-  });
+      // assert
+      const history = getRawColorThemeHistory();
+      assert.strictEqual(history.includes(getRawNextColorTheme()), false);
+      const [a, b, c] = history;
+      assert(a !== b && b !== c && c !== a); // assert history is unique
+    });
 
-  test('returns favorite color themes when shiftMode is set to "favorites"', async () => {
-    // arrange
-    const favorites = ["Abyss", "Monokai Dimmed", "Solarized Dark"];
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
-    await updateConfig("shifty.shiftMode", "favorites");
+    test('returns the default VS Code color theme when shiftMode is set to "discovery" and all color themes have been ignored', async () => {
+      // arrange
+      const { seedConfig, updateConfig } = setupTest();
+      await seedConfig("shifty.shiftMode", "discovery");
 
-    // act
-    const rawCache = getRawCache();
+      // act
+      // ignore all color themes
+      await updateConfig(
+        "shifty.colorThemes.ignoreColorThemes",
+        getAvailableColorThemesForKind(),
+      );
 
-    // assert
-    expect(rawCache).toEqual(favorites);
-  });
-
-  test('returns color themes without favorites when shiftMode is set to "discovery"', async () => {
-    // arrange
-    const abyss = "Abyss";
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", [abyss]);
-    await updateConfig("shifty.shiftMode", "discovery");
-
-    // act
-    const rawCache = getRawCache();
-
-    // assert
-    expect(rawCache).not.toContain(abyss);
-  });
-
-  test('returns favorite color themes when shiftMode is set to "discovery" and all color themes have been ignored or favorited', async () => {
-    // arrange
-    const favorites = ["Abyss", "Monokai Dimmed", "Solarized Dark"];
-    await updateConfig("shifty.colorThemes.favoriteColorThemes", favorites);
-    await updateConfig("shifty.shiftMode", "discovery");
-
-    // act
-    // ignore the rest of the available color themes
-    await updateConfig("shifty.colorThemes.ignoreColorThemes", getRawCache());
-
-    // assert
-    expect(getRawCache()).toEqual(favorites);
-  });
-
-  test('returns the default VS Code color theme when shiftMode is set to "discovery" and all color themes have been ignored', async () => {
-    // arrange
-    await updateConfig("shifty.shiftMode", "discovery");
-
-    // act
-    // ignore all color themes
-    await updateConfig("shifty.colorThemes.ignoreColorThemes", getRawCache());
-
-    // assert
-    expect(getRawCache()).toEqual([DEFAULT_COLOR_THEME]);
+      // assert
+      assert.deepStrictEqual(getAvailableColorThemesForKind(), [
+        defaultColorTheme,
+      ]);
+    });
   });
 });

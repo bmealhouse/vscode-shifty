@@ -46,6 +46,7 @@ Cycles through color themes & font families that have not been favorited or igno
 
 ### favorites
 
+TODO
 Cycles through favorite color themes & font families. Respects `ignoreDarkColorThemes`, `ignoreHighContrastColorThemes`, and `ignoreLightColorThemes` settings to allow cycling through specific sets of favorite color themes.
 
 ## Shift interval
@@ -107,30 +108,6 @@ List of color themes you've favorited.
 > Default value: `[]`
 
 List of color themes you've ignored.
-
----
-
-### ignoreDarkColorThemes
-
-> Default value: `false`
-
-Controls whether to ignore dark color themes.
-
----
-
-### ignoreHighContrastColorThemes
-
-> Default value: `false`
-
-Controls whether to ignore high contrast color themes.
-
----
-
-### ignoreLightColorThemes
-
-> Default value: `false`
-
-Controls whether to ignore light color themes.
 
 ---
 

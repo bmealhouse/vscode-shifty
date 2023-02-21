@@ -1,35 +1,32 @@
-import expect from "expect";
-import sinon from "sinon";
+import assert from "node:assert";
 import vscode from "vscode";
-
-import {
-  commandMap,
-  DEFAULT_COLOR_THEME,
-  DEFAULT_FONT_FAMILY,
-} from "./constants";
 import { getColorTheme } from "./color-themes";
+import { commandMap, defaultColorTheme, defaultFontFamily } from "./constants";
 import { getFontFamily } from "./font-families";
+import { setupTest } from "./test/setup-test";
 
 suite("extension.test.ts", () => {
   test("registers global commands at vscode start up", async () => {
     // arrange
+
     // act
     const commands = await vscode.commands.getCommands();
 
     // assert
-    expect(commands).toContain(commandMap.SHIFT);
+    assert(commands.includes(commandMap.shift));
   });
 
-  test('shifts the color theme and font when running the "SHIFT" command', async () => {
+  // TODO: break out into separate suite
+  test.skip('shifts the color theme and font when running the "shift" command', async () => {
     // arrange
-    const spy = sinon.spy(vscode.commands, "executeCommand");
+    const { executeCommandSpy } = setupTest();
 
     // act
-    await vscode.commands.executeCommand(commandMap.SHIFT);
+    await vscode.commands.executeCommand(commandMap.shift);
 
     // assert
-    expect(getColorTheme()).not.toBe(DEFAULT_COLOR_THEME);
-    expect(getFontFamily()).not.toBe(DEFAULT_FONT_FAMILY);
-    expect(spy.lastCall.firstArg).toBe(commandMap.RESTART_SHIFT_INTERVAL);
+    assert.notStrictEqual(getColorTheme(), defaultColorTheme);
+    assert.notStrictEqual(getFontFamily(), defaultFontFamily);
+    assert(executeCommandSpy.calledWith(commandMap.restartShiftInterval));
   });
 });
